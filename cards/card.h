@@ -3,8 +3,11 @@
 using namespace std;
 
 class Card {
-    protected:
-        string name, desc;
-        int cost, actionID;
+    string name;
+
     public:
+        Card(string name);
+        friend ostream &operator<<(ostream &out, Card c);
+
+
 };
