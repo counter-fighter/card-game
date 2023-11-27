@@ -13,14 +13,14 @@ class Card {
 
     public:
         Card(string name, string desc, int cost);
-
+        ~Card();
         virtual CardType getCardType() = 0;
         virtual void notifyCardTurnStart();
         virtual void notifyCardTurnEnd();
         virtual void notifyCardMinionEnter();
         virtual void notifyCardMinionLeave();
-        virtual void play(Board *board);
-        virtual void play(Board *board, Card *target);
+        virtual void play(Board *board) = 0;
+        virtual void play(Board *board, Card *target) = 0;
         int getCost();
 
         friend ostream &operator<<(ostream &out, Card &c);
