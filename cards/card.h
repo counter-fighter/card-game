@@ -2,6 +2,7 @@
 #define __CARD_H__
 #include <string>
 #include "board.h"
+class Board;
 
 using namespace std;
 
