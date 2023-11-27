@@ -3,13 +3,14 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include "card.h"
 
 using namespace std;
 
 class Player {
     int id, magic;
     string name;
-    vector<unique_ptr<int>> hand;
+    vector<unique_ptr<Card>> hand;
 
     public:
         Player(int id, string name); // magic is initialized to 0 and hand is initially empty.
@@ -20,7 +21,7 @@ class Player {
         void setMagic(const int n);
         int getMagic() const;
         int getID() const;
-        vector<unique_ptr<int>> getHand() const;
+        vector<unique_ptr<Card>> getHand() const;
 };
 
 #endif
