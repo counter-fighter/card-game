@@ -1,6 +1,6 @@
 #ifndef __PLAYER_H__
-#define __PLAYER_H_
-#include <string>_
+#define __PLAYER_H__
+#include <string>
 #include <vector>
 #include <memory>
 
