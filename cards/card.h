@@ -21,7 +21,7 @@ class Card {
         virtual void notifyCardMinionEnter();
         virtual void notifyCardMinionLeave();
         virtual void play(Board &board) = 0;
-        virtual void play(Board &board, Card *target) = 0;
+        virtual void play(Board &board, Card &target) = 0;
         int getCost();
 
         friend ostream &operator<<(ostream &out, Card &c);
