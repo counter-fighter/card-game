@@ -4,7 +4,7 @@
 
 class MasterSummoner : public Minion {
     public:
-        MasterSummoner(string name, string desc, int cost, int atck, int def, int actCount, int actReset, int actCost);
+        MasterSummoner(string name, string desc, int cost, int player, int atck, int def, int actCount, int actReset, int actCost);
         ~MasterSummoner();
         void activateAbility();
 };

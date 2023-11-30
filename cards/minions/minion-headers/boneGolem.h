@@ -4,7 +4,7 @@
 
 class BoneGolem : public Minion {
     public:
-        BoneGolem(string name, string desc, int cost, int atck, int def, int actCount, int actReset, int actCost);
+        BoneGolem(string name, string desc, int cost, int player, int atck, int def, int actCount, int actReset, int actCost);
         ~BoneGolem();
         void notifyCardMinionLeave();
         void activateAbility();

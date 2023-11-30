@@ -4,7 +4,7 @@
 
 class ApprenticeSummoner : public Minion {
     public:
-        ApprenticeSummoner(string name, string desc, int cost, int atck, int def, int actCount, int actReset, int actCost);
+        ApprenticeSummoner(string name, string desc, int cost, int player, int atck, int def, int actCount, int actReset, int actCost);
         ~ApprenticeSummoner();
         void activateAbility();
 };

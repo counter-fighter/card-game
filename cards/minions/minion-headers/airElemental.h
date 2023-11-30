@@ -4,7 +4,7 @@
 
 class AirElemental : public Minion {
     public:
-        AirElemental(string name, string desc, int cost, int atck, int def, int actCount, int actReset, int actCost);
+        AirElemental(string name, string desc, int cost, int player, int atck, int def, int actCount, int actReset, int actCost);
         ~AirElemental();
 
 };
