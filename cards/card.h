@@ -10,19 +10,26 @@ enum class CardType { Minion, Spell, Ritual, Enchantment };
 
 class Card {
     string name, desc;
-    int cost;
+    int cost, player;
 
     public:
         Card(string name, string desc, int cost);
-        virtual ~Card() = 0;
+        ~Card(); // Not virtual
         virtual CardType getCardType() = 0;
-        virtual void notifyCardTurnStart();
-        virtual void notifyCardTurnEnd();
-        virtual void notifyCardMinionEnter();
-        virtual void notifyCardMinionLeave();
-        virtual void play(Board &board) = 0;
-        virtual void play(Board &board, Card &target) = 0;
+        virtual void notifyCardTurnStart() = 0;
+        virtual void notifyCardTurnEnd() = 0;
+        // Decide on pointer
+        virtual void notifyCardMinionEnter() = 0;
+        // Decide on pointer
+        virtual void notifyCardMinionLeave() = 0;
+
+        // Play should be handled by Board
+        //virtual void play(Board &board) = 0;
+        //virtual void play(Board &board, Card &target) = 0;
         int getCost();
+        int getPlayer();
+        string getName();
+        string getDesc();
 
         friend ostream &operator<<(ostream &out, Card &c);
 };
