@@ -40,8 +40,8 @@ class Minion : public Card {
     int getActivationCost();
     CardType getCardType(); //Card type already determined
 
-    // Minions dont have a deafault activity, only override with enchantment or if card has default ability.
-    virtual void activateAbility() = 0;
+    // Minions dont have a default activity, only override with enchantment or if card has default ability.
+    virtual void activateAbility() = 0; // I think we should be setting this as empty function, so we don't have to override for each class
     virtual void activateAbility(Minion &target) = 0;
 
     // I'm thinking play should be handled between player and board
