@@ -8,8 +8,7 @@ class Spell : public Card {
         virtual ~Spell();
         virtual bool useSpell(Minion* target) const;
         virtual bool useSpell(Ritual* target) const;
-
-
+        CardType getCardType();
 };
 
 

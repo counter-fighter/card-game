@@ -10,7 +10,7 @@ class Enchantment : public Card {
         Enchantment(string name, string desc, int cost, int player);
         virtual ~Enchantment() = 0;
         virtual void apply(Minion *minion) = 0;
-
+        CardType getCardType();
 };
 
 #endif
