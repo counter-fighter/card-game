@@ -11,7 +11,7 @@ class Printer {
     vector<vector<unique_ptr<Card>>> board;
     vector<unique_ptr<Card>> hand;
     unique_ptr<Minion> minion;
-    
+     
     public:
         Printer();
         void printBoard(vector<vector<unique_ptr<Card>>> board);
