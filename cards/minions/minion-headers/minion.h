@@ -8,7 +8,7 @@ class Minion : public Card {
     int atck, def, actCount, actReset, actCost;
     CardType ct = CardType::Minion;
 
-    Minion(string name, string desc, int cost, int atck, int def, int actCount, int actReset,int actCost);
+    Minion(string name, string desc, int cost, int player, int atck, int def, int actCount, int actReset,int actCost);
     ~Minion();
 
     // Would be overrided by concrete minions
