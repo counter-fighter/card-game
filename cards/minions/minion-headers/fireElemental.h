@@ -8,7 +8,7 @@ class FireElemental : public Minion {
         ~FireElemental();
         void notifyCardMinionEnter();
         void activateAbility();
-}
+};
 
 
 #endif

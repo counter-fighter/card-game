@@ -14,7 +14,7 @@ class Card {
 
     public:
         Card(string name, string desc, int cost);
-        ~Card(); // Not virtual
+        virtual ~Card(); // Not virtual
         virtual CardType getCardType() = 0;
         virtual void notifyCardTurnStart() = 0;
         virtual void notifyCardTurnEnd() = 0;

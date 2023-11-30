@@ -7,7 +7,7 @@ class AirElemental : public Minion {
         AirElemental(string name, string desc, int cost, int atck, int def, int actCount, int actReset, int actCost);
         ~AirElemental();
 
-}
+};
 
 
 #endif

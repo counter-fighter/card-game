@@ -7,7 +7,7 @@ class NovicePyromancer : public Minion {
         NovicePyromancer(string name, string desc, int cost, int atck, int def, int actCount, int actReset, int actCost);
         ~NovicePyromancer();
         void activateAbility();
-}
+};
 
 
 #endif

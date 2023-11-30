@@ -8,7 +8,7 @@ class BoneGolem : public Minion {
         ~BoneGolem();
         void notifyCardMinionLeave();
         void activateAbility();
-}
+};
 
 
 #endif

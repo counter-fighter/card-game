@@ -8,7 +8,7 @@ class PotionSeller : public Minion {
         ~PotionSeller();
         void notifyCardTurnEnd();
         void activateAbility();
-}
+};
 
 
 #endif
