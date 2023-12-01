@@ -1,6 +1,6 @@
 #include "master_sum.h"
 
-MasterSummoner::MasterSummoner() : Minion{"Apprentice Summoner", "Summon a 1/1 air elemental", 3, 2, 3, 1, 2} {};
+MasterSummoner::MasterSummoner(int player) : Minion{"Apprentice Summoner", "Summon a 1/1 air elemental", 3, player, 2, 3, 1, 2} {};
 
 MasterSummoner::~MasterSummoner() {};
 

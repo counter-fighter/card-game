@@ -1,7 +1,7 @@
 #include "minion.h"
 
 class MasterSummoner : public Minion {
-  MasterSummoner();
+  MasterSummoner(int player);
   ~MasterSummoner();
   void activateAbility(Board &brd) override;
 };

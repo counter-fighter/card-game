@@ -4,8 +4,9 @@
 
 class AuraOfPower : public Ritual {
     public:
-        AuraOfPower(string name, string desc, int cost, int player, int actCost, int charges);
+        AuraOfPower(int player);
         ~AuraOfPower();
+        void notifyCardMinionEnter(Board &brd, Card &target) override;
 };
 
 

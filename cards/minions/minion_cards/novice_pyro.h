@@ -1,7 +1,7 @@
 #include "minion.h"
 
 class NovicePyromancer : public Minion {
-  NovicePyromancer();
+  NovicePyromancer(int player);
   ~NovicePyromancer();
-  void activateAbility(Minion &target) override;
+  void activateAbility(Board &brd, Minion &target) override;
 };

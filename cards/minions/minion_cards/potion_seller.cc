@@ -1,6 +1,6 @@
 #include "potion_seller.h"
 
-PotionSeller::PotionSeller() : Minion{"Potion Seller", "At the end of your turn, all your minions gain +0/+1", 2, 1, 3, 1, 0} {};
+PotionSeller::PotionSeller(int player) : Minion{"Potion Seller", "At the end of your turn, all your minions gain +0/+1", 2, player, 1, 3, 1, 0} {};
 
 PotionSeller::~PotionSeller() {};
 

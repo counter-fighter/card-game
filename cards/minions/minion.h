@@ -39,18 +39,21 @@ class Minion : public Card {
         // void setActivationCost(int n);
         void attachEnchant (unique_ptr<Enchantment> ench);
 
+        void setAttack(int n);
+        void setDefence(int n);
+        void setActReset(int n);
+        void setActCost(int n);
+
         int getAttack();
         int getDefence();
-        void minusDefence(int n);
         int getActivationCost();
         int getActionReset();
-        CardType getCardType(); //Card type already determined
+        CardType getCardType() override; //Card type already determined
 
         // Minions dont have a deafault activity, only override with enchantment or if card has default ability.
         virtual void activateAbility(Board &brd);
         virtual void activateAbility(Board &brd, Minion &target);
 
-        friend class Enchantment;
 };
 
 #endif

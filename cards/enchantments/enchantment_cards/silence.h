@@ -1,8 +1,8 @@
 #include "enchantment.h"
 
 class Silence : public Enchantment {
-    Silence();
+    Silence(int player);
     virtual ~Silence();
 
-    void attach(Minion *target) override;
+    void attach(Minion &target) override;
 };

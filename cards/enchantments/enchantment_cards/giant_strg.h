@@ -1,8 +1,8 @@
 #include "enchantment.h"
 
 class GiantStrength : public Enchantment {
-    GiantStrength();
+    GiantStrength(int player);
     virtual ~GiantStrength();
 
-    void attach(Minion *target) override;
+    void attach(Minion &target) override;
 };

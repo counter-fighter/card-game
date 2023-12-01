@@ -1,8 +1,8 @@
 #include "enchantment.h"
 
 class Haste : public Enchantment {
-    Haste();
+    Haste(int player);
     virtual ~Haste();
 
-    void attach(Minion *target) override;
+    void attach(Minion &target) override;
 };

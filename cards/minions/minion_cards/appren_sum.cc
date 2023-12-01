@@ -1,6 +1,6 @@
 #include "appren_sum.h"
 
-ApprenticeSummoner::ApprenticeSummoner() : Minion{"Apprentice Summoner", "Summon a 1/1 air elemental", 1, 1, 1, 1, 1} {};
+ApprenticeSummoner::ApprenticeSummoner(int player) : Minion{"Apprentice Summoner", "Summon a 1/1 air elemental", 1, player, 1, 1, 1, 1} {};
 
 ApprenticeSummoner::~ApprenticeSummoner() {};
 

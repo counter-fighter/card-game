@@ -5,7 +5,7 @@ Minion::Minion(string name, string desc, int cost, int player, int atck, int def
 Minion::~Minion() {};
 
 void Minion::attack(Minion &target) {
-  target.minusDefence(this->atck);
+  target.setDefence(target.getDefence() - this->atck);
   this->def = this->def - target.getAttack();
   actCount--;
 };
@@ -14,6 +14,14 @@ void Minion::attack(Player &target) {
 // Awaiting player implementation
 };
 
+void Minion::setAttack(int n) { atck = n; };
+
+void Minion::setDefence(int n) { def = n; };
+
+void Minion::setActReset(int n) { actReset = n; };
+
+void Minion::setActCost(int n) { actCost = n; };
+
 int Minion::getActionCount() {
   return actCount;
 };
@@ -21,11 +29,6 @@ int Minion::getActionCount() {
 int Minion::getAttack() {
   return atck;
 };
-
-void Minion::minusDefence(int n) {
-  this->def -= n;
-};
-
 
 int Minion::getDefence() {
   return def;
@@ -55,8 +58,7 @@ void Minion::notifyCardTurnStart(Board &brd) {
 
 
 void Minion::attachEnchant (unique_ptr<Enchantment> ench) {
-  enchants.emplace_back(ench);
-  Enchantment* temp = ench.get();
-  temp->attach(this);
+  ench->attach(*this);
+  enchants.emplace_back(move(ench));
 
 };

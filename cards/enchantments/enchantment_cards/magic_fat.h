@@ -1,8 +1,8 @@
 #include "enchantment.h"
 
 class MagicFatigue : public Enchantment {
-    MagicFatigue();
+    MagicFatigue(int player);
     virtual ~MagicFatigue();
 
-    void attach(Minion *target) override;
+    void attach(Minion &target) override;
 };

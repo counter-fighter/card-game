@@ -1,8 +1,8 @@
 #include "enchantment.h"
 
 class Enrage : public Enchantment {
-    Enrage();
+    Enrage(int player);
     virtual ~Enrage();
 
-    void attach(Minion *target) override;
+    void attach(Minion &target) override;
 };

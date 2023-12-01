@@ -4,8 +4,9 @@
 
 class DarkRitual : public Ritual {
     public:
-        DarkRitual(string name, string desc, int cost, int player, int actCost, int charges);
+        DarkRitual(int player);
         ~DarkRitual();
+        void notifyCardTurnStart(Board &brd) override;
 };
 
 

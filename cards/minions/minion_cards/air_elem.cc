@@ -1,5 +1,5 @@
 #include "air_elem.h"
 
-AirElement::AirElement() : Minion{"Air Element", "", 0, 1, 1, 1, 0} {};
+AirElement::AirElement(int player) : Minion{"Air Element", "", 0, player, 1, 1, 1, 0} {};
 
 AirElement::~AirElement() {};

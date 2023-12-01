@@ -4,8 +4,9 @@
 
 class StandStill : public Ritual {
     public:
-        StandStill(string name, string desc, int cost, int player, int actCost, int charges);
+        StandStill(int player);
         ~StandStill();
+        void notifyCardMinionEnter(Board &brd, Card &target) override;
 };
 
 

@@ -1,7 +1,7 @@
 #include "minion.h"
 
 class PotionSeller : public Minion {
-  PotionSeller();
+  PotionSeller(int player);
   ~PotionSeller();
   void notifyCardTurnEnd(Board &brd) override;
 };
