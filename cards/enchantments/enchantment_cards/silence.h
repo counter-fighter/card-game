@@ -5,4 +5,6 @@ class Silence : public Enchantment {
     virtual ~Silence();
 
     void attach(Minion &target) override;
+    void detach(Minion &target) override;
+
 };

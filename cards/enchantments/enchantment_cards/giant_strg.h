@@ -5,4 +5,5 @@ class GiantStrength : public Enchantment {
     virtual ~GiantStrength();
 
     void attach(Minion &target) override;
+    void detach(Minion &target) override;
 };

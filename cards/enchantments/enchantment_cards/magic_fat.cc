@@ -6,3 +6,7 @@ MagicFatigue::~MagicFatigue() {};
 void MagicFatigue::attach(Minion &target) {
   target.setActCost(target.getActivationCost() + 2);
 };
+
+void MagicFatigue::detach(Minion &target) {
+  target.setActCost(target.getActivationCost() - 2);
+};

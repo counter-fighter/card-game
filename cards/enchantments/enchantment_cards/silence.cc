@@ -4,5 +4,15 @@ Silence::Silence(int player) : Enchantment{"Silence", "Enchanted minion cannot u
 Silence::~Silence() {};
 
 void Silence::attach(Minion &target) {
-  target.setActReset(-1);
+  int actReset = target.getActionReset();
+  if (actReset > 0) {
+    target.setActReset(-actReset);
+  }
+};
+
+void Silence::detach(Minion &target) {
+  int actReset = target.getActionReset();
+  if (actReset < 0) {
+    target.setActReset(-actReset);
+  }
 };

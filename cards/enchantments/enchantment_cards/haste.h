@@ -5,4 +5,5 @@ class Haste : public Enchantment {
     virtual ~Haste();
 
     void attach(Minion &target) override;
+    void detach(Minion &target) override;
 };

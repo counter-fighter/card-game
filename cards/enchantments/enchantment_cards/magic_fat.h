@@ -5,4 +5,6 @@ class MagicFatigue : public Enchantment {
     virtual ~MagicFatigue();
 
     void attach(Minion &target) override;
+    void detach(Minion &target) override;
+
 };

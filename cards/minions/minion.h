@@ -8,7 +8,7 @@ class Player; // Replace with Player class when ready
 
 class Minion : public Card {
     protected :
-        int atck, def, actCount, actReset, actCost;
+        int atck, atckReset, def, defReset, actCount, actReset, actCost;
         CardType ct = CardType::Minion;
         vector <unique_ptr<Enchantment>> enchants;
 
@@ -30,6 +30,7 @@ class Minion : public Card {
         //void inspect();
 
         int getActionCount();
+        int setActionCount(int n);
         
         // We shouldn't have a setter function for attack and actCost, otherwise that just 
         //   breaks the encapsulation. I was thinking of making enchantment
@@ -38,15 +39,20 @@ class Minion : public Card {
         // void setAttack(int n);
         // void setActivationCost(int n);
         void attachEnchant (unique_ptr<Enchantment> ench);
-        void dettachEnchant ();
+        void detachEnchant ();
+        void detachAllEnchant ();
 
         void setAttack(int n);
         void setDefence(int n);
+        void setAttackReset(int n);
+        void setDefenceReset(int n);
         void setActReset(int n);
         void setActCost(int n);
 
         int getAttack();
         int getDefence();
+        int getAttackReset();
+        int getDefenceReset();
         int getDefenceReset();
         int getActivationCost();
         int getActionReset();
