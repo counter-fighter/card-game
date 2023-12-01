@@ -16,16 +16,11 @@ class Card {
         Card(string name, string desc, int cost);
         ~Card(); // Not virtual
         virtual CardType getCardType() = 0;
-        virtual void notifyCardTurnStart() = 0;
-        virtual void notifyCardTurnEnd() = 0;
-        // Decide on pointer
-        virtual void notifyCardMinionEnter() = 0;
-        // Decide on pointer
-        virtual void notifyCardMinionLeave() = 0;
+        virtual void notifyCardTurnStart(Board &brd);
+        virtual void notifyCardTurnEnd(Board &brd);
+        virtual void notifyCardMinionEnter(Board &brd, Card &target);
+        virtual void notifyCardMinionLeave(Board &brd, Card &target);
 
-        // Play should be handled by Board
-        //virtual void play(Board &board) = 0;
-        //virtual void play(Board &board, Card &target) = 0;
         int getCost();
         int getPlayer();
         string getName();
