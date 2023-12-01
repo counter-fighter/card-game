@@ -4,10 +4,9 @@
 
 class Unsummon : public Spell {
     public:
-        Unsummon(string name, string desc, int cost, int player);
+        Unsummon(int player);
         virtual ~Unsummon();
-
-        bool useSpell(Minion* target) const;
+        bool useSpell(Board &brd, Card &target) override;
    
 };
 

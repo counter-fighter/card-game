@@ -4,11 +4,9 @@
 
 class Disenchant : public Spell {
     public:
-        Disenchant(string name, string desc, int cost, int player);
+        Disenchant(int player);
         virtual ~Disenchant();
-
-        bool useSpell(Minion* target) const;
-   
+        bool useSpell(Board &brd, Card &target) override;
 };
 
 

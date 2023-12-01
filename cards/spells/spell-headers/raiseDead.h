@@ -4,10 +4,9 @@
 
 class RaiseDead : public Spell {
     public:
-        RaiseDead(string name, string desc, int cost, int player);
+        RaiseDead(int player);
         virtual ~RaiseDead();
-
-        bool useSpell(Minion* target) const;
+        bool useSpell(Board &brd, Card &target) override;
    
 };
 

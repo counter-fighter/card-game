@@ -4,8 +4,9 @@
 
 class Blizzard : public Spell {
     public:
-        Blizzard(string name, string desc, int cost, int player);
+        Blizzard(int player);
         virtual ~Blizzard();   
+        bool useSpell(Board &brd, Card &target) override;
 };
 
 

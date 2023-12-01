@@ -1,13 +1,13 @@
 #ifndef __RECHARGE_H__
 #define __RECHARGE_H__
 #include "spell.h"
+#include "ritual.h"
 
 class Recharge : public Spell {
     public:
-        Recharge(string name, string desc, int cost, int player);
+        Recharge(int player);
         virtual ~Recharge();
-
-        bool useSpell(Ritual* target) const;
+        bool useSpell(Board &brd, Card &target) override;
    
 };
 

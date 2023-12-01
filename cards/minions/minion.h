@@ -8,7 +8,7 @@ class Player; // Replace with Player class when ready
 
 class Minion : public Card {
     protected :
-        int atck, def, actCount, actReset, actCost;
+        int atck, currDef, defReset, actCount, actReset, actCost;
         CardType ct = CardType::Minion;
         vector <unique_ptr<Enchantment>> enchants;
 
@@ -38,6 +38,7 @@ class Minion : public Card {
         // void setAttack(int n);
         // void setActivationCost(int n);
         void attachEnchant (unique_ptr<Enchantment> ench);
+        void dettachEnchant ();
 
         void setAttack(int n);
         void setDefence(int n);
@@ -46,6 +47,7 @@ class Minion : public Card {
 
         int getAttack();
         int getDefence();
+        int getDefenceReset();
         int getActivationCost();
         int getActionReset();
         CardType getCardType() override; //Card type already determined

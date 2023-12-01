@@ -4,9 +4,9 @@
 
 class Banish : public Spell {
     public:
-        Banish(string name, string desc, int cost, int player);
+        Banish(int player);
         virtual ~Banish();
-        bool useSpell(Card &target) override;
+        bool useSpell(Board &brd, Card &target) override;
    
 };
 

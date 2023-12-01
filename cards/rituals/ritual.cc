@@ -5,3 +5,7 @@ Ritual::Ritual(string name, string desc, int cost, int player, int actCost, int 
 Ritual::~Ritual() {};
 
 CardType Ritual::getCardType() { return ct; };
+
+int Ritual::getCharges() { return charges; };
+
+void Ritual::setCharges(int n) { charges = n; };
