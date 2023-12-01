@@ -11,6 +11,7 @@ enum class CardType { Minion, Spell, Ritual, Enchantment };
 class Card {
     string name, desc;
     int cost, player;
+    bool returnToHand = false;
 
     public:
         Card(string name, string desc, int cost, int player);
@@ -25,6 +26,8 @@ class Card {
         int getPlayer();
         string getName();
         string getDesc();
+        bool getReturnToHand();
+        bool setReturnToHand(bool tf);
 
         friend ostream &operator<<(ostream &out, Card &c);
 };
