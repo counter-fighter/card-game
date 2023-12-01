@@ -26,8 +26,8 @@ class Board {
     void notifyMinionEnter();
     void notifyMinionLeave();
     Player getPlayer(int playerID);
-    vector<vector<unique_ptr<Card>>> getBoard();
-    vector<unique_ptr<Card>> getGraveyard(int playerID);
+    vector<vector<Card&>> getBoard();
+    vector<unique_ptr<Card&>> getGraveyard(int playerID);
 };
 
 #endif

@@ -8,12 +8,14 @@
 using namespace std;
 
 class Player {
-    int id, magic;
+    int id, magic, health;
     string name;
     vector<unique_ptr<Card>> hand;
+    vector<unique_ptr<Card>> deck;
+    // should graveyard and spells removed also be here? Or on board instead?
 
     public:
-        Player(int id, string name); // magic is initialized to 0 and hand is initially empty.
+        Player(int id, string name, istringstream &iss); // magic is initialized to 0 and hand is initially empty.
         ~Player();
         void startTurn();
         void endTurn();
