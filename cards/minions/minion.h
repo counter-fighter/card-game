@@ -12,7 +12,7 @@ class Minion : public Card {
         CardType ct = CardType::Minion;
         vector <unique_ptr<Enchantment>> enchants;
 
-        Minion(string name, string desc, int cost, int atck, int def, int actReset, int actCost);
+        Minion(string name, string desc, int cost, int player, int atck, int def, int actReset, int actCost);
 
 
         // I'm thinking play should be handled between player and board

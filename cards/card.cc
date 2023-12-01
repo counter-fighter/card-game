@@ -1,6 +1,6 @@
 #include "card.h"
 
-Card::Card(string name, string desc, int cost): name{name}, desc{desc}, cost{cost} {}
+Card::Card(string name, string desc, int cost, int player): name{name}, desc{desc}, cost{cost}, player{player} {}
 Card::~Card() {}; // No heap alloc
 
 void Card::notifyCardTurnStart(Board &brd) {};
