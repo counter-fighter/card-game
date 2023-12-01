@@ -14,6 +14,7 @@ class Player {
 
     public:
         Player(int id, string name); // magic is initialized to 0 and hand is initially empty.
+        ~Player();
         void startTurn();
         void endTurn();
         void drawCard();
