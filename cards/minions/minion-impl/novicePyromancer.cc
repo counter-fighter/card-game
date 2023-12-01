@@ -1,0 +1,4 @@
+#include "novicePyromancer.h"
+
+
+

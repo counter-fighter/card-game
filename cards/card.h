@@ -13,8 +13,8 @@ class Card {
     int cost, player;
 
     public:
-        Card(string name, string desc, int cost);
-        ~Card(); // Not virtual
+        Card(string name, string desc, int cost, int player);
+        virtual ~Card() = 0; // Not virtual
         virtual CardType getCardType() = 0;
         virtual void notifyCardTurnStart(Board &brd);
         virtual void notifyCardTurnEnd(Board &brd);

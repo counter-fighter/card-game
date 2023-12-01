@@ -1,5 +1,5 @@
-#ifndef __PLAYER_H__
-#define __PLAYER_H__
+#ifndef __BOARD_H__
+#define __BOARD_H__
 #include <string>
 #include <vector>
 
