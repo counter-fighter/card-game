@@ -6,4 +6,5 @@ NovicePyromancer::~NovicePyromancer() {};
 
 void NovicePyromancer::activateAbility(Board &brd, Minion &target) {
   target.setDefence(target.getAttack() - 1);
+  this->actCount--;
 };

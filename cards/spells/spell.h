@@ -3,12 +3,13 @@
 #include "card.h"
 
 class Spell : public Card {
+    CardType ct = CardType::Spell;
+
     public:
         Spell(string name, string desc, int cost, int player);
         virtual ~Spell();
-        virtual bool useSpell(Minion* target) const;
-        virtual bool useSpell(Ritual* target) const;
-        CardType getCardType();
+        virtual bool useSpell(Card &target) const = 0;
+        CardType getCardType() override;
 };
 
 
