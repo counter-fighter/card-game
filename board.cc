@@ -4,7 +4,9 @@ Board::Board() {}
 
 Board::~Board() {}
 
-void Board::damage(int n) {}
+void Board::damageAll(int n) {}
+
+void Board::healAll(int n) {}
 
 void Board::playACard(unique_ptr<Card> card) {}
 

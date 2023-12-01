@@ -16,7 +16,8 @@ class Board {
   public:
     Board();
     ~Board();
-    void damage(int n);
+    void damageAll(int n);
+    void healAll(int n);
     void playACard(unique_ptr<Card> card);
     void summon(unique_ptr<Card> card, int n);
     void attach(unique_ptr<Card> card);

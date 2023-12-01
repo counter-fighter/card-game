@@ -10,6 +10,7 @@ using namespace std;
 class Player {
     int id, magic, health;
     string name;
+    vector<string> deck;
     vector<unique_ptr<Card>> hand;
     vector<unique_ptr<Card>> deck;
     // should graveyard and spells removed also be here? Or on board instead?
@@ -24,6 +25,8 @@ class Player {
         void setMagic(const int n);
         int getMagic() const;
         int getID() const;
+        void setName(const string name);
+        void setDeck(const vector<string> deck);
         vector<unique_ptr<Card>> getHand() const;
 };
 
