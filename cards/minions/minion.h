@@ -8,7 +8,7 @@ class Player; // Replace with Player class when ready
 
 class Minion : public Card {
     protected :
-        int atck, currDef, defReset, actCount, actReset, actCost;
+        int atck, def, actCount, actReset, actCost;
         CardType ct = CardType::Minion;
         vector <unique_ptr<Enchantment>> enchants;
 

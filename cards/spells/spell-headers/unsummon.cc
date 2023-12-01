@@ -8,7 +8,7 @@ bool Unsummon::useSpell(Board &brd, Card &target) {
   if (target.getCardType() == CardType::Minion) {
     Minion &m = dynamic_cast<Minion&>(target);
 
-    m.setDefence(-1000000);
+    m.setDefence(-1000000 - m.getDefence());
     return true;
   }
   return false;
