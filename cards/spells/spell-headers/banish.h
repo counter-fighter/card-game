@@ -6,9 +6,7 @@ class Banish : public Spell {
     public:
         Banish(string name, string desc, int cost, int player);
         virtual ~Banish();
-
-        bool useSpell(Minion* target) const;
-        bool useSpell(Ritual* target) const;
+        bool useSpell(Card &target) override;
    
 };
 

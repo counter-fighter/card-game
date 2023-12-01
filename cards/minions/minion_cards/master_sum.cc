@@ -6,4 +6,5 @@ MasterSummoner::~MasterSummoner() {};
 
 void MasterSummoner::activateAbility(Board &brd) {
   // brd.summon(3, "Air Element")
+  this->actCount -= 2;
 };

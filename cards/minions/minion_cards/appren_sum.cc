@@ -6,4 +6,5 @@ ApprenticeSummoner::~ApprenticeSummoner() {};
 
 void ApprenticeSummoner::activateAbility(Board &brd) {
   // brd.summon(1, "Air Element")
+  this->actCount--;
 };
