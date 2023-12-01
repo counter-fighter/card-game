@@ -14,6 +14,7 @@ class Printer {
      
     public:
         Printer();
+        ~Printer();
         void printBoard(vector<vector<unique_ptr<Card>>> board);
         void printHand(vector<unique_ptr<Card>> hand);
         void printInspect(unique_ptr<Minion> minion);
