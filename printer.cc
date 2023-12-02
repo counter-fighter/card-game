@@ -10,7 +10,7 @@ Printer::~Printer() {}
 void Printer::printBoard(const Board& board) {
     vector<vector<Minion&>> minions = board.getMinions();
     vector<vector<Ritual&>> rituals = board.getRituals();
-    vector<Player> players{board.getPlayer(1), board.getPlayer(2)}; // must be 1 or 2
+    vector<Player> players{board.getPlayer(1), board.getPlayer(2)}; // playerID must be 1 or 2
     vector<vector<Minion&>> graveyards; // NEED GETGRAVEYARD
 
     printUpperBoarder();
@@ -85,9 +85,9 @@ void Printer::printCardsWithBoarder() {
 
 void Printer::printCards() {
     int cardsPrinted = 0;
-    while (cardsPrinted < cards.size()) { // Prints 5 cards per row.
+    while (cardsPrinted < cards.size()) { 
         for (int line = 0; line < cardHeight; line++) {
-            for (int i = cardsPrinted; i < cardsPrinted + maxCardPerRow && i < cards.size(); i++) {
+            for (int i = cardsPrinted; i < cardsPrinted + maxCardPerRow && i < cards.size(); i++) { // Prints 5 cards per row.
                 cout << cards[i][line];
             }
             cout << endl;
@@ -106,7 +106,7 @@ void Printer::emplaceBackCard(Card& card) {
 }
 
 void Printer::emplaceBackPlayerCard(const Player& player) {
-    //card = display_player_card(int player_num, std::string name, int life, int mana);
+    card = display_player_card(int player_num, std::string name, int life, int mana); // NEED GET METHODS FROM PLAYER CLASS
     cards.emplace_back(card);
 }
 
@@ -126,7 +126,7 @@ void Printer::minionToCardTemplateT(const Minion& minion) {
 }
 
 void Printer::ritualToCardTemplateT(const Ritual& ritual) {
-    card = display_ritual(ritual.getName(), ritual.getCost(), ritual.getActivationCost(), 
+    card = display_ritual(ritual.getName(), ritual.getCost(), ritual.getActivationCost(), // NEED GETACTIVATIONCOST
                           ritual.getDesc(), ritual.getCharges());
 }
 
@@ -138,7 +138,7 @@ void Printer::enchantmentToCardTemplateT(const Enchantment& enchantment) {
     if (enchantment.getDesc() == "") { // Enchantment modifying attack/defense.
         card = display_enchantment_attack_defence(enchantment.getName(), enchantment.getCost(),
                                                   enchantment.getDesc(), enchantment.getAttack(),
-                                                  enchantment.getDefense());
+                                                  enchantment.getDefence());
     } else { // Enchantment modifying ability.
         card = display_enchantment(enchantment.getName(), enchantment.getCost(), 
                                    enchantment.getDesc());
