@@ -13,6 +13,7 @@ class Ritual : public Card {
         CardType getCardType() override;
         int getCharges();
         void setCharges(int n);
+        int getActionCost();
 };
 
 

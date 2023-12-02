@@ -30,7 +30,7 @@ int Minion::getActionCount() {
   return actCount;
 };
 
-int Minion::setActionCount(int n) {
+void Minion::setActionCount(int n) {
   actCount = n;
 };
 

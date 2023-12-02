@@ -9,3 +9,5 @@ CardType Ritual::getCardType() { return ct; };
 int Ritual::getCharges() { return charges; };
 
 void Ritual::setCharges(int n) { charges = n; };
+
+int Ritual::getActionCost() { return actCost; };

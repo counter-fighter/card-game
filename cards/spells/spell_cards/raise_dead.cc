@@ -6,7 +6,7 @@ RaiseDead::~RaiseDead() {};
 
 bool RaiseDead::useSpell(Board &brd, Card &target) {
   //brd.raiseDead();
-  //return true;
+  return true;
 
 };
 

@@ -1,8 +1,8 @@
 #include "minion.h"
 
-class FireElement : public Minion {
+class FireElemental : public Minion {
   public :
-    FireElement(int player);
-    ~FireElement();
+    FireElemental(int player);
+    ~FireElemental();
     void notifyCardMinionLeave(Board &brd, Card &target) override;
 };

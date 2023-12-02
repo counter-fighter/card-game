@@ -4,6 +4,7 @@
 #include "enchantment.h"
 #include "card.h"
 class Player; // Replace with Player class when ready
+class Enchantment; // Replace with Player class when ready
 
 
 class Minion : public Card {
@@ -30,7 +31,7 @@ class Minion : public Card {
         //void inspect();
 
         int getActionCount();
-        int setActionCount(int n);
+        void setActionCount(int n);
         
         // We shouldn't have a setter function for attack and actCost, otherwise that just 
         //   breaks the encapsulation. I was thinking of making enchantment

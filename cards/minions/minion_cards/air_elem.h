@@ -1,7 +1,7 @@
 #include "minion.h"
 
-class AirElement : public Minion {
+class AirElemental : public Minion {
   public :
-    AirElement(int player);
-    ~AirElement();
+    AirElemental(int player);
+    ~AirElemental();
 };
