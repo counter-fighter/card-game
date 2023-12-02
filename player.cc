@@ -66,3 +66,5 @@ string Player::getPlayerName() { return name; };
 int Player::getPlayerHealth() { return health; };
 
 int Player::getPlayerMagic() { return magic; };
+
+void Player::setPlayerHealth(int n) { health = n; };

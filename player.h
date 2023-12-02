@@ -63,6 +63,7 @@ class Player {
         string getPlayerName();
         int getPlayerHealth();
         int getPlayerMagic();
+        void setPlayerHealth(int n);
 };
 
 #endif

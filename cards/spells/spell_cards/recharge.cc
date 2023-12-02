@@ -6,7 +6,7 @@ Recharge::~Recharge() {};
 
 void Recharge::useSpell(Board &brd, Card &target) {
   if (target.getCardType() == CardType::Ritual) {
-    Ritual &r = dynamic_cast<Ritual&>(target);
+    Ritual &r = static_cast<Ritual&>(target);
     
     if (r.getPlayer() == this->getPlayer()) {
       r.setCharges(r.getCharges() + 3);

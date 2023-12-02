@@ -6,11 +6,11 @@ Banish::~Banish() {};
 
 void Banish::useSpell(Board &brd, Card &target) {
   if (target.getCardType() == CardType::Minion) {
-    Minion &m = dynamic_cast<Minion&>(target);
+    Minion &m = static_cast<Minion&>(target);
 
     m.setDefence(-1);
   } else {
-    // brd.removeRitual();
+    // brd.removeRitual(target.getPlayer());
   }
 
 };

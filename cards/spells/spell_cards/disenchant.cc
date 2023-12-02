@@ -6,7 +6,7 @@ Disenchant::~Disenchant() {};
 
 void Disenchant::useSpell(Board &brd, Card &target) {
   if (target.getCardType() == CardType::Minion) {
-    Minion &m = dynamic_cast<Minion&>(target);
+    Minion &m = static_cast<Minion&>(target);
     m.detachEnchant();
   }
 };
