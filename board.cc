@@ -4,6 +4,11 @@ Board::Board(): minions{}, rituals{}, players{} {}
 
 Board::~Board() {}
 
+void Board::initPlayers(string p1Name, string p2Name, ifstream ifs1, ifstream ifs2) {
+    players.emplace_back(make_unique<Player>(1, p1Name, ifs1));
+    players.emplace_back(make_unique<Player>(2, p2Name, ifs2)); 
+}
+
 void Board::damageAll(int n) {
     const int p1 = 0, p2 = 1;
     int minionSizeP1 = minions[p1].size(), minionSizeP2 = minions[p2].size();

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <fstream>
 #include "player.h"
 #include "minion.h"
 #include "ritual.h"
@@ -18,6 +19,7 @@ class Board {
   public:
     Board();
     ~Board();
+    void initPlayers(string p1Name, string p2Name, ifstream ifs1, ifstream ifs2);
     void damageAll(int n);
     void healAll(int n);
     void playACard(unique_ptr<Card> card, int playerID);
@@ -32,6 +34,7 @@ class Board {
     vector<vector<Minion&>> getMinions();
     vector<vector<Ritual&>> getRituals();
     vector<Card&> getGraveyard(int playerID);
+    void receiveCommand();
 };
 
 #endif
