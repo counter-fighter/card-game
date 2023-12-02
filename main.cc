@@ -10,16 +10,15 @@
 using namespace std;
 
 int main (int argc, char *argv []) {
-    const string initArg = "-init", const testingArg = "-testing", const graphicsArg = "-graphics";
-    const deck1Arg = "-deck1", const deck2Arg = "-deck2";
+    const string initArg = "-init", testingArg = "-testing", graphicsArg = "-graphics";
+    const string deck1Arg = "-deck1", deck2Arg = "-deck2";
     string initFile, cmd, cardName, deckfile1, deckfile2;
-    istringstream lineCmd;
     bool testing = false, graphics = false;
     // vector<unique_ptr<Card>> deck1 {};
     vector<string> validCards {};
 
     Board board;
-    Player player1, player2;
+    // Player player1, player2;
 
     for (int i = 0; i < argc; i++) {
         string arg = argv[i];
@@ -49,31 +48,34 @@ int main (int argc, char *argv []) {
     ifstream init{initFile};
     
     int i = 0;
+    string line, p1Name, p2Name;
 
     // game loop from initFile
-    while (getline(init, lineCmd)) {
-        if (i == 0) { player1.setName(cmd); i++; }
-        else if (i == 1) { player2.setName(cmd); i++; }
+    while (getline(init, line)) {
+        if (i == 0) { p1Name = cmd; i++; }
+        else if (i == 1) { p2Name = cmd; i++; }
 
+        istringstream lineCmd (line);
         lineCmd >> cmd;
 
         if (cmd == "help") {
             // print the help 
         } else if (cmd == "end") {
-            
+            // end 
         } else if (cmd == "quit") {
             break;
         } else if (cmd == "attack") {
             string ownMinion, enemyMinion;
             lineCmd >> ownMinion;
-            if (!lineCmd >> enemyMinion) {
-                // not sure if this is how to check EOF for sstream
+            if (lineCmd >> enemyMinion) {
                 // attack minion
             } else {
                 // attack player
             }
  
         } else if (cmd == "play") {
+            string cardToPlay;
+            lineCmd >> cardToPlay;
             
 
         } else if (cmd == "use") {

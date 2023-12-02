@@ -4,13 +4,14 @@
 #include <vector>
 #include <memory>
 #include "player.h"
-#include "card.h"
+#include "minion.h"
+#include "ritual.h"
 
 using namespace std;
 
 class Board {
-  vector<vector<unique_ptr<Card>>> minions;
-  vector<vector<unique_ptr<Card>>> rituals;
+  vector<vector<unique_ptr<Minion>>> minions;
+  vector<vector<unique_ptr<Ritual>>> rituals;
   vector<unique_ptr<Player>> players;
   // other fields (deck, graveyard, removedFromPlay?)
 
@@ -28,8 +29,8 @@ class Board {
     void notifyMinionEnter();
     void notifyMinionLeave();
     Player getPlayer(int playerID);
-    vector<vector<Card&>> getMinions();
-    vector<vector<Card&>> getRituals();
+    vector<vector<Minion&>> getMinions();
+    vector<vector<Ritual&>> getRituals();
     vector<Card&> getGraveyard(int playerID);
 };
 

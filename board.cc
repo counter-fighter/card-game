@@ -1,28 +1,30 @@
 #include "board.h"
 
-Board::Board(): board{}, players{} {}
+Board::Board(): minions{}, rituals{}, players{} {}
 
 Board::~Board() {}
 
 void Board::damageAll(int n) {
-    const int p1 = 0, const p2 = 1, minionSizeP1 = board[p1].size(), minionSizeP2 = board[p2].size();
+    const int p1 = 0, p2 = 1;
+    int minionSizeP1 = minions[p1].size(), minionSizeP2 = minions[p2].size();
     for (int i = 0; i < minionSizeP1; i++) {
-        board[p1][i].setDefence(board[p1][i].getDefence() - n);
+        minions[p1][i]->setDefence(minions[p1][i]->getDefence() - n);
     }
 
-    for (int i = 0l i < minionSizeP2; i++) {
-        board[p2][i].setDefence(board[p2][i].getDefence() - n);
+    for (int i = 0; i < minionSizeP2; i++) {
+        minions[p2][i]->setDefence(minions[p2][i]->getDefence() - n);
     }
 }
 
 void Board::healAll(int n) {
-    const int p1 = 0, const p2 = 1, minionSizeP1 = board[p1].size(), minionSizeP2 = board[p2].size();
+    const int p1 = 0, p2 = 1;
+    int minionSizeP1 = minions[p1].size(), minionSizeP2 = minions[p2].size();
     for (int i = 0; i < minionSizeP1; i++) {
-        board[p1][i].setDefence(board[p1][i].getDefence() + n);
+        minions[p1][i]->setDefence(minions[p1][i]->getDefence() + n);
     }
 
     for (int i = 0; i < minionSizeP2; i++) {
-        board[p2][i].setDefence(board[p2][i].getDefence() + n);
+        minions[p2][i]->setDefence(minions[p2][i]->getDefence() + n);
     }
 }
 
@@ -45,17 +47,17 @@ void Board::notifyMinionEnter() {}
 void Board::notifyMinionLeave() {}
 
 Player Board::getPlayer(int playerID) {
-    return players[playerID - 1];
+    return *players[playerID - 1];
 }
 
-vector<vector<Card&>> Board::getMinions() {
+vector<vector<Minion&>> Board::getMinions() {
     return minions;
 }
 
-vector<vector<Card&>> Board::getRituals() {
+vector<vector<Ritual&>> Board::getRituals() {
     return rituals;
 }
 
-vector<unique_ptr<Card&>> Board::getGraveyard(int playerID) {
-    return players[playerID - 1].getGraveyard();
+vector<Card&> Board::getGraveyard(int playerID) {
+    return players[playerID - 1]->getGraveyard();
 }
