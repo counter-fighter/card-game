@@ -28,19 +28,35 @@ unique_ptr<Card> allocCard (string name, int id) {
 
 Player::~Player() {};
 
-void f(Card &c) {
-  cout <<  c.getName() << endl;
-}
+// void f(Card &c) {
+//   cout <<  c.getName() << endl;
+// }
 
 Player::Player(string name, int id, ifstream &ifs): 
 name{name}, id{id}, magic{MAGIC_RESET}, health{HEALTH_RESET}, deck{}, hand{}, graveyard{} {
   string line;
   while (getline(ifs, line)) {
-    cout << line << endl;
+    //cout << line << endl;
     deck.emplace_back(move(allocCard(line, id)));
     //shared_ptr<Card> c {new GiantStrength(1)};
-    f(*deck.back().get());
+    //f(*deck.back().get());
   }
 };
 
+vector<Minion&> Player::getGraveyard() {
+  vector<Minion&> ret;
 
+  for (auto it = graveyard.begin(); it != graveyard.end(); it++) {
+    ret.emplace_back(*(*it).get());
+  }
+
+  return ret;
+};
+
+int Player::getPlayerId() { return id; };
+
+string Player::getPlayerName() { return name; };
+
+int Player::getPlayerHealth() { return health; };
+
+int Player::getPlayerMagic() { return magic; };

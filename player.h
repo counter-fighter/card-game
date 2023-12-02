@@ -33,21 +33,19 @@
 using namespace std;
 
 const int MAGIC_RESET = 3;
-const int HEALTH_RESET = 30;
+const int HEALTH_RESET = 20;
 
 class Player {
     string name;
     int id, magic, health;
     vector<unique_ptr<Card>> deck;
     vector<unique_ptr<Card>> hand;
-    vector<unique_ptr<Card>> graveyard;
+    vector<unique_ptr<Minion>> graveyard;
     // should graveyard and spells removed also be here? Or on board instead?
 
     public:
         Player(string name, int id, ifstream &ifs); // magic is initialized to 0 and hand is initially empty.
         ~Player();
-        // void startTurn();
-        // void endTurn();
         // void drawCard();
         // void playCard();
         // void setMagic(const int n);
@@ -56,6 +54,11 @@ class Player {
         // void setName(const string name);
         // void setDeck(const vector<string> deck);
         // vector<unique_ptr<Card>> getHand() const;
+        vector<Minion&> getGraveyard();
+        int getPlayerId();
+        string getPlayerName();
+        int getPlayerHealth();
+        int getPlayerMagic();
 };
 
 #endif
