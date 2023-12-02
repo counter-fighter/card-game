@@ -28,18 +28,23 @@ unique_ptr<Card> allocCard (string name, int id) {
 
 Player::~Player() {};
 
-// void f(Card &c) {
-//   cout <<  c.getName() << endl;
-// }
 
-Player::Player(string name, int id, ifstream &ifs): 
+Player::Player(string name, int id, string filename, bool shuffle): 
 name{name}, id{id}, magic{MAGIC_RESET}, health{HEALTH_RESET}, deck{}, hand{}, graveyard{} {
+  ifstream ifs(filename);
   string line;
   while (getline(ifs, line)) {
-    //cout << line << endl;
     deck.emplace_back(move(allocCard(line, id)));
-    //shared_ptr<Card> c {new GiantStrength(1)};
-    //f(*deck.back().get());
+  }
+
+  if (shuffle) {
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+
+    std::default_random_engine rng{seed};
+
+    for ( int i = 0; i < 1000; i++ ) {
+      std::shuffle( deck.begin(), deck.end(), rng );
+    }
   }
 };
 

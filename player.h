@@ -5,6 +5,10 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <stdexcept>
+#include <algorithm>
+#include <random>
+#include <chrono>
 #include "card.h"
 
 #include "giant_strg.h"
@@ -44,7 +48,7 @@ class Player {
     // should graveyard and spells removed also be here? Or on board instead?
 
     public:
-        Player(string name, int id, ifstream &ifs); // magic is initialized to 0 and hand is initially empty.
+        Player(string name, int id, string filename, bool shuffle); // magic is initialized to 0 and hand is initially empty.
         ~Player();
         // void drawCard();
         // void playCard();
