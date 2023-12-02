@@ -14,7 +14,6 @@ class Printer {
     const int cardHeight = 11;
     const int maxCardPerRow = 5;
     const int boarderWidthNoCorner = 165;
-    card_template_t card;
     vector<card_template_t> cards;
 
     public:
@@ -33,10 +32,10 @@ class Printer {
         void printCards();
         void emplaceBackCard(Card& card);
         void emplaceBackPlayerCard(const Player& player);
-        void minionToCardTemplateT(const Minion& minion);
-        void ritualToCardTemplateT(const Ritual& ritual);
-        void spellToCardTemplateT(const Spell& spell);
-        void enchantmentToCardTemplateT(const Enchantment& enchantment);
+        card_template_t minionToCardTemplateT(const Minion& minion);
+        card_template_t ritualToCardTemplateT(const Ritual& ritual);
+        card_template_t spellToCardTemplateT(const Spell& spell);
+        card_template_t enchantmentToCardTemplateT(const Enchantment& enchantment);
 };
 
 #endif
