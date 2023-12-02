@@ -11,7 +11,7 @@ void Printer::printBoard(const Board& board) {
     vector<vector<Minion&>> minions = board.getMinions();
     vector<vector<Ritual&>> rituals = board.getRituals();
     vector<Player> players{board.getPlayer(1), board.getPlayer(2)};
-    vector<vector<Minion&>> graveyards; // NEED GETGRAVEYARD
+    vector<vector<Minion&>> graveyards{players[0].getGraveyard(), players[1].getGraveyard()};
 
     printUpperBoarder();
     printOuterRow(rituals[0], players[0], graveyards[0]);
@@ -22,7 +22,7 @@ void Printer::printBoard(const Board& board) {
     printLowerBoarder();
 }
 
-void Printer::printOuterRow(const vector<Ritual&> ritual, const Player& player, const vector<Minion&> graveyard) {
+void Printer::printOuterRow(vector<Ritual&> ritual, const Player& player, vector<Minion&> graveyard) {
     if (ritual.empty()) cards.emplace_back(CARD_TEMPLATE_BORDER);
     else emplaceBackCard(ritual[0]);
     cards.emplace_back(CARD_TEMPLATE_EMPTY);
@@ -33,7 +33,7 @@ void Printer::printOuterRow(const vector<Ritual&> ritual, const Player& player, 
     printCardsWithBoarder();
 }
 
-void Printer::printInnerRow(const vector<Minion&> minions) {
+void Printer::printInnerRow(vector<Minion&> minions) {
     int cardEmplaced = 0;
     for (Minion& minion:minions) {
         emplaceBackCard(minion);
@@ -59,7 +59,7 @@ void Printer::printLowerBoarder() {
     cout << EXTERNAL_BORDER_CHAR_BOTTOM_RIGHT << endl;
 }
 
-void Printer::printHand(const vector<Card&> hand) {
+void Printer::printHand(vector<Card&> hand) {
     for (Card& card:hand) emplaceBackCard(card);
     printCards();
 }
@@ -67,7 +67,7 @@ void Printer::printHand(const vector<Card&> hand) {
 void Printer::printInspect(Minion& minion) {
     emplaceBackCard(minion);
     printCards();
-    vector<Enchantment&> enchantments = minion.getEnchantments();
+    vector<Enchantment&> enchantments = minion.getEnchantment();
     for (Enchantment& echantment:enchantments) emplaceBackCard(echantment);
     printCards();
 }
@@ -113,20 +113,21 @@ void Printer::emplaceBackCard(Card& card) {
 
 void Printer::emplaceBackPlayerCard(const Player& player) {
     card_template_t convertedCard;
-    convertedCard = display_player_card(int player_num, std::string name, int life, int mana); // NEED GET METHODS FROM PLAYER CLASS
+    convertedCard = display_player_card(player.getPlayerId(), player.getPlayerName(), 
+                                        player.getPlayerHealth(), player.getPlayerMagic());
     cards.emplace_back(convertedCard);
 }
 
 card_template_t Printer::minionToCardTemplateT(const Minion& minion) {
     card_template_t convertedCard;
-    if (minion.getDesc() == "") { // Minion with no ability.
+    if (minion.getDesc() == "") {
         convertedCard = display_minion_no_ability(minion.getName(), minion.getCost(), minion.getAttack(), 
                                                   minion.getDefence());
-    } else if (minion.getActivationCost() == 0) { // Minion with triggered ability.
+    } else if (minion.getActivationCost() == 0) {
         convertedCard = display_minion_triggered_ability(minion.getName(), minion.getCost(), 
                                                          minion.getAttack(), minion.getDefence(), 
                                                          minion.getDesc());
-    } else { // Minion with activated ability.
+    } else {
         convertedCard = display_minion_activated_ability(minion.getName(), minion.getCost(), 
                                                          minion.getAttack(), minion.getDefence(), 
                                                          minion.getActivationCost(), minion.getDesc());
@@ -149,11 +150,11 @@ card_template_t Printer::spellToCardTemplateT(const Spell& spell) {
 
 card_template_t Printer::enchantmentToCardTemplateT(const Enchantment& enchantment) {
     card_template_t convertedCard;
-    if (enchantment.getDesc() == "") { // Enchantment modifying attack/defense.
+    if (enchantment.getDesc() == "") {
         convertedCard = display_enchantment_attack_defence(enchantment.getName(), enchantment.getCost(),
                                                            enchantment.getDesc(), enchantment.getAttack(),
                                                            enchantment.getDefence());
-    } else { // Enchantment modifying ability.
+    } else {
         convertedCard = display_enchantment(enchantment.getName(), enchantment.getCost(), 
                                             enchantment.getDesc());
     }
