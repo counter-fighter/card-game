@@ -10,7 +10,7 @@ Printer::~Printer() {}
 void Printer::printBoard(const Board& board) {
     vector<vector<Minion&>> minions = board.getMinions();
     vector<vector<Ritual&>> rituals = board.getRituals();
-    vector<Player> players{board.getPlayer(0), board.getPlayer(1)};
+    vector<Player> players{board.getPlayer(1), board.getPlayer(2)};
     vector<vector<Minion&>> graveyards; // NEED GETGRAVEYARD
 
     printUpperBoarder();
@@ -113,8 +113,7 @@ void Printer::emplaceBackCard(Card& card) {
 
 void Printer::emplaceBackPlayerCard(const Player& player) {
     card_template_t convertedCard;
-    int playerNum; // GET PLAYERID
-    convertedCard = display_player_card(playerNum, std::string name, int life, int mana); // NEED GET METHODS FROM PLAYER CLASS
+    convertedCard = display_player_card(int player_num, std::string name, int life, int mana); // NEED GET METHODS FROM PLAYER CLASS
     cards.emplace_back(convertedCard);
 }
 
