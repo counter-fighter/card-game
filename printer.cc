@@ -120,14 +120,14 @@ void Printer::emplaceBackPlayerCard(const Player& player) {
 
 card_template_t Printer::minionToCardTemplateT(const Minion& minion) {
     card_template_t convertedCard;
-    if (minion.getDesc() == "") { // Minion with no ability.
+    if (minion.getDesc() == "") {
         convertedCard = display_minion_no_ability(minion.getName(), minion.getCost(), minion.getAttack(), 
                                                   minion.getDefence());
-    } else if (minion.getActivationCost() == 0) { // Minion with triggered ability.
+    } else if (minion.getActivationCost() == 0) {
         convertedCard = display_minion_triggered_ability(minion.getName(), minion.getCost(), 
                                                          minion.getAttack(), minion.getDefence(), 
                                                          minion.getDesc());
-    } else { // Minion with activated ability.
+    } else {
         convertedCard = display_minion_activated_ability(minion.getName(), minion.getCost(), 
                                                          minion.getAttack(), minion.getDefence(), 
                                                          minion.getActivationCost(), minion.getDesc());
@@ -150,11 +150,11 @@ card_template_t Printer::spellToCardTemplateT(const Spell& spell) {
 
 card_template_t Printer::enchantmentToCardTemplateT(const Enchantment& enchantment) {
     card_template_t convertedCard;
-    if (enchantment.getDesc() == "") { // Enchantment modifying attack/defense.
+    if (enchantment.getDesc() == "") {
         convertedCard = display_enchantment_attack_defence(enchantment.getName(), enchantment.getCost(),
                                                            enchantment.getDesc(), enchantment.getAttack(),
                                                            enchantment.getDefence());
-    } else { // Enchantment modifying ability.
+    } else {
         convertedCard = display_enchantment(enchantment.getName(), enchantment.getCost(), 
                                             enchantment.getDesc());
     }
