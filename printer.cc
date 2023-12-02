@@ -3,24 +3,31 @@
 
 using namespace std;
 
-Printer::Printer() {}
+Printer::Printer() {
+    cardHeight = 11;
+    maxCardPerRow = 5;
+    blank.assign(11, "                                 ");
+}
 
 Printer::~Printer() {}
 
 void Printer::printBoard(const Board& board) {
-
+    
 }
 
 void Printer::printHand(const vector<Card&> hand) {
-    
+    for (Card& card:hand) {
+        emplaceBackCard(card);
+    }
+    printCards();
 }
 
 void Printer::printInspect(Minion& minion) {
     emplaceBackCard(minion);
     printCards();
     vector<Enchantment&> enchantments = minion.getEnchantments();
-    for (Enchantment& i:enchantments) {
-        emplaceBackCard(i);
+    for (Enchantment& echantment:enchantments) {
+        emplaceBackCard(echantment);
     }
     printCards();
 }
@@ -64,8 +71,8 @@ void Printer::minionToCardTemplateT(const Minion& minion) {
 }
 
 void Printer::ritualToCardTemplateT(const Ritual& ritual) {
-    card = display_ritual(ritual.getName(), ritual.getCost(), ritual.getActCost(), ritual.getDesc(),
-                               ritual.getCharges());
+    card = display_ritual(ritual.getName(), ritual.getCost(), ritual.getActionCost(), 
+                          ritual.getDesc(), ritual.getCharges());
 }
 
 void Printer::spellToCardTemplateT(const Spell& spell) {
