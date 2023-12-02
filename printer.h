@@ -20,13 +20,13 @@ class Printer {
         Printer();
         ~Printer();
         void printBoard(const Board& board);
-        void printOuterRow(const vector<Ritual&> ritual, const Player& player, 
-                           const vector<Minion&> graveyard);
-        void printInnerRow(const vector<Minion&> minions);
+        void printOuterRow(vector<Ritual&> ritual, const Player& player, 
+                           vector<Minion&> graveyard);
+        void printInnerRow(vector<Minion&> minions);
         void printUpperBoarder();
         void printCentreGraphic();
         void printLowerBoarder();
-        void printHand(const vector<Card&> hand);
+        void printHand(vector<Card&> hand);
         void printInspect(Minion& minion);
         void printCardsWithBoarder();
         void printCards();

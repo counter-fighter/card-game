@@ -22,7 +22,7 @@ void Printer::printBoard(const Board& board) {
     printLowerBoarder();
 }
 
-void Printer::printOuterRow(const vector<Ritual&> ritual, const Player& player, const vector<Minion&> graveyard) {
+void Printer::printOuterRow(vector<Ritual&> ritual, const Player& player, vector<Minion&> graveyard) {
     if (ritual.empty()) cards.emplace_back(CARD_TEMPLATE_BORDER);
     else emplaceBackCard(ritual[0]);
     cards.emplace_back(CARD_TEMPLATE_EMPTY);
@@ -33,7 +33,7 @@ void Printer::printOuterRow(const vector<Ritual&> ritual, const Player& player, 
     printCardsWithBoarder();
 }
 
-void Printer::printInnerRow(const vector<Minion&> minions) {
+void Printer::printInnerRow(vector<Minion&> minions) {
     int cardEmplaced = 0;
     for (Minion& minion:minions) {
         emplaceBackCard(minion);
@@ -59,7 +59,7 @@ void Printer::printLowerBoarder() {
     cout << EXTERNAL_BORDER_CHAR_BOTTOM_RIGHT << endl;
 }
 
-void Printer::printHand(const vector<Card&> hand) {
+void Printer::printHand(vector<Card&> hand) {
     for (Card& card:hand) emplaceBackCard(card);
     printCards();
 }
