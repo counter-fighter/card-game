@@ -4,18 +4,13 @@ Banish::Banish(int player) : Spell{"Banish", "Destroy target minion or ritual", 
 
 Banish::~Banish() {};
 
-bool Banish::useSpell(Board &brd, Card &target) {
+void Banish::useSpell(Board &brd, Card &target) {
   if (target.getCardType() == CardType::Minion) {
     Minion &m = dynamic_cast<Minion&>(target);
 
     m.setDefence(-1);
-    return true;
-  }
-
-  if (target.getCardType() == CardType::Ritual) {
+  } else {
     // brd.removeRitual();
-    return true;
   }
 
-    return false;
 };

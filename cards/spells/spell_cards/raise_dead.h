@@ -6,7 +6,7 @@ class RaiseDead : public Spell {
     public:
         RaiseDead(int player);
         virtual ~RaiseDead();
-        bool useSpell(Board &brd, Card &target) override;
+        void useSpell(Board &brd) override;
    
 };
 

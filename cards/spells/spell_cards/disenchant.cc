@@ -4,14 +4,9 @@ Disenchant::Disenchant(int player) : Spell{"Disenchant", "Destroy top enchantmen
 
 Disenchant::~Disenchant() {};
 
-bool Disenchant::useSpell(Board &brd, Card &target) {
+void Disenchant::useSpell(Board &brd, Card &target) {
   if (target.getCardType() == CardType::Minion) {
     Minion &m = dynamic_cast<Minion&>(target);
-
     m.detachEnchant();
-    return true;
   }
-  
-  return false;
-
 };

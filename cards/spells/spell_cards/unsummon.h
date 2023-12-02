@@ -6,7 +6,7 @@ class Unsummon : public Spell {
     public:
         Unsummon(int player);
         virtual ~Unsummon();
-        bool useSpell(Board &brd, Card &target) override;
+        void useSpell(Board &brd, Card &target) override;
    
 };
 

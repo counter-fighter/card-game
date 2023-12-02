@@ -7,3 +7,7 @@ Spell::~Spell() {};
 CardType Spell::getCardType() { return ct; };
 
 TargetType Spell::getTargetType() { return tt; }; 
+
+void Spell::useSpell(Board &brd, Card &target) {};
+
+void Spell::useSpell(Board &brd) {};

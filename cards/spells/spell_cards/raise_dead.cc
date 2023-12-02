@@ -4,9 +4,7 @@ RaiseDead::RaiseDead(int player) : Spell{"Raise Dead", "Resurrect the top minion
 
 RaiseDead::~RaiseDead() {};
 
-bool RaiseDead::useSpell(Board &brd, Card &target) {
+void RaiseDead::useSpell(Board &brd) {
   //brd.raiseDead();
-  return true;
-
 };
 

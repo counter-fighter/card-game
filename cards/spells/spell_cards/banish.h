@@ -6,7 +6,7 @@ class Banish : public Spell {
     public:
         Banish(int player);
         virtual ~Banish();
-        bool useSpell(Board &brd, Card &target) override;
+        void useSpell(Board &brd, Card &target) override;
    
 };
 

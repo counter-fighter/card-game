@@ -10,7 +10,8 @@ class Spell : public Card {
     public:
         Spell(string name, string desc, int cost, int player, TargetType tt);
         virtual ~Spell();
-        virtual bool useSpell(Board &brd, Card &target) = 0;
+        virtual void useSpell(Board &brd, Card &target);
+        virtual void useSpell(Board &brd);
         CardType getCardType() override;
         TargetType getTargetType() override; 
 

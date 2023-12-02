@@ -6,7 +6,7 @@ class Disenchant : public Spell {
     public:
         Disenchant(int player);
         virtual ~Disenchant();
-        bool useSpell(Board &brd, Card &target) override;
+        void useSpell(Board &brd, Card &target) override;
 };
 
 

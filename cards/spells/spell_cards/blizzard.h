@@ -6,7 +6,7 @@ class Blizzard : public Spell {
     public:
         Blizzard(int player);
         virtual ~Blizzard();   
-        bool useSpell(Board &brd, Card &target) override;
+        void useSpell(Board &brd) override;
 };
 
 

@@ -4,11 +4,8 @@ Unsummon::Unsummon(int player) : Spell{"Unsummon", "Return target minion to its 
 
 Unsummon::~Unsummon() {};
 
-bool Unsummon::useSpell(Board &brd, Card &target) {
+void Unsummon::useSpell(Board &brd, Card &target) {
   if (target.getCardType() == CardType::Minion) {
     target.setReturnToHand(true);
-    return true;
   }
-  return false;
-
 };

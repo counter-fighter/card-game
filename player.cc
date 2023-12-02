@@ -46,6 +46,7 @@ name{name}, id{id}, magic{MAGIC_RESET}, health{HEALTH_RESET}, deck{}, hand{}, gr
       std::shuffle( deck.begin(), deck.end(), rng );
     }
   }
+
 };
 
 vector<Minion&> Player::getGraveyard() {
