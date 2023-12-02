@@ -1,4 +1,4 @@
-#include "auraOfPower.h"
+#include "aura_of_power.h"
 
 AuraOfPower::AuraOfPower(int player) : Ritual{"Aura of Power", "", 1, player, 4, 1} {};
 

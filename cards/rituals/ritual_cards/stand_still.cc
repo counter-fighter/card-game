@@ -1,4 +1,4 @@
-#include "standStill.h"
+#include "stand_still.h"
 
 StandStill::StandStill(int player) : Ritual{"Stand Still", "Whenever a minion enters play, destroy it", 3, player, 4, 2} {};
 
