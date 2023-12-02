@@ -9,9 +9,11 @@ using namespace std;
 enum class CardType { Minion, Spell, Ritual, Enchantment };
 
 class Card {
-    string name, desc;
-    int cost, player;
-    bool returnToHand = false;
+    protected: 
+        string name, desc;
+        int cost, player;
+        bool requireTarget = false;
+        bool returnToHand = false;
 
     public:
         Card(string name, string desc, int cost, int player);
@@ -28,6 +30,8 @@ class Card {
         string getDesc();
         bool getReturnToHand();
         void setReturnToHand(bool tf);
+        bool getRequireTarget();
+
 
         friend ostream &operator<<(ostream &out, Card &c);
 };

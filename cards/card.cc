@@ -16,6 +16,9 @@ string Card::getDesc() {return desc;};
 bool Card::getReturnToHand() { return returnToHand; };
 void Card::setReturnToHand(bool tf) { returnToHand = tf; };
 
+bool Card::getRequireTarget() { return requireTarget; };
+
+
 // most likely printing by pointer
 // Decide on pointer
 ostream &operator<<(ostream &out, Card &c) {

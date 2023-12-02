@@ -1,6 +1,6 @@
 #include "banish.h"
 
-Banish::Banish(int player) : Spell{"Banish", "Destroy target minion or ritual", 2, player} {};
+Banish::Banish(int player) : Spell{"Banish", "Destroy target minion or ritual", 2, player} { requireTarget = true; };
 
 Banish::~Banish() {};
 
