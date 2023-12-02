@@ -1,6 +1,6 @@
 #include "disenchant.h"
 
-Disenchant::Disenchant(int player) : Spell{"Disenchant", "Destroy top enchantment on target minion", 1, player} { requireTarget = true; };
+Disenchant::Disenchant(int player) : Spell{"Disenchant", "Destroy top enchantment on target minion", 1, player, TargetType::MinionTarget} {};
 
 Disenchant::~Disenchant() {};
 

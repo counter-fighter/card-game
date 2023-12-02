@@ -108,3 +108,6 @@ vector<Enchantment&> Minion::getEnchantment() {
 
   return ret;
 };
+
+TargetType Minion::getTargetType() { return tt; }; 
+

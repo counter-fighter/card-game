@@ -6,6 +6,8 @@ Ritual::~Ritual() {};
 
 CardType Ritual::getCardType() { return ct; };
 
+TargetType Ritual::getTargetType() { return tt; }; 
+
 int Ritual::getCharges() { return charges; };
 
 void Ritual::setCharges(int n) { charges = n; };

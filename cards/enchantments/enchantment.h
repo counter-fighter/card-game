@@ -6,7 +6,8 @@
 class Enchantment : public Card {
     protected:
         string atck, def;
-        CardType ct = CardType::Enchantment;
+        const CardType ct = CardType::Enchantment;
+        const TargetType tt = TargetType::MinionTarget;
 
     public :
         Enchantment(string name, string desc, int cost, int player, string atck = "", string def = "");
@@ -14,6 +15,7 @@ class Enchantment : public Card {
         virtual void attach(Minion &target) = 0;
         virtual void detach(Minion &target) = 0;
         CardType getCardType() override; 
+        TargetType getTargetType() override; 
         string getAttack();
         string getDefence();
 };

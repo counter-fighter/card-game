@@ -10,7 +10,8 @@ class Enchantment; // Replace with Player class when ready
 class Minion : public Card {
     protected :
         int atck, atckReset, def, defReset, actCount, actReset, actCost;
-        CardType ct = CardType::Minion;
+        const CardType ct = CardType::Minion;
+        const TargetType tt = TargetType::NoTarget;
         vector <unique_ptr<Enchantment>> enchants;
 
 
@@ -61,6 +62,7 @@ class Minion : public Card {
         vector<Enchantment&> getEnchantment();
 
         CardType getCardType() override; //Card type already determined
+        TargetType getTargetType() override; 
 
         // Minions dont have a deafault activity, only override with enchantment or if card has default ability.
         virtual void activateAbility(Board &brd);

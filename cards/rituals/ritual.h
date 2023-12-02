@@ -5,12 +5,14 @@
 
 class Ritual : public Card {
     int actCost, charges;
-    CardType ct = CardType::Ritual;
+    const CardType ct = CardType::Ritual;
+    const TargetType tt = TargetType::NoTarget;
 
     public:
         Ritual(string name, string desc, int cost, int player, int actCost, int charges);
         virtual ~Ritual();
         CardType getCardType() override;
+        TargetType getTargetType() override; 
         int getCharges();
         void setCharges(int n);
         int getActionCost();

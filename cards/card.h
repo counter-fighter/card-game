@@ -7,18 +7,19 @@ class Board;
 using namespace std;
 
 enum class CardType { Minion, Spell, Ritual, Enchantment };
+enum class TargetType { NoTarget, MinionTarget, RitualTarget, AllTarget };
 
 class Card {
     protected: 
         string name, desc;
         int cost, player;
-        bool requireTarget = false;
         bool returnToHand = false;
 
     public:
         Card(string name, string desc, int cost, int player);
         virtual ~Card() = 0; // Not virtual
         virtual CardType getCardType() = 0;
+        virtual TargetType getTargetType() = 0;
         virtual void notifyCardTurnStart(Board &brd);
         virtual void notifyCardTurnEnd(Board &brd);
         virtual void notifyCardMinionEnter(Board &brd, Card &target);
@@ -30,7 +31,6 @@ class Card {
         string getDesc();
         bool getReturnToHand();
         void setReturnToHand(bool tf);
-        bool getRequireTarget();
 
 
         friend ostream &operator<<(ostream &out, Card &c);

@@ -4,13 +4,16 @@
 #include "minion.h"
 
 class Spell : public Card {
-    CardType ct = CardType::Spell;
+    const CardType ct = CardType::Spell;
+    const TargetType tt;
 
     public:
-        Spell(string name, string desc, int cost, int player);
+        Spell(string name, string desc, int cost, int player, TargetType tt);
         virtual ~Spell();
         virtual bool useSpell(Board &brd, Card &target) = 0;
         CardType getCardType() override;
+        TargetType getTargetType() override; 
+
 };
 
 

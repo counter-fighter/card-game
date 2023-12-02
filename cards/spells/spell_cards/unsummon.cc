@@ -1,6 +1,6 @@
 #include "unsummon.h"
 
-Unsummon::Unsummon(int player) : Spell{"Unsummon", "Return target minion to its owner’s hand", 1, player} { requireTarget = true; };
+Unsummon::Unsummon(int player) : Spell{"Unsummon", "Return target minion to its owner’s hand", 1, player, TargetType::MinionTarget} {};
 
 Unsummon::~Unsummon() {};
 
