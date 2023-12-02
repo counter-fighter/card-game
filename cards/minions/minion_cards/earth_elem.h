@@ -1,6 +1,7 @@
 #include "minion.h"
 
 class EarthElement : public Minion {
-  EarthElement(int player);
-  ~EarthElement();
+  public :
+    EarthElement(int player);
+    ~EarthElement();
 };

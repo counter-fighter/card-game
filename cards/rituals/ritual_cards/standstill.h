@@ -2,10 +2,10 @@
 #define __STANDSTILL_H__
 #include "ritual.h"
 
-class StandStill : public Ritual {
+class Standstill : public Ritual {
     public:
-        StandStill(int player);
-        ~StandStill();
+        Standstill(int player);
+        ~Standstill();
         void notifyCardMinionEnter(Board &brd, Card &target) override;
 };
 
