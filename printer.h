@@ -11,9 +11,8 @@
 using namespace std;
 
 class Printer {
-    int cardHeight;
-    int maxCardPerRow;
-    card_template_t blank;
+    const int cardHeight = 11;
+    const int maxCardPerRow = 5;
     card_template_t card;
     vector<card_template_t> cards;
 

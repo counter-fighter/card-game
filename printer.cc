@@ -3,11 +3,7 @@
 
 using namespace std;
 
-Printer::Printer() {
-    cardHeight = 11;
-    maxCardPerRow = 5;
-    blank.assign(11, "                                 ");
-}
+Printer::Printer() {}
 
 Printer::~Printer() {}
 
@@ -36,8 +32,7 @@ void Printer::printCards() {
     int cardsPrinted = 0;
     while (cardsPrinted < cards.size()) { // Prints 5 cards per row.
         for (int line = 0; line < cardHeight; line++) {
-            for (int i = cardsPrinted; 
-                 i < cardsPrinted + maxCardPerRow && i < cards.size(); i++) {
+            for (int i = cardsPrinted; i < cardsPrinted + maxCardPerRow && i < cards.size(); i++) {
                 cout << cards[i][line];
             }
             cout << endl;
@@ -71,7 +66,7 @@ void Printer::minionToCardTemplateT(const Minion& minion) {
 }
 
 void Printer::ritualToCardTemplateT(const Ritual& ritual) {
-    card = display_ritual(ritual.getName(), ritual.getCost(), ritual.getActionCost(), 
+    card = display_ritual(ritual.getName(), ritual.getCost(), ritual.getActivationCost(), 
                           ritual.getDesc(), ritual.getCharges());
 }
 
