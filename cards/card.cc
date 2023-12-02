@@ -14,7 +14,7 @@ string Card::getName() {return name;};
 string Card::getDesc() {return desc;};
 
 bool Card::getReturnToHand() { return returnToHand; };
-bool Card::setReturnToHand(bool tf) { returnToHand = tf; };
+void Card::setReturnToHand(bool tf) { returnToHand = tf; };
 
 // most likely printing by pointer
 // Decide on pointer

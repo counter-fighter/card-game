@@ -28,9 +28,10 @@ unique_ptr<Card> allocCard (string name, int id) {
 
 Player::Player(string name, int id, ifstream &ifs): 
 name{name}, id{id}, magic{MAGIC_RESET}, health{HEALTH_RESET}, deck{}, hand{}, graveyard{} {
-
-
-
+  string line;
+  while (getline(ifs, line)) {
+    deck.emplace_back(move(allocCard(line, id)));
+  }
 };
 
 

@@ -12,7 +12,6 @@ class Minion : public Card {
         CardType ct = CardType::Minion;
         vector <unique_ptr<Enchantment>> enchants;
 
-        Minion(string name, string desc, int cost, int player, int atck, int def, int actReset, int actCost);
 
 
         // I'm thinking play should be handled between player and board
@@ -21,6 +20,7 @@ class Minion : public Card {
         void notifyCardTurnStart(Board &brd) override;
 
     public :
+        Minion(string name, string desc, int cost, int player, int atck, int def, int actReset, int actCost);
         virtual ~Minion();
         
         void attack(Minion &target);

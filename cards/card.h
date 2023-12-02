@@ -27,7 +27,7 @@ class Card {
         string getName();
         string getDesc();
         bool getReturnToHand();
-        bool setReturnToHand(bool tf);
+        void setReturnToHand(bool tf);
 
         friend ostream &operator<<(ostream &out, Card &c);
 };
