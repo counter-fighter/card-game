@@ -11,24 +11,31 @@
 using namespace std;
 
 class Printer {
-    int cardHeight;
-    int maxCardPerRow;
-    card_template_t blank;
-    card_template_t card;
+    const int cardHeight = 11;
+    const int maxCardPerRow = 5;
+    const int boarderWidthNoCorner = 165;
     vector<card_template_t> cards;
 
     public:
         Printer();
         ~Printer();
         void printBoard(const Board& board);
+        void printOuterRow(const vector<Ritual&> ritual, const Player& player, 
+                           const vector<Minion&> graveyard);
+        void printInnerRow(const vector<Minion&> minions);
+        void printUpperBoarder();
+        void printCentreGraphic();
+        void printLowerBoarder();
         void printHand(const vector<Card&> hand);
         void printInspect(Minion& minion);
+        void printCardsWithBoarder();
         void printCards();
         void emplaceBackCard(Card& card);
-        void minionToCardTemplateT(const Minion& minion);
-        void ritualToCardTemplateT(const Ritual& ritual);
-        void spellToCardTemplateT(const Spell& spell);
-        void enchantmentToCardTemplateT(const Enchantment& enchantment);
+        void emplaceBackPlayerCard(const Player& player);
+        card_template_t minionToCardTemplateT(const Minion& minion);
+        card_template_t ritualToCardTemplateT(const Ritual& ritual);
+        card_template_t spellToCardTemplateT(const Spell& spell);
+        card_template_t enchantmentToCardTemplateT(const Enchantment& enchantment);
 };
 
 #endif
