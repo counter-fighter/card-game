@@ -11,6 +11,7 @@ class Ritual : public Card {
         Ritual(string name, string desc, int cost, int player, int actCost, int charges);
         virtual ~Ritual();
         CardType getCardType() override;
+        int getActivationCost();
         int getCharges();
         void setCharges(int n);
 };
