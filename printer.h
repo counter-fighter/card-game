@@ -13,6 +13,7 @@ using namespace std;
 class Printer {
     const int cardHeight = 11;
     const int maxCardPerRow = 5;
+    const int boarderWidthNoCorner = 165;
     card_template_t card;
     vector<card_template_t> cards;
 
@@ -20,8 +21,12 @@ class Printer {
         Printer();
         ~Printer();
         void printBoard(const Board& board);
-        void printOuterRow();
-        void printInnerRow();
+        void printOuterRow(const vector<Ritual&> ritual, const Player& player, 
+                           const vector<Minion&> graveyard);
+        void printInnerRow(const vector<Minion&> minions);
+        void printUpperBoarder();
+        void printCentreGraphic();
+        void printLowerBoarder();
         void printHand(const vector<Card&> hand);
         void printInspect(Minion& minion);
         void printCardsWithBoarder();

@@ -10,34 +10,57 @@ Printer::~Printer() {}
 void Printer::printBoard(const Board& board) {
     vector<vector<Minion&>> minions = board.getMinions();
     vector<vector<Ritual&>> rituals = board.getRituals();
-    vector<Player> players{board.getPlayer(1), board.getPlayer(2)}; // change 1&2 depending on playerID
-    vector<vector<Minion&>> graveyards;
+    vector<Player> players{board.getPlayer(1), board.getPlayer(2)}; // must be 1 or 2
+    vector<vector<Minion&>> graveyards; // NEED GETGRAVEYARD
 
-    // print upper boarder
-    printOuterRow();
-    printInnerRow();
-    // print CENTRE_GRAPHIC
-    printInnerRow();
-    printOuterRow();
-    // print lower border
+    printUpperBoarder();
+    printOuterRow(rituals[0], players[0], graveyards[0]);
+    printInnerRow(minions[0]);
+    printCentreGraphic();
+    printInnerRow(minions[1]);
+    printOuterRow(rituals[1], players[1], graveyards[1]);
+    printLowerBoarder();
 }
 
-void Printer::printOuterRow() {
-    // emplaceback ritual or CARD_TEMPLATE_BORDER
+void Printer::printOuterRow(const vector<Ritual&> ritual, const Player& player, const vector<Minion&> graveyard) {
+    if (ritual.empty()) cards.emplace_back(CARD_TEMPLATE_BORDER);
+    else emplaceBackCard(ritual[0]);
     cards.emplace_back(CARD_TEMPLATE_EMPTY);
-    emplaceBackPlayerCard(players[0]);
+    emplaceBackPlayerCard(player);
     cards.emplace_back(CARD_TEMPLATE_EMPTY);
-    // emplaceback graveyard or CARD_TEMPLATE_BORDER
+    if (graveyard.empty()) cards.emplace_back(CARD_TEMPLATE_BORDER);
+    else emplaceBackCard(graveyard[0]);
+    printCardsWithBoarder();
 }
 
-void Printer::printInnerRow() {
-    // IMPLEMENT
+void Printer::printInnerRow(const vector<Minion&> minions) {
+    int cardEmplaced = 0;
+    for (Minion& minion:minions) {
+        emplaceBackCard(minion);
+        cardEmplaced++;
+    }
+    for (; cardEmplaced < maxCardPerRow; cardEmplaced++) cards.emplace_back(CARD_TEMPLATE_BORDER);
+    printCardsWithBoarder();
+}
+
+void Printer::printUpperBoarder() {
+    cout << EXTERNAL_BORDER_CHAR_TOP_LEFT;
+    for (int i = 0; i < boarderWidthNoCorner; i++) cout << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
+    cout << EXTERNAL_BORDER_CHAR_TOP_RIGHT << endl;
+}
+
+void Printer::printCentreGraphic() {
+    for (string i:CENTRE_GRAPHIC) cout << i << endl;
+}
+
+void Printer::printLowerBoarder() {
+    cout << EXTERNAL_BORDER_CHAR_BOTTOM_LEFT;
+    for (int i = 0; i < boarderWidthNoCorner; i++) cout << EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
+    cout << EXTERNAL_BORDER_CHAR_BOTTOM_RIGHT << endl;
 }
 
 void Printer::printHand(const vector<Card&> hand) {
-    for (Card& card:hand) {
-        emplaceBackCard(card);
-    }
+    for (Card& card:hand) emplaceBackCard(card);
     printCards();
 }
 
@@ -45,14 +68,19 @@ void Printer::printInspect(Minion& minion) {
     emplaceBackCard(minion);
     printCards();
     vector<Enchantment&> enchantments = minion.getEnchantments();
-    for (Enchantment& echantment:enchantments) {
-        emplaceBackCard(echantment);
-    }
+    for (Enchantment& echantment:enchantments) emplaceBackCard(echantment);
     printCards();
 }
 
 void Printer::printCardsWithBoarder() {
-    // IMPLEMENT
+    for (int line = 0; line < cardHeight; line++) {
+        cout << EXTERNAL_BORDER_CHAR_UP_DOWN;
+        for (int i = 0; i < maxCardPerRow; i++) {
+            cout << cards[i][line];
+        }
+        cout << EXTERNAL_BORDER_CHAR_UP_DOWN << endl;
+    } 
+    cards.clear();
 }
 
 void Printer::printCards() {
