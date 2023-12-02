@@ -97,3 +97,13 @@ void Minion::detachAllEnchant () {
   }
 
 };
+
+vector<Enchantment&> Minion::getEnchantment() {
+  vector<Enchantment&> ret;
+
+  for (auto it = enchants.begin(); it != enchants.end(); it++) {
+    ret.emplace_back(*(*it).get());
+  }
+
+  return ret;
+};

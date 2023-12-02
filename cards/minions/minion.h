@@ -57,6 +57,9 @@ class Minion : public Card {
         int getDefenceReset();
         int getActivationCost();
         int getActionReset();
+
+        vector<Enchantment&> getEnchantment();
+
         CardType getCardType() override; //Card type already determined
 
         // Minions dont have a deafault activity, only override with enchantment or if card has default ability.
