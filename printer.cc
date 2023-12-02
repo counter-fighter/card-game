@@ -11,7 +11,7 @@ void Printer::printBoard(const Board& board) {
     vector<vector<Minion&>> minions = board.getMinions();
     vector<vector<Ritual&>> rituals = board.getRituals();
     vector<Player> players{board.getPlayer(1), board.getPlayer(2)};
-    vector<vector<Minion&>> graveyards; // NEED GETGRAVEYARD
+    vector<vector<Minion&>> graveyards{players[0].getGraveyard(), players[1].getGraveyard()};
 
     printUpperBoarder();
     printOuterRow(rituals[0], players[0], graveyards[0]);
@@ -67,7 +67,7 @@ void Printer::printHand(const vector<Card&> hand) {
 void Printer::printInspect(Minion& minion) {
     emplaceBackCard(minion);
     printCards();
-    vector<Enchantment&> enchantments = minion.getEnchantments();
+    vector<Enchantment&> enchantments = minion.getEnchantment();
     for (Enchantment& echantment:enchantments) emplaceBackCard(echantment);
     printCards();
 }
@@ -113,7 +113,8 @@ void Printer::emplaceBackCard(Card& card) {
 
 void Printer::emplaceBackPlayerCard(const Player& player) {
     card_template_t convertedCard;
-    convertedCard = display_player_card(int player_num, std::string name, int life, int mana); // NEED GET METHODS FROM PLAYER CLASS
+    convertedCard = display_player_card(player.getPlayerId(), player.getPlayerName(), 
+                                        player.getPlayerHealth(), player.getPlayerMagic());
     cards.emplace_back(convertedCard);
 }
 
