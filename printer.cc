@@ -42,13 +42,9 @@ void Printer::printCards() {
 
 void Printer::emplaceBackCard(Card& card) {
     if (card.getCardType() == CardType::Minion) minionToCardTemplateT(static_cast<Minion&>(card));
-    else if (card.getCardType() == CardType::Ritual) {
-
-    } else if (card.getCardType() == CardType::Spell) {
-
-    } else {
-        enchantmentToCardTemplateT(static_cast<Enchantment&>(card));
-    }
+    else if (card.getCardType() == CardType::Ritual) ritualToCardTemplateT(static_cast<Ritual&>(card));
+    else if (card.getCardType() == CardType::Spell) spellToCardTemplateT(static_cast<Spell&>(card));
+    else enchantmentToCardTemplateT(static_cast<Enchantment&>(card));
     cards.emplace_back(card);
 }
 
@@ -68,8 +64,8 @@ void Printer::minionToCardTemplateT(const Minion& minion) {
 }
 
 void Printer::ritualToCardTemplateT(const Ritual& ritual) {
-    card = display_ritual(ritual.getName(), ritual.getCost(), ritual., ritual.getDesc(),
-                               int ritual_charges);
+    card = display_ritual(ritual.getName(), ritual.getCost(), ritual.getActCost(), ritual.getDesc(),
+                               ritual.getCharges());
 }
 
 void Printer::spellToCardTemplateT(const Spell& spell) {
