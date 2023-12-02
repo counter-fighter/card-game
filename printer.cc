@@ -8,7 +8,30 @@ Printer::Printer() {}
 Printer::~Printer() {}
 
 void Printer::printBoard(const Board& board) {
-    
+    vector<vector<Minion&>> minions = board.getMinions();
+    vector<vector<Ritual&>> rituals = board.getRituals();
+    vector<Player> players{board.getPlayer(1), board.getPlayer(2)}; // change 1&2 depending on playerID
+    vector<vector<Minion&>> graveyards;
+
+    // print upper boarder
+    printOuterRow();
+    printInnerRow();
+    // print CENTRE_GRAPHIC
+    printInnerRow();
+    printOuterRow();
+    // print lower border
+}
+
+void Printer::printOuterRow() {
+    // emplaceback ritual or CARD_TEMPLATE_BORDER
+    cards.emplace_back(CARD_TEMPLATE_EMPTY);
+    emplaceBackPlayerCard(players[0]);
+    cards.emplace_back(CARD_TEMPLATE_EMPTY);
+    // emplaceback graveyard or CARD_TEMPLATE_BORDER
+}
+
+void Printer::printInnerRow() {
+    // IMPLEMENT
 }
 
 void Printer::printHand(const vector<Card&> hand) {
@@ -26,6 +49,10 @@ void Printer::printInspect(Minion& minion) {
         emplaceBackCard(echantment);
     }
     printCards();
+}
+
+void Printer::printCardsWithBoarder() {
+    // IMPLEMENT
 }
 
 void Printer::printCards() {
@@ -47,6 +74,11 @@ void Printer::emplaceBackCard(Card& card) {
     else if (card.getCardType() == CardType::Ritual) ritualToCardTemplateT(static_cast<Ritual&>(card));
     else if (card.getCardType() == CardType::Spell) spellToCardTemplateT(static_cast<Spell&>(card));
     else enchantmentToCardTemplateT(static_cast<Enchantment&>(card));
+    cards.emplace_back(card);
+}
+
+void Printer::emplaceBackPlayerCard(const Player& player) {
+    //card = display_player_card(int player_num, std::string name, int life, int mana);
     cards.emplace_back(card);
 }
 

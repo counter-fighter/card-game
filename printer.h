@@ -20,10 +20,14 @@ class Printer {
         Printer();
         ~Printer();
         void printBoard(const Board& board);
+        void printOuterRow();
+        void printInnerRow();
         void printHand(const vector<Card&> hand);
         void printInspect(Minion& minion);
+        void printCardsWithBoarder();
         void printCards();
         void emplaceBackCard(Card& card);
+        void emplaceBackPlayerCard(const Player& player);
         void minionToCardTemplateT(const Minion& minion);
         void ritualToCardTemplateT(const Ritual& ritual);
         void spellToCardTemplateT(const Spell& spell);
