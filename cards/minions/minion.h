@@ -19,7 +19,7 @@ class Minion : public Card {
         // I'm thinking play should be handled between player and board
         //virtual void play(Board &board);
 
-        void notifyCardTurnStart(Board &brd) override;
+        
 
     public :
         Minion(string name, string desc, int cost, int player, int atck, int def, int actReset, int actCost);
@@ -67,6 +67,8 @@ class Minion : public Card {
         // Minions dont have a deafault activity, only override with enchantment or if card has default ability.
         virtual void activateAbility(Board &brd);
         virtual void activateAbility(Board &brd, Minion &target);
+
+        void notifyCardTurnStart(Board &brd) override;
 
 };
 
