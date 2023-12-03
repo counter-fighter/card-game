@@ -70,6 +70,7 @@ class Player {
         bool drawCard();
         unique_ptr<Card> playFromHand (int index);
         void sendToGraveyard(unique_ptr<Minion> m);
+        unique_ptr<Minion> returnTopFromGraveyard();
         void returnToHand(unique_ptr<Card> c);
 };
 

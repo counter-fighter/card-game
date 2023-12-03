@@ -88,6 +88,10 @@ void Player::sendToGraveyard(unique_ptr<Minion> m) {
   graveyard.emplace_back(move(m));
 };
 
+unique_ptr<Minion> Player::returnTopFromGraveyard() {
+  return std::move(graveyard[graveyard.size() - 1]);
+}
+
 void Player::returnToHand(unique_ptr<Card> c) {
   hand.emplace_back(move(c));
 };
