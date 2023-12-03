@@ -59,6 +59,7 @@ class Player {
         // void setName(const string name);
         // void setDeck(const vector<string> deck);
         // vector<unique_ptr<Card>> getHand() const;
+        vector<unique_ptr<Card>> allocCard(string name, int id);
         vector<Minion&> getGraveyard();
         int getPlayerId();
         string getPlayerName();

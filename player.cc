@@ -1,6 +1,6 @@
 #include "player.h"
 
-unique_ptr<Card> allocCard (string name, int id) {
+unique_ptr<Card> Player::allocCard (string name, int id) {
   if (name == "Giant Strength") return unique_ptr<Card> {new GiantStrength(id)};
   if (name == "Enrage") return unique_ptr<Card> {new Enrage(id)};
   if (name == "Haste") return unique_ptr<Card> {new Haste(id)};
