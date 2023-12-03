@@ -28,7 +28,7 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
 
     // use the effect/place it down
     if (cardToPlay->getCardType() == CardType::Minion) {
-        if (minions[playerID - 1].size() < 5) {
+        if (static_cast<int>(minions[playerID - 1].size()) < MAX_MINIONS) {
             minions[playerID - 1].emplace_back(std::move(cardToPlay));
             notifyMinionEnter(playerID);
         } else {
@@ -37,7 +37,7 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         }
         
     } else if (cardToPlay->getCardType() == CardType::Ritual) {
-        if (rituals[playerID - 1].size() > 0) {
+        if (static_cast<int>(rituals[playerID - 1].size()) > 0) {
             discardedCards[playerID - 1].emplace_back(std::move(rituals[playerID - 1][0]));
         }
         rituals[playerID - 1].emplace_back(std::move(cardToPlay));
@@ -68,7 +68,7 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
 void Board::checkCardStates() {
     const int numPlayers = 2;
     for (int i = 0; i < numPlayers; i++) {
-        for (int j = 0; j < minions[i].size(); j++) {
+        for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
             if (minions[i][j]->getReturnToHand()) {
                 Card &targetNotify = dynamic_cast<Card&>(*minions[i][j]);
                 notifyMinionLeave(i, targetNotify);
@@ -83,7 +83,7 @@ void Board::checkCardStates() {
             }
         }
 
-        if (rituals[i].size() > 0) {
+        if (static_cast<int> (rituals[i].size()) > 0) {
             if (rituals[i][0]->getReturnToHand() && players[i]->getHandSize() < MAX_HAND) {
                 players[i]->returnToHand(std::move(rituals[i][0])); // not sure about cast again
             }
@@ -93,7 +93,7 @@ void Board::checkCardStates() {
 
 void Board::summon(string card, int n, int playerID) {
     for (int i = 0; i < n; i++) {
-        if (minions[playerID - 1].size() < MAX_MINIONS) {
+        if (static_cast<int> (minions[playerID - 1].size()) < MAX_MINIONS) {
             // add minion to vector, either by creating new from string or std::move(card)
             minions[playerID - 1].emplace_back(players[playerID - 1]->allocCard(card, playerID - 1));
             notifyMinionEnter(playerID);
@@ -113,11 +113,11 @@ void Board::detach(int playerID, int targetCard) {
 
 void Board::notifyTurnStart() {
     for (int i = 0; i < NUM_PLAYERS; i++) {
-        for (int j = 0; j < minions[i].size(); j++) {
+        for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
             minions[i][j]->notifyCardTurnStart(*this);
         }
 
-        if (rituals[i].size() > 0 && rituals[i][0]->getCharges() < rituals[i][0]->getActionCost()) {
+        if (static_cast<int> (rituals[i].size()) > 0 && rituals[i][0]->getCharges() < rituals[i][0]->getActionCost()) {
             rituals[i][0]->notifyCardTurnStart(*this);
         }
     }
@@ -125,11 +125,11 @@ void Board::notifyTurnStart() {
 
 void Board::notifyTurnEnd() {
     for (int i = 0; i < NUM_PLAYERS; i++) {
-        for (int j = 0; j < minions[i].size(); j++) {
+        for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
             minions[i][j]->notifyCardTurnEnd(*this);
         }
 
-        if (rituals[i].size() > 0 && rituals[i][0]->getCharges() < rituals[i][0]->getActionCost()) {
+        if (static_cast<int> (rituals[i].size()) > 0 && rituals[i][0]->getCharges() < rituals[i][0]->getActionCost()) {
             rituals[i][0]->notifyCardTurnEnd(*this);
         }
     }
@@ -137,21 +137,21 @@ void Board::notifyTurnEnd() {
 
 void Board::notifyMinionEnter(int playerID) {
     for (int i = 0; i < NUM_PLAYERS; i++) {
-        for (int j = 0; j < minions[i].size(); j++) {
-            minions[i][j]->notifyCardMinionEnter(*this, *minions[playerID - 1][minions[playerID - 1].size() - 1]);
+        for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
+            minions[i][j]->notifyCardMinionEnter(*this, *minions[playerID - 1][static_cast<int>(minions[playerID - 1].size()) - 1]);
         }
-        if (rituals[i].size() > 0 && rituals[i][0]->getCharges() < rituals[i][0]->getActionCost()) {
-            rituals[i][0]->notifyCardMinionEnter(*this, *minions[playerID - 1][minions[playerID - 1].size() - 1]);
+        if (static_cast<int> (rituals[i].size()) > 0 && rituals[i][0]->getCharges() < rituals[i][0]->getActionCost()) {
+            rituals[i][0]->notifyCardMinionEnter(*this, *minions[playerID - 1][static_cast<int> (minions[playerID - 1].size()) - 1]);
         }
     }
 }
 
 void Board::notifyMinionLeave(int playerID, Card &target) {
     for (int i = 0; i < NUM_PLAYERS; i++) {
-        for (int j = 0; j < minions[i].size(); j++) {
+        for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
             minions[i][j]->notifyCardMinionLeave(*this, target);
         }
-        if (rituals[i].size() > 0) {
+        if (static_cast<int> (rituals[i].size()) > 0) {
             rituals[i][0]->notifyCardMinionEnter(*this, target);
         }
     }
@@ -164,7 +164,7 @@ Player Board::getPlayer(int playerID) {
 vector<vector<Minion&>> Board::getMinions() {
     vector<vector<Minion&>> minionsCopy;
     for (int i = 0; i < NUM_PLAYERS; i++) {
-        for (int j = 0; j < minions[i].size(); j++) {
+        for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
             minionsCopy[i].emplace_back(*minions[i][j]);
         }
     }
@@ -174,7 +174,7 @@ vector<vector<Minion&>> Board::getMinions() {
 vector<vector<Ritual&>> Board::getRituals() {
     vector<vector<Ritual&>> ritualsCopy;
     for (int i = 0; i < NUM_PLAYERS; i++) {
-        if (rituals[i].size() > 0) {
+        if (static_cast<int> (rituals[i].size()) > 0) {
             ritualsCopy.emplace_back(*rituals[i][0]);
         }
     }
@@ -226,7 +226,7 @@ void Board::increaseRitualCharges(int playerID, int amount) {
 }
 
 void Board::raiseDead(int playerID) {
-    if (players[playerID - 1]->getGraveyard().size() > 0 && minions[playerID - 1].size() < MAX_MINIONS) {
+    if (static_cast<int> (players[playerID - 1]->getGraveyard().size()) > 0 && static_cast<int> (minions[playerID - 1].size()) < MAX_MINIONS) {
         unique_ptr<Minion> raisedMinion {players[playerID - 1]->returnTopFromGraveyard()};
         raisedMinion->setDefence(1);
         minions[playerID - 1].emplace_back(std::move(raisedMinion));
@@ -234,7 +234,7 @@ void Board::raiseDead(int playerID) {
 }
 
 void Board::removeRitual(int playerTarget) {
-    if (rituals[playerTarget].size() > 0) {
+    if (static_cast<int> (rituals[playerTarget].size()) > 0) {
         discardedCards[playerTarget - 1].emplace_back(rituals[playerTarget][0]);
     } else {
         // print error message
@@ -247,7 +247,7 @@ void Board::addMagic(int playerID, int magic) {
 }
 
 void Board::rechargeRitual(int playerID, int charges) {
-    if (rituals[playerID - 1].size() > 0) {
+    if (static_cast<int>(rituals[playerID - 1].size()) > 0) {
         rituals[playerID - 1][0]->setCharges(rituals[playerID - 1][0]->getCharges() + charges);
     } else {
         // print error message
