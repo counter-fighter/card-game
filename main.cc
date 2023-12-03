@@ -77,6 +77,7 @@ int main (int argc, char *argv []) {
         } else if (cmd == "end") {
             board.endCommand();
             currentPlayerID = (currentPlayerID) ? 0 : 1;
+            board.startCommand();
         } else if (cmd == "quit") {
             break;
         } else if (cmd == "attack") {
