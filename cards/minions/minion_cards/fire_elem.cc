@@ -4,7 +4,7 @@ FireElemental::FireElemental(int player) : Minion{"Fire Elemental", "Whenever an
 
 FireElemental::~FireElemental() {};
 
-void FireElemental::notifyCardMinionLeave(Board &brd, Card &target) {
+void FireElemental::notifyCardMinionEnter(Board &brd, Card &target) {
   if (target.getCardType() == CardType::Minion) {
     Minion &m = dynamic_cast<Minion&>(target);
 
