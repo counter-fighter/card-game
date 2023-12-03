@@ -60,7 +60,7 @@ class Player {
         // void setDeck(const vector<string> deck);
         // vector<unique_ptr<Card>> getHand() const;
         unique_ptr<Card> allocCard(string name, int id);
-        vector<Minion&> getGraveyard();
+        vector<Minion> getGraveyard();
         int getPlayerId();
         string getPlayerName();
         int getPlayerHealth();
@@ -73,7 +73,7 @@ class Player {
         void sendToGraveyard(unique_ptr<Minion> m);
         unique_ptr<Minion> returnTopFromGraveyard();
         void returnToHand(unique_ptr<Card> c);
-        vector<Card&> getHand ();
+        vector<Card> getHand ();
 
 };
 
