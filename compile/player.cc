@@ -42,7 +42,7 @@ Player::Player(Player&& p) {
   moveVec(p.deck, deck);
   moveVec(p.hand, hand);
   moveVec(p.graveyard, graveyard);
-
+  
 };
 
 Player::Player(Player& p) {
