@@ -56,7 +56,6 @@ class Minion : public Card {
         int getDefence();
         int getAttackReset();
         int getDefenceReset();
-        int getDefenceReset();
         int getActivationCost();
         int getActionReset();
 
