@@ -5,10 +5,11 @@ Standstill::Standstill(int player) : Ritual{"Standstill", "Whenever a minion ent
 Standstill::~Standstill() {};
 
 void Standstill::notifyCardMinionEnter(Board &brd, Card &target) {
-  if (target.getCardType() == CardType::Minion) {
+  if (target.getCardType() == CardType::Minion && charges >= actCost) {
     Minion &m = dynamic_cast<Minion&>(target);
 
     m.setDefence(-1);
+    charges -= actCost;
   }
 };
 

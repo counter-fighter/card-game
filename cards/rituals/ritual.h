@@ -4,9 +4,10 @@
 #include "minion.h"
 
 class Ritual : public Card {
-    int actCost, charges;
-    const CardType ct = CardType::Ritual;
-    const TargetType tt = TargetType::NoTarget;
+    protected :
+        int charges, actCost;
+        const CardType ct = CardType::Ritual;
+        const TargetType tt = TargetType::NoTarget;
 
     public:
         Ritual(string name, string desc, int cost, int player, int charges, int actCost);

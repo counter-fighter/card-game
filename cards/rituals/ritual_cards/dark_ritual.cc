@@ -6,7 +6,10 @@ DarkRitual::DarkRitual(int player) : Ritual{"Dark Ritual", "At the start of your
 DarkRitual::~DarkRitual() {};
 
 void DarkRitual::notifyCardTurnStart(Board &brd) {
-  brd.addMagic(player, 1);
+  if (charges >= actCost) {
+    brd.addMagic(player, 1);
+    charges -= actCost;
+  }
 };
 
 
