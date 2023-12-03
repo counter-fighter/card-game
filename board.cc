@@ -106,8 +106,7 @@ void Board::detach(int playerID, int targetCard) {
 }
 
 void Board::notifyTurnStart() {
-    const int numPlayers = 2;
-    for (int i = 0; i < numPlayers; i++) {
+    for (int i = 0; i < NUM_PLAYERS; i++) {
         for (int j = 0; j < minions[i].size(); j++) {
             minions[i][j]->notifyCardTurnStart(*this);
         }
@@ -118,8 +117,7 @@ void Board::notifyTurnStart() {
 }
 
 void Board::notifyTurnEnd() {
-    const int numPlayers = 2;
-    for (int i = 0; i < numPlayers; i++) {
+    for (int i = 0; i < NUM_PLAYERS; i++) {
         for (int j = 0; j < minions[i].size(); j++) {
             minions[i][j]->notifyCardTurnEnd(*this);
         }
@@ -130,8 +128,7 @@ void Board::notifyTurnEnd() {
 }
 
 void Board::notifyMinionEnter(int playerID) {
-    const int numPlayers = 2;
-    for (int i = 0; i < numPlayers; i++) {
+    for (int i = 0; i < NUM_PLAYERS; i++) {
         for (int j = 0; j < minions[i].size(); j++) {
             minions[i][j]->notifyCardMinionEnter(*this, *minions[playerID - 1][minions[playerID - 1].size() - 1]);
         }
@@ -142,8 +139,7 @@ void Board::notifyMinionEnter(int playerID) {
 }
 
 void Board::notifyMinionLeave(int playerID, Card &target) {
-    const int numPlayers = 2;
-    for (int i = 0; i < numPlayers; i++) {
+    for (int i = 0; i < NUM_PLAYERS; i++) {
         for (int j = 0; j < minions[i].size(); j++) {
             minions[i][j]->notifyCardMinionLeave(*this, target);
         }
