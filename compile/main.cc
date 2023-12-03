@@ -62,12 +62,12 @@ int main (int argc, char *argv []) {
         if (i == 0) { 
             p1Name = cmd;
             i++;
-            board.initPlayer(i, p1Name, deckfile1);
+            board.initPlayer(p1Name, i, deckfile1, testing);
             continue;
         } else if (i == 1) { 
             p2Name = cmd; 
             i++;            
-            board.initPlayer(i, p2Name, deckfile2);
+            board.initPlayer(p2Name, i, deckfile2, testing);
             continue; 
         }
 
