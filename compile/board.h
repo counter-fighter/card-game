@@ -41,7 +41,7 @@ class Board {
     Player getPlayer(int playerID); // returns a player object
     vector<vector<Minion>> getMinions(); // returns p1's minions in vector[0] and p2's minions in vector[1]
     vector<vector<Ritual>> getRituals(); // returns p1's ritual in vector[0][0] and p2's ritual in vector[1][0] (if they exist)
-    vector<Minion&> getGraveyard(int playerID); // do we need this?
+    vector<Minion> getGraveyard(int playerID); // do we need this?
 
     // Commands called from main using input
     void startCommand(int playerID);

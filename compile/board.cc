@@ -181,7 +181,7 @@ vector<vector<Ritual>> Board::getRituals() {
     return ritualsCopy;
 }
 
-vector<Minion&> Board::getGraveyard(int playerID) {
+vector<Minion> Board::getGraveyard(int playerID) {
     return players[playerID - 1]->getGraveyard();
 }
 
