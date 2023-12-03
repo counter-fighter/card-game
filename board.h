@@ -44,6 +44,7 @@ class Board {
     vector<Minion&> getGraveyard(int playerID); // do we need this?
 
     // Commands called from main using input
+    void startCommand();
     void endCommand(); // ends the turn, notifies all cards of Turn End
     void attackCommand(int minionInd, int playerID, int enemyMinion = -1); // performs an attack on an enemy minion or player
     void useMinionAbilityCommand(int minion, int playerID, int targetPlayer = -1, int targetCard = -1); // uses a minion ability

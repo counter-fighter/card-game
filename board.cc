@@ -177,6 +177,10 @@ vector<Minion&> Board::getGraveyard(int playerID) {
     return players[playerID - 1]->getGraveyard();
 }
 
+void Board::startCommand() {
+    notifyTurnStart();
+}
+
 void Board::endCommand() {
     notifyTurnEnd();
 }
