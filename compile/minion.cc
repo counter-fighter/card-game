@@ -1,8 +1,29 @@
 #include "minion.h"
 #include "player.h"
+#include "player.cc"
 
 Minion::Minion(string name, string desc, int cost, int player, int atck, int def, int actReset,int actCost) : 
   Card{name, desc, cost, player}, atck{atck}, atckReset{atck}, def{def}, defReset{def}, actCount(0), actReset{actReset}, actCost{actCost} {};
+
+Minion::Minion(Minion &other): Card{other.name, other.desc, other.cost, other.player}, 
+  atck{other.atck}, atckReset{atck}, def{other.def}, defReset{other.defReset}, 
+  actCount{other.actCount}, actReset{other.actReset}, actCost{other.actCost} {
+    moveVec(other.enchants, enchants);
+}
+
+Minion::Minion(Minion &&other): Card{other.name, other.desc, other.cost, other.player}, 
+  atck{other.atck}, atckReset{atck}, def{other.def}, defReset{other.defReset}, 
+  actCount{other.actCount}, actReset{other.actReset}, actCost{other.actCost} {
+    moveVec(other.enchants, enchants);
+}
+
+template<typename T> void moveVec (vector<T> &source, vector<T> &dest) {
+  while (source.size() > 0) {
+    auto it = source.begin();
+    dest.push_back(move(*it));
+    source.erase(it);
+  }
+};
 
 Minion::~Minion() {};
 

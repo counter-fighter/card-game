@@ -26,6 +26,8 @@ class Minion : public Card {
 
     public :
         Minion(string name, string desc, int cost, int player, int atck, int def, int actReset, int actCost);
+        Minion(Minion &copied);
+        Minion(Minion &&moved);
         virtual ~Minion();
         
         void attack(Minion &target);
