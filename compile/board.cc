@@ -4,8 +4,8 @@ Board::Board(): minions{}, rituals{}, players{}, discardedCards{} {}
 
 Board::~Board() {}
 
-void Board::initPlayer(int playerID, string pName, string deckfile) {
-    players.emplace_back(move(make_unique<Player>(playerID, pName, deckfile)));
+void Board::initPlayer(int playerID, string pName, string deckfile, bool shuffle) {
+    players.emplace_back(move(make_unique<Player>(playerID, pName, deckfile, shuffle)));
 }
 
 void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCard) {
