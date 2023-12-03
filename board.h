@@ -13,7 +13,7 @@
 using namespace std;
 
 class Board {
-  const int MAX_MINIONS= 5;
+  const int MAX_MINIONS = 5;
   const int MAX_RITUALS = 1;
   const int NUM_PLAYERS = 2;
   vector<vector<unique_ptr<Minion>>> minions;
@@ -26,10 +26,13 @@ class Board {
     Board();
     ~Board();
     void initPlayer(int playerID, string pName, string deckfile);
-    void damageAll(int n);
-    void healAll(int n);
-    void playACard(int cardInd, int playerID, int targetPlayer = -1, int targetCard = -1);
-    void summon(string card, int n, int playerID);
+    void damageAll(int n); // damages all minions on board
+    void healAll(int n); // adds Defence to all minions on board
+
+    // plays a card from hand, uses discards spell after use or places minion/ritual/enchanment on board
+    void playACard(int cardInd, int playerID, int targetPlayer = -1, int targetCard = -1); 
+
+    void summon(string card, int n, int playerID); // summons a minion to the board
     void attach(unique_ptr<Card> card, int playerID, int targetCard);
     void detach(int playerID, int targetCard);
     void notifyTurnStart();
