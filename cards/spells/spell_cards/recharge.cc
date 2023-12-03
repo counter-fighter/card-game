@@ -1,15 +1,9 @@
 #include "recharge.h"
 
-Recharge::Recharge(int player) : Spell{"Recharge", "Your ritual gains 3 charges", 1, player, TargetType::RitualTarget} {};
+Recharge::Recharge(int player) : Spell{"Recharge", "Your ritual gains 3 charges", 1, player, TargetType::NoTarget} {};
 
 Recharge::~Recharge() {};
 
-void Recharge::useSpell(Board &brd, Card &target) {
-  if (target.getCardType() == CardType::Ritual) {
-    Ritual &r = static_cast<Ritual&>(target);
-    
-    if (r.getPlayer() == this->getPlayer()) {
-      r.setCharges(r.getCharges() + 3);
-    }
-  }
+void Recharge::useSpell(Board &brd) {
+  //brd.recharge(player, 3);
 };

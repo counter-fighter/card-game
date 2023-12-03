@@ -7,7 +7,7 @@ class Recharge : public Spell {
     public:
         Recharge(int player);
         virtual ~Recharge();
-        void useSpell(Board &brd, Card &target) override;
+        void useSpell(Board &brd) override;
    
 };
 

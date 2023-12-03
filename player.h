@@ -38,6 +38,7 @@ using namespace std;
 
 const int MAGIC_RESET = 3;
 const int HEALTH_RESET = 20;
+const int MAX_HAND = 5;
 
 class Player {
     string name;
@@ -64,6 +65,10 @@ class Player {
         int getPlayerHealth();
         int getPlayerMagic();
         void setPlayerHealth(int n);
+        bool drawCard();
+        unique_ptr<Card> playFromHand (int index);
+        void sendToGraveyard(unique_ptr<Minion> m);
+        bool returnToHand(unique_ptr<Card> c);
 };
 
 #endif

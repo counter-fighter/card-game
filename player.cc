@@ -68,3 +68,28 @@ int Player::getPlayerHealth() { return health; };
 int Player::getPlayerMagic() { return magic; };
 
 void Player::setPlayerHealth(int n) { health = n; };
+
+bool Player::drawCard() {
+  if ((int)hand.size() < MAX_HAND) {
+    hand.emplace_back(deck.back());
+    deck.pop_back();
+  }
+};
+
+unique_ptr<Card> Player::playFromHand (int index) {
+  if (index >= 0 && index < (int)hand.size()) {
+    unique_ptr<Card> temp = move(hand[index]);
+    hand.erase(hand.begin() + index);
+    return move(temp);
+  }
+};
+
+void Player::sendToGraveyard(unique_ptr<Minion> m) {
+  graveyard.emplace_back(move(m));
+};
+
+bool Player::returnToHand(unique_ptr<Card> c) {
+  if ((int)hand.size() >= MAX_HAND) return false;
+  hand.emplace_back(move(c));
+  return true;
+};
