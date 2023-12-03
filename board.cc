@@ -253,3 +253,15 @@ void Board::checkCardStates() {
     }
 }
 
+void Board::addMagic(int playerID, int magic) {
+    players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() + magic);
+}
+
+void Board::rechargeRitual(int playerID, int charges) {
+    if (rituals[playerID - 1].size() > 0) {
+        rituals[playerID - 1][0]->setCharges(rituals[playerID - 1][0]->getCharges() + charges);
+    } else {
+        // print error message
+    }
+}
+

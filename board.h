@@ -39,7 +39,7 @@ class Board {
     Player getPlayer(int playerID);
     vector<vector<Minion&>> getMinions();
     vector<vector<Ritual&>> getRituals();
-    vector<Minion&> getGraveyard(int playerID);
+    vector<Minion&> getGraveyard(int playerID); // do we need this?
     void endCommand();
     void attackCommand(int minionInd, int playerID, int enemyMinion = -1);
     void useMinionAbilityCommand(int minion, int playerID, int targetPlayer = -1, int targetCard = -1);
@@ -47,6 +47,8 @@ class Board {
     void raiseDead(int playerID);
     void removeRitual(int playerTarget);
     void checkCardStates();
+    void addMagic(int playerID, int magic);
+    void rechargeRitual(int playerID, int charges);
 };
 
 #endif
