@@ -8,7 +8,7 @@ void FireElemental::notifyCardMinionLeave(Board &brd, Card &target) {
   if (target.getCardType() == CardType::Minion) {
     Minion &m = dynamic_cast<Minion&>(target);
 
-    m.setDefence(m.getAttack() - 1);
+    m.setDefence(m.getDefence() - 1);
 
   }
 };
