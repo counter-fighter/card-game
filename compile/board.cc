@@ -45,7 +45,6 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
     } else if (cardToPlay->getCardType() == CardType::Spell) {
         Card &cardCast = *cardToPlay.get();
         Spell& spellCast = dynamic_cast<Spell&> (cardCast);
-        bool castSuccess;
 
         if (targetType == TargetType::RitualTarget) {
             Card &target = *rituals[playerID - 1][0];
@@ -161,18 +160,19 @@ Player Board::getPlayer(int playerID) {
     return *players[playerID - 1];
 }
 
-vector<vector<Minion&>> Board::getMinions() {
-    vector<vector<Minion&>> minionsCopy;
+vector<vector<Minion>> Board::getMinions() {
+    vector<vector<Minion>> minionsCopy;
     for (int i = 0; i < NUM_PLAYERS; i++) {
         for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
-            minionsCopy[i].emplace_back(*minions[i][j]);
+            Minion m = *minions[i][j];
+            minionsCopy[i].emplace_back(m);
         }
     }
     return minionsCopy;
 }
 
-vector<vector<Ritual&>> Board::getRituals() {
-    vector<vector<Ritual&>> ritualsCopy;
+vector<vector<Ritual>> Board::getRituals() {
+    vector<vector<Ritual>> ritualsCopy;
     for (int i = 0; i < NUM_PLAYERS; i++) {
         if (static_cast<int> (rituals[i].size()) > 0) {
             ritualsCopy.emplace_back(*rituals[i][0]);
