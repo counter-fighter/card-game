@@ -158,15 +158,27 @@ Player Board::getPlayer(int playerID) {
 }
 
 vector<vector<Minion&>> Board::getMinions() {
-    // return minions;
+    vector<vector<Minion&>> minionsCopy;
+    for (int i = 0; i < NUM_PLAYERS; i++) {
+        for (int j = 0; j < minions[i].size(); j++) {
+            minionsCopy[i].emplace_back(*minions[i][j]);
+        }
+    }
+    return minionsCopy;
 }
 
 vector<vector<Ritual&>> Board::getRituals() {
-    // return rituals;
+    vector<vector<Ritual&>> ritualsCopy;
+    for (int i = 0; i < NUM_PLAYERS; i++) {
+        if (rituals[i].size() > 0) {
+            ritualsCopy.emplace_back(*rituals[i][0]);
+        }
+    }
+    return ritualsCopy;
 }
 
-vector<Card&> Board::getGraveyard(int playerID) {
-    // return players[playerID]->getGraveyard();
+vector<Minion&> Board::getGraveyard(int playerID) {
+    return players[playerID - 1]->getGraveyard();
 }
 
 void Board::endCommand() {

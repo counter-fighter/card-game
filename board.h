@@ -15,6 +15,7 @@ using namespace std;
 class Board {
   const int MAX_MINIONS= 5;
   const int MAX_RITUALS = 1;
+  const int NUM_PLAYERS = 2;
   vector<vector<unique_ptr<Minion>>> minions;
   vector<vector<unique_ptr<Ritual>>> rituals;
   vector<unique_ptr<Player>> players;
@@ -38,7 +39,7 @@ class Board {
     Player getPlayer(int playerID);
     vector<vector<Minion&>> getMinions();
     vector<vector<Ritual&>> getRituals();
-    vector<Card&> getGraveyard(int playerID);
+    vector<Minion&> getGraveyard(int playerID);
     void endCommand();
     void attackCommand(int minionInd, int playerID, int enemyMinion = -1);
     void useMinionAbilityCommand(int minion, int playerID, int targetPlayer = -1, int targetCard = -1);
