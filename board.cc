@@ -8,30 +8,6 @@ void Board::initPlayer(int playerID, string pName, string deckfile) {
     players.emplace_back(make_unique<Player>(playerID, pName, deckfile));
 }
 
-void Board::damageAll(int n) {
-    const int p1 = 0, p2 = 1;
-    int minionSizeP1 = minions[p1].size(), minionSizeP2 = minions[p2].size();
-    for (int i = 0; i < minionSizeP1; i++) {
-        minions[p1][i]->setDefence(minions[p1][i]->getDefence() - n);
-    }
-
-    for (int i = 0; i < minionSizeP2; i++) {
-        minions[p2][i]->setDefence(minions[p2][i]->getDefence() - n);
-    }
-}
-
-void Board::healAll(int n) {
-    const int p1 = 0, p2 = 1;
-    int minionSizeP1 = minions[p1].size(), minionSizeP2 = minions[p2].size();
-    for (int i = 0; i < minionSizeP1; i++) {
-        minions[p1][i]->setDefence(minions[p1][i]->getDefence() + n);
-    }
-
-    for (int i = 0; i < minionSizeP2; i++) {
-        minions[p2][i]->setDefence(minions[p2][i]->getDefence() + n);
-    }
-}
-
 void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCard) {
     TargetType targetType = TargetType::NoTarget;
     
@@ -82,6 +58,32 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
     } else {
         // unique_ptr<Enchantment> enchant {dynamic_cast<Enchantment*>(std::move(cardToPlay))};
         attach(std::move(cardToPlay), playerID, targetCard);
+    }
+}
+
+void Board::checkCardStates() {
+    const int numPlayers = 2;
+    for (int i = 0; i < numPlayers; i++) {
+        for (int j = 0; j < minions[i].size(); j++) {
+            if (minions[i][j]->getReturnToHand()) {
+                Card &targetNotify = dynamic_cast<Card&>(*minions[i][j]);
+                notifyMinionLeave(i, targetNotify);
+                minions[i][j]->detachAllEnchant();
+                players[i]->returnToHand(std::move(minions[i][j])); // not sure if I need to cast to Card
+            
+            } else if (minions[i][j]->getDefence() <= 0) {
+                Card &targetNotify = dynamic_cast<Card&> (*minions[i][j]);
+                notifyMinionLeave(i, targetNotify);
+                minions[i][j]->detachAllEnchant();
+                players[i]->sendToGraveyard(std::move(minions[i][j]));
+            }
+        }
+
+        if (rituals[i].size() > 0) {
+            if (rituals[i][0]->getReturnToHand()) {
+                players[i]->returnToHand(std::move(rituals[i][0])); // not sure about cast again
+            }
+        }
     }
 }
 
@@ -177,7 +179,9 @@ vector<Minion&> Board::getGraveyard(int playerID) {
     return players[playerID - 1]->getGraveyard();
 }
 
-void Board::startCommand() {
+void Board::startCommand(int playerID) {
+    addMagic(playerID, 1);
+    players[playerID - 1]->drawCard(); // checking for hand size and deck size is done in player
     notifyTurnStart();
 }
 
@@ -227,32 +231,6 @@ void Board::removeRitual(int playerTarget) {
     
 }
 
-void Board::checkCardStates() {
-    const int numPlayers = 2;
-    for (int i = 0; i < numPlayers; i++) {
-        for (int j = 0; j < minions[i].size(); j++) {
-            if (minions[i][j]->getReturnToHand()) {
-                Card &targetNotify = dynamic_cast<Card&>(*minions[i][j]);
-                notifyMinionLeave(i, targetNotify);
-                minions[i][j]->detachAllEnchant();
-                players[i]->returnToHand(std::move(minions[i][j])); // not sure if I need to cast to Card
-            
-            } else if (minions[i][j]->getDefence() <= 0) {
-                Card &targetNotify = dynamic_cast<Card&> (*minions[i][j]);
-                notifyMinionLeave(i, targetNotify);
-                minions[i][j]->detachAllEnchant();
-                players[i]->sendToGraveyard(std::move(minions[i][j]));
-            }
-        }
-
-        if (rituals[i].size() > 0) {
-            if (rituals[i][0]->getReturnToHand()) {
-                players[i]->returnToHand(std::move(rituals[i][0])); // not sure about cast again
-            }
-        }
-    }
-}
-
 void Board::addMagic(int playerID, int magic) {
     players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() + magic);
 }
@@ -265,3 +243,26 @@ void Board::rechargeRitual(int playerID, int charges) {
     }
 }
 
+void Board::damageAll(int n) {
+    const int p1 = 0, p2 = 1;
+    int minionSizeP1 = minions[p1].size(), minionSizeP2 = minions[p2].size();
+    for (int i = 0; i < minionSizeP1; i++) {
+        minions[p1][i]->setDefence(minions[p1][i]->getDefence() - n);
+    }
+
+    for (int i = 0; i < minionSizeP2; i++) {
+        minions[p2][i]->setDefence(minions[p2][i]->getDefence() - n);
+    }
+}
+
+void Board::healAll(int n) {
+    const int p1 = 0, p2 = 1;
+    int minionSizeP1 = minions[p1].size(), minionSizeP2 = minions[p2].size();
+    for (int i = 0; i < minionSizeP1; i++) {
+        minions[p1][i]->setDefence(minions[p1][i]->getDefence() + n);
+    }
+
+    for (int i = 0; i < minionSizeP2; i++) {
+        minions[p2][i]->setDefence(minions[p2][i]->getDefence() + n);
+    }
+}
