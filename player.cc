@@ -67,6 +67,8 @@ int Player::getPlayerHealth() { return health; };
 
 int Player::getPlayerMagic() { return magic; };
 
+void Player::setPlayerMagic(int n) { magic = n; }
+
 void Player::setPlayerHealth(int n) { health = n; };
 
 bool Player::drawCard() {

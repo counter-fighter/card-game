@@ -5,6 +5,6 @@ NovicePyromancer::NovicePyromancer(int player) : Minion{"Novice Pyromancer", "De
 NovicePyromancer::~NovicePyromancer() {};
 
 void NovicePyromancer::activateAbility(Board &brd, Minion &target) {
-  target.setDefence(target.getAttack() - 1);
+  target.setDefence(target.getDefence() - 1);
   this->actCount--;
 };

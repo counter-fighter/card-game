@@ -65,6 +65,7 @@ class Player {
         string getPlayerName();
         int getPlayerHealth();
         int getPlayerMagic();
+        void setPlayerMagic(int n);
         int getHandSize();
         void setPlayerHealth(int n);
         bool drawCard();
