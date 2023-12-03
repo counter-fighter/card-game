@@ -9,7 +9,7 @@ class Ritual : public Card {
     const TargetType tt = TargetType::NoTarget;
 
     public:
-        Ritual(string name, string desc, int cost, int player, int actCost, int charges);
+        Ritual(string name, string desc, int cost, int player, int charges, int actCost);
         virtual ~Ritual();
         CardType getCardType() override;
         TargetType getTargetType() override; 
