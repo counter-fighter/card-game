@@ -8,7 +8,8 @@ void FireElemental::notifyCardMinionEnter(Board &brd, Card &target) {
   if (target.getCardType() == CardType::Minion) {
     Minion &m = dynamic_cast<Minion&>(target);
 
-    m.setDefence(m.getDefence() - 1);
-
+    if (m.getPlayer() != player) {
+      m.setDefence(m.getDefence() - 1);
+    }
   }
 };

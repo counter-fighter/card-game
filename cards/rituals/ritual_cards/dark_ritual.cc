@@ -6,7 +6,7 @@ DarkRitual::DarkRitual(int player) : Ritual{"Dark Ritual", "At the start of your
 DarkRitual::~DarkRitual() {};
 
 void DarkRitual::notifyCardTurnStart(Board &brd) {
-  // brd.addMagic();
+  brd.addMagic(player, 1);
 };
 
 

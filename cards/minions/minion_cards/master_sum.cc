@@ -5,6 +5,6 @@ MasterSummoner::MasterSummoner(int player) : Minion{"Master Summoner", "Summon a
 MasterSummoner::~MasterSummoner() {};
 
 void MasterSummoner::activateAbility(Board &brd) {
-  // brd.summon(3, "Air Element")
+  brd.summon("Air Elemental", 3, player);
   this->actCount -= 2;
 };

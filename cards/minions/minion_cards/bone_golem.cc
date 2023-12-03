@@ -5,6 +5,6 @@ BoneGolem::BoneGolem(int player) : Minion{"Bone Golem", "Gain +1/+1 whenever a m
 BoneGolem::~BoneGolem() {};
 
 void BoneGolem::notifyCardMinionLeave(Board &brd, Card &target) {
-  Minion::atck++;
-  Minion::def++;
+  atck++;
+  def++;
 };

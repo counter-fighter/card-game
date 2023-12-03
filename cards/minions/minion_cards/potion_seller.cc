@@ -5,5 +5,5 @@ PotionSeller::PotionSeller(int player) : Minion{"Potion Seller", "At the end of 
 PotionSeller::~PotionSeller() {};
 
 void PotionSeller::notifyCardTurnEnd(Board &brd) {
-  // brd.healAll(1);
+  brd.healAll(1);
 };

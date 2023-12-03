@@ -10,7 +10,7 @@ void Banish::useSpell(Board &brd, Card &target) {
 
     m.setDefence(-1);
   } else {
-    // brd.removeRitual(target.getPlayer());
+    brd.removeRitual(target.getPlayer());
   }
 
 };

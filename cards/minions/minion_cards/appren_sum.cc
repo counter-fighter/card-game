@@ -5,6 +5,6 @@ ApprenticeSummoner::ApprenticeSummoner(int player) : Minion{"Apprentice Summoner
 ApprenticeSummoner::~ApprenticeSummoner() {};
 
 void ApprenticeSummoner::activateAbility(Board &brd) {
-  // brd.summon(1, "Air Element")
+  brd.summon("Air Elemental", 1, player);
   this->actCount--;
 };
