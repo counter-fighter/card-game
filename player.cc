@@ -88,8 +88,9 @@ void Player::sendToGraveyard(unique_ptr<Minion> m) {
   graveyard.emplace_back(move(m));
 };
 
-bool Player::returnToHand(unique_ptr<Card> c) {
-  if ((int)hand.size() >= MAX_HAND) return false;
+void Player::returnToHand(unique_ptr<Card> c) {
   hand.emplace_back(move(c));
-  return true;
 };
+
+int Player::getHandSize() {return (int)hand.size(); };
+

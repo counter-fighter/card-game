@@ -64,11 +64,12 @@ class Player {
         string getPlayerName();
         int getPlayerHealth();
         int getPlayerMagic();
+        int getHandSize();
         void setPlayerHealth(int n);
         bool drawCard();
         unique_ptr<Card> playFromHand (int index);
         void sendToGraveyard(unique_ptr<Minion> m);
-        bool returnToHand(unique_ptr<Card> c);
+        void returnToHand(unique_ptr<Card> c);
 };
 
 #endif
