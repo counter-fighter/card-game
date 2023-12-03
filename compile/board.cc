@@ -39,11 +39,11 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         
     } else if (cardToPlay->getCardType() == CardType::Ritual) {
         if (static_cast<int>(rituals[playerID - 1].size()) > 0) {
-            unique_ptr<Card> discard = unique_ptr<Card> (dynamic_cast<Card*>(rituals[playerID - 1][0].release()));
+            unique_ptr<Card> discard = unique_ptr<Card> (static_cast<Card*>(rituals[playerID - 1][0].release()));
             discardedCards[playerID - 1].emplace_back(std::move(discard));
         }
         unique_ptr<Ritual> ritualToPlay = unique_ptr<Ritual> (dynamic_cast<Ritual*>(cardToPlay.release()));
-        rituals[playerID - 1].emplace_back(ritualToPlay);
+        rituals[playerID - 1].emplace_back(std::move(ritualToPlay));
 
     } else if (cardToPlay->getCardType() == CardType::Spell) {
         Card &cardCast = *cardToPlay.get();
@@ -72,15 +72,15 @@ void Board::checkCardStates() {
     for (int i = 0; i < numPlayers; i++) {
         for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
             if (minions[i][j]->getReturnToHand()) {
-                Card &targetNotify = dynamic_cast<Card&>(*minions[i][j]);
+                Card &targetNotify = static_cast<Card&>(*minions[i][j]);
                 notifyMinionLeave(i, targetNotify);
                 minions[i][j]->detachAllEnchant();
                 
-                unique_ptr<Card> card = unique_ptr<Card> (dynamic_cast<Card*>(minions[i][j].release()));
+                unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(minions[i][j].release()));
                 players[i]->returnToHand(std::move(card)); // not sure if I need to cast to Card
             
             } else if (minions[i][j]->getDefence() <= 0) {
-                Card &targetNotify = dynamic_cast<Card&> (*minions[i][j]);
+                Card &targetNotify = static_cast<Card&> (*minions[i][j]);
                 notifyMinionLeave(i, targetNotify);
                 minions[i][j]->detachAllEnchant();
                 players[i]->sendToGraveyard(std::move(minions[i][j]));
@@ -89,7 +89,7 @@ void Board::checkCardStates() {
 
         if (static_cast<int> (rituals[i].size()) > 0) {
             if (rituals[i][0]->getReturnToHand() && players[i]->getHandSize() < MAX_HAND) {
-                unique_ptr<Card> card = unique_ptr<Card> (dynamic_cast<Card*>(rituals[i][0].release()));
+                unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(rituals[i][0].release()));
                 players[i]->returnToHand(std::move(card)); // not sure about cast again
             }
         }
@@ -241,8 +241,8 @@ void Board::raiseDead(int playerID) {
 
 void Board::removeRitual(int playerTarget) {
     if (static_cast<int> (rituals[playerTarget].size()) > 0) {
-        unique_ptr<Card> enchant = unique_ptr<Card> (dynamic_cast<Card*>(rituals[playerTarget][0].release()));
-        discardedCards[playerTarget - 1].emplace_back(rituals[playerTarget][0]);
+        unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(rituals[playerTarget][0].release()));
+        discardedCards[playerTarget - 1].emplace_back(std::move(card));
     } else {
         // print error message
     }
