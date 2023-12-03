@@ -1,3 +1,5 @@
+#ifndef __BONEGOLEM_H__
+#define __BONEGOLEM_H__
 #include "minion.h"
 
 class BoneGolem : public Minion {
@@ -7,3 +9,5 @@ class BoneGolem : public Minion {
     BoneGolem(int player);
     ~BoneGolem();
 };
+
+#endif

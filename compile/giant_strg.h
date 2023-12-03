@@ -1,3 +1,5 @@
+#ifndef __GIANTSTRENGTH_H__
+#define __GIANTSTRENGTH_H__
 #include "enchantment.h"
 
 class GiantStrength : public Enchantment {
@@ -6,5 +8,7 @@ class GiantStrength : public Enchantment {
     
     public :
         GiantStrength(int player);
+
         virtual ~GiantStrength();
 };
+#endif

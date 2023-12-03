@@ -1,3 +1,5 @@
+#ifndef __FIREELEM_H__
+#define __FIREELEM_H__
 #include "minion.h"
 
 class FireElemental : public Minion {
@@ -6,3 +8,5 @@ class FireElemental : public Minion {
     ~FireElemental();
     void notifyCardMinionEnter(Board &brd, Card &target) override;
 };
+
+#endif

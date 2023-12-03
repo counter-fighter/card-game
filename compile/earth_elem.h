@@ -1,3 +1,5 @@
+#ifndef __EARTHELEM_H__
+#define __EARTHELEM_H__
 #include "minion.h"
 
 class EarthElemental : public Minion {
@@ -5,3 +7,5 @@ class EarthElemental : public Minion {
     EarthElemental(int player);
     ~EarthElemental();
 };
+
+#endif
