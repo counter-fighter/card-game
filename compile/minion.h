@@ -61,7 +61,7 @@ class Minion : public Card {
         int getActivationCost();
         int getActionReset();
 
-        vector<Enchantment&> getEnchantment();
+        vector<Enchantment> getEnchantment();
 
         CardType getCardType() override; //Card type already determined
         TargetType getTargetType() override; 

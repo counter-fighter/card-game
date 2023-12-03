@@ -1,4 +1,5 @@
 #include "minion.h"
+#include "player.h"
 
 Minion::Minion(string name, string desc, int cost, int player, int atck, int def, int actReset,int actCost) : 
   Card{name, desc, cost, player}, atck{atck}, atckReset{atck}, def{def}, defReset{def}, actCount(0), actReset{actReset}, actCost{actCost} {};
@@ -100,8 +101,8 @@ void Minion::detachAllEnchant () {
 
 };
 
-vector<Enchantment&> Minion::getEnchantment() {
-  vector<Enchantment&> ret;
+vector<Enchantment> Minion::getEnchantment() {
+  vector<Enchantment> ret;
 
   for (auto it = enchants.begin(); it != enchants.end(); it++) {
     ret.emplace_back(*(*it).get());

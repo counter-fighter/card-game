@@ -49,8 +49,8 @@ name{name}, id{id}, magic{MAGIC_RESET}, health{HEALTH_RESET}, deck{}, hand{}, gr
 
 };
 
-vector<Minion&> Player::getGraveyard() {
-  vector<Minion&> ret;
+vector<Minion> Player::getGraveyard() {
+  vector<Minion> ret;
 
   for (auto it = graveyard.begin(); it != graveyard.end(); it++) {
     ret.emplace_back(*(*it).get());
@@ -100,8 +100,8 @@ void Player::returnToHand(unique_ptr<Card> c) {
 
 int Player::getHandSize() {return static_cast<int>(hand.size()); };
 
-vector<Card&> Player::getHand() {
-  vector<Card&> ret;
+vector<Card> Player::getHand() {
+  vector<Card> ret;
 
   for (auto it = hand.begin(); it != hand.end(); it++) {
     ret.emplace_back(*(*it).get());
