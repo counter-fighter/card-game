@@ -1,4 +1,5 @@
 #include "banish.h"
+#include "board.h"
 
 Banish::Banish(int player) : Spell{"Banish", "Destroy target minion or ritual", 2, player, TargetType::AllTarget} {};
 
