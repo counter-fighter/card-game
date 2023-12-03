@@ -19,7 +19,11 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         }
     }
 
-    unique_ptr<Card> cardToPlay = players[playerID]->playFromHand(cardInd);
+    unique_ptr<Card> cardToPlay = players[playerID - 1]->playFromHand(cardInd);
+
+    if (cardToPlay->getCost() < players[playerID - 1]->getPlayerMagic()) {
+        players[playerID - 1]->returnToHand(std::move(cardToPlay));
+    }
     
 
     // use the effect/place it down
@@ -112,7 +116,8 @@ void Board::notifyTurnStart() {
         for (int j = 0; j < minions[i].size(); j++) {
             minions[i][j]->notifyCardTurnStart(*this);
         }
-        if (rituals[i].size() > 0) {
+
+        if (rituals[i].size() > 0 && rituals[i][0]->getCharges() < rituals[i][0]->getActionCost()) {
             rituals[i][0]->notifyCardTurnStart(*this);
         }
     }
@@ -123,7 +128,8 @@ void Board::notifyTurnEnd() {
         for (int j = 0; j < minions[i].size(); j++) {
             minions[i][j]->notifyCardTurnEnd(*this);
         }
-        if (rituals[i].size() > 0) {
+
+        if (rituals[i].size() > 0 && rituals[i][0]->getCharges() < rituals[i][0]->getActionCost()) {
             rituals[i][0]->notifyCardTurnEnd(*this);
         }
     }
@@ -134,7 +140,7 @@ void Board::notifyMinionEnter(int playerID) {
         for (int j = 0; j < minions[i].size(); j++) {
             minions[i][j]->notifyCardMinionEnter(*this, *minions[playerID - 1][minions[playerID - 1].size() - 1]);
         }
-        if (rituals[i].size() > 0) {
+        if (rituals[i].size() > 0 && rituals[i][0]->getCharges() < rituals[i][0]->getActionCost()) {
             rituals[i][0]->notifyCardMinionEnter(*this, *minions[playerID - 1][minions[playerID - 1].size() - 1]);
         }
     }
@@ -200,6 +206,11 @@ void Board::attackCommand(int minionInd, int playerID, int enemyMinion) {
 }
 
 void Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlayer, int targetCard) {
+    if (minions[playerID - 1][minionInd]->getActionCount() < minions[playerID - 1][minionInd]->getActivationCost()) {
+        // print error message, not enough action count
+        return;
+    }
+
     if (targetCard == 'r') {
         // minions[playerID - 1][minionInd]->activateAbility(*this, *rituals[targetPlayer - 1][0]);
         // print error message for now because we don't have any cards that do this

@@ -38,7 +38,7 @@ int main (int argc, char *argv []) {
         }
     }
 
-    Printer printer{graphics};
+    Printer printer{};
     Board board;
     
     ifstream init{initFile};
@@ -73,7 +73,9 @@ int main (int argc, char *argv []) {
 
 
         if (cmd == "help") {
-            // print the help
+            // print the help menu
+            printer.printHelp();
+
         } else if (cmd == "end") {
             board.endCommand();
             currentPlayerID = (currentPlayerID == 1) ? 2 : 1;
@@ -114,11 +116,22 @@ int main (int argc, char *argv []) {
             }
 
         } else if (cmd == "inspect") {
-            // call printer command for inspect
+            int minion;
+            if (lineCmd >> minion) {
+                Minion &inspectMinion = board.getMinions()[currentPlayerID - 1][minion - 1];
+                printer.printInspect(inspectMinion);
+            } else {
+                // print invalid input
+            }
+
         } else if (cmd == "hand") {
             // printer command for hand
+            printer.printHand(board.getPlayer().getHand());
+
         } else if (cmd == "board") {
             // printer command for board
+            printer.printBoard(board);
+
         } else {
             cout << "A valid command was not entered, please enter a valid command" << endl;
         }
