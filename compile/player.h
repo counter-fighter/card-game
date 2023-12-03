@@ -50,6 +50,9 @@ class Player {
     public:
         Player(string name, int id, string filename, bool shuffle); // magic is initialized to 0 and hand is initially empty.
         ~Player();
+        Player(Player&& p);
+        Player(Player& p);
+
         // void drawCard();
         // void playCard();
         // void setMagic(const int n);

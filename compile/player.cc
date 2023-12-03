@@ -26,6 +26,36 @@ unique_ptr<Card> Player::allocCard (string name, int id) {
   return nullptr;
 }
 
+template<typename T> void moveVec (vector<T> &source, vector<T> &dest) {
+  while (source.size() > 0) {
+    auto it = source.begin();
+    dest.push_back(move(*it));
+    source.erase(it);
+  }
+};
+
+Player::Player(Player&& p) {
+  name = p.name;
+  id = p.id;
+  magic = p.magic;
+  health = p.health;
+  moveVec(p.deck, deck);
+  moveVec(p.hand, hand);
+  moveVec(p.graveyard, graveyard);
+
+};
+
+Player::Player(Player& p) {
+  name = p.name;
+  id = p.id;
+  magic = p.magic;
+  health = p.health;
+  moveVec(p.deck, deck);
+  moveVec(p.hand, hand);
+  moveVec(p.graveyard, graveyard);
+};
+
+
 Player::~Player() {};
 
 

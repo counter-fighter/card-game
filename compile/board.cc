@@ -164,7 +164,7 @@ void Board::notifyMinionLeave(int playerID, Card &target) {
 }
 
 Player Board::getPlayer(int playerID) {
-    return *players[playerID - 1];
+    return *players[playerID - 1].get();
 }
 
 vector<vector<Minion>> Board::getMinions() {
