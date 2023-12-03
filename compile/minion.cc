@@ -92,7 +92,7 @@ void Minion::detachEnchant () {
 };
 
 void Minion::detachAllEnchant () {
-  int num = (int)enchants.size();
+  int num = static_cast<int>(enchants.size());
 
   for (int i = 0; i < num; i++) {
     detachEnchant();

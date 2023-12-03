@@ -79,7 +79,7 @@ bool Player::drawCard() {
 };
 
 unique_ptr<Card> Player::playFromHand (int index) {
-  if (index >= 0 && index < (int)hand.size()) {
+  if (index >= 0 && index < static_cast<int>(hand.size())) {
     unique_ptr<Card> temp = move(hand[index]);
     hand.erase(hand.begin() + index);
     return move(temp);
@@ -91,14 +91,14 @@ void Player::sendToGraveyard(unique_ptr<Minion> m) {
 };
 
 unique_ptr<Minion> Player::returnTopFromGraveyard() {
-  return std::move(graveyard[graveyard.size() - 1]);
+  return std::move(graveyard[ static_cast<int>(graveyard.size()) - 1]);
 }
 
 void Player::returnToHand(unique_ptr<Card> c) {
   hand.emplace_back(move(c));
 };
 
-int Player::getHandSize() {return (int)hand.size(); };
+int Player::getHandSize() {return static_cast<int>(hand.size()); };
 
 vector<Card&> Player::getHand() {
   vector<Card&> ret;
