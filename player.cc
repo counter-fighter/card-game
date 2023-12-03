@@ -100,3 +100,12 @@ void Player::returnToHand(unique_ptr<Card> c) {
 
 int Player::getHandSize() {return (int)hand.size(); };
 
+vector<Card&> Player::getHand() {
+  vector<Card&> ret;
+
+  for (auto it = hand.begin(); it != hand.end(); it++) {
+    ret.emplace_back(*(*it).get());
+  }
+
+  return ret;
+};
