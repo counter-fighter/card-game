@@ -59,11 +59,9 @@ Xwindow::~Xwindow() {
   XCloseDisplay(d);
 }
 
-// void Xwindow::fillRectangle(int x, int y, int width, int height, int colour) {
-//   XSetForeground(d, gc, colours[colour]);
-//   XFillRectangle(d, w, gc, x, y, width, height);
-//   XSetForeground(d, gc, colours[Black]);
-// }
+void Xwindow::clearArea(int x, int y, int width, int height) {
+  XClearArea(d, w, x, y, width, height, true);
+}
 
 void Xwindow::drawString(int x, int y, string msg) {
   XDrawString(d, w, DefaultGC(d, s), x, y, msg.c_str(), msg.length());

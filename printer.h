@@ -7,6 +7,7 @@
 // #include "ritual.h"
 // #include "spell.h"
 #include "ascii_graphics.h"
+#include "window.h"
 
 using namespace std;
 
@@ -14,10 +15,11 @@ class Printer {
     const int cardHeight = 11;
     const int maxCardPerRow = 5;
     const int boarderWidthNoCorner = 165;
-    //bool enableGraphics;
+    bool enableGraphics;
     vector<card_template_t> cards;
-    // window pointer
+    Window *window;
 
+    // incorporate window where applicable
     void printOuterRow(vector<Ritual&> ritual, const Player& player, vector<Minion&> graveyard);
     void printInnerRow(vector<Minion&> minions);
     void printUpperBoarder();
@@ -33,12 +35,13 @@ class Printer {
     card_template_t enchantmentToCardTemplateT(const Enchantment& enchantment);
 
     public:
-        Printer(); //window pointer
+        Printer(bool enableGraphics, Xwindow &w);
         ~Printer();
         void printHelp();
         void printBoard(const Board& board); //clear window (except hand) if enabled print board
         void printHand(vector<Card&> hand); //constantly displayed, updated when changes r made, 
         void printInspect(Minion& minion); //clear window (except hand) if enabled print inspect
+        void updateHnad(vector<Card&> hand); // for graphics
 };
 
 #endif
