@@ -77,7 +77,8 @@ int main (int argc, char *argv []) {
         } else if (cmd == "end") {
             board.endCommand();
             currentPlayerID = (currentPlayerID) ? 0 : 1;
-            board.startCommand();
+            board.startCommand(currentPlayerID);
+
         } else if (cmd == "quit") {
             break;
         } else if (cmd == "attack") {
@@ -90,6 +91,7 @@ int main (int argc, char *argv []) {
                 // attack player
                 board.attackCommand(ownMinion, currentPlayerID);
             }
+
         } else if (cmd == "play") {
             int cardToPlay, targetPlayer, targetCard;
             lineCmd >> cardToPlay;
@@ -99,6 +101,7 @@ int main (int argc, char *argv []) {
             } else {
                 board.playACard(cardToPlay, currentPlayerID);
             }
+
         } else if (cmd == "use") {
             int minion, targetPlayer, targetCard;
             lineCmd >> minion;
@@ -109,6 +112,7 @@ int main (int argc, char *argv []) {
                 // do some error checking for incorrect input
                 board.useMinionAbilityCommand(minion, currentPlayerID);
             }
+            
         } else if (cmd == "inspect") {
             // call printer command for inspect
         } else if (cmd == "hand") {
