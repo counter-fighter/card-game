@@ -1,3 +1,5 @@
+#ifndef __MASTER_SUM_H__
+#define __MASTER_SUM_H__
 #include "minion.h"
 
 class MasterSummoner : public Minion {
@@ -6,3 +8,5 @@ class MasterSummoner : public Minion {
     ~MasterSummoner();
     void activateAbility(Board &brd) override;
 };
+
+#endif 

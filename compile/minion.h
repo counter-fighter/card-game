@@ -3,6 +3,8 @@
 #include <memory>
 #include <vector>
 #include "card.h"
+// #include "board.h"
+class Board;
 
 class Player; // Replace with Player class when ready
 class Enchantment; // Replace with Player class when ready

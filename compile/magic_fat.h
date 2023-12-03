@@ -1,3 +1,5 @@
+#ifndef __MAGICFAT_H__
+#define __MAGICFAT_H__
 #include "enchantment.h"
 
 class MagicFatigue : public Enchantment {
@@ -8,3 +10,5 @@ class MagicFatigue : public Enchantment {
         MagicFatigue(int player);
         virtual ~MagicFatigue();
 };
+
+#endif

@@ -1,5 +1,5 @@
-#ifndef __MASTERSUMMONER_H__
-#define __MASTERSUMMONER_H__
+#ifndef __SPELL_H__
+#define __SPELL_H__
 #include "card.h"
 #include "minion.h"
 

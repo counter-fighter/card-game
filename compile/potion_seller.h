@@ -1,3 +1,5 @@
+#ifndef __POTION_SELLER_H__
+#define __POTION_SELLER_H__
 #include "minion.h"
 
 class PotionSeller : public Minion {
@@ -6,3 +8,5 @@ class PotionSeller : public Minion {
     ~PotionSeller();
     void notifyCardTurnEnd(Board &brd) override;
 };
+
+#endif
