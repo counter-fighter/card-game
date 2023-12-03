@@ -29,7 +29,8 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
     // use the effect/place it down
     if (cardToPlay->getCardType() == CardType::Minion) {
         if (static_cast<int>(minions[playerID - 1].size()) < MAX_MINIONS) {
-            minions[playerID - 1].emplace_back(std::move(cardToPlay));
+            unique_ptr<Minion> minionToPlay = unique_ptr<Minion> (dynamic_cast<Minion*>(cardToPlay.release()));
+            minions[playerID - 1].emplace_back(std::move(minionToPlay));
             notifyMinionEnter(playerID);
         } else {
             players[playerID - 1]->returnToHand(std::move(cardToPlay));
@@ -38,9 +39,11 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         
     } else if (cardToPlay->getCardType() == CardType::Ritual) {
         if (static_cast<int>(rituals[playerID - 1].size()) > 0) {
-            discardedCards[playerID - 1].emplace_back(std::move(rituals[playerID - 1][0]));
+            unique_ptr<Card> discard = unique_ptr<Card> (dynamic_cast<Card*>(rituals[playerID - 1][0].release()));
+            discardedCards[playerID - 1].emplace_back(std::move(discard));
         }
-        rituals[playerID - 1].emplace_back(std::move(cardToPlay));
+        unique_ptr<Ritual> ritualToPlay = unique_ptr<Ritual> (dynamic_cast<Ritual*>(cardToPlay.release()));
+        rituals[playerID - 1].emplace_back(ritualToPlay);
 
     } else if (cardToPlay->getCardType() == CardType::Spell) {
         Card &cardCast = *cardToPlay.get();
@@ -59,8 +62,8 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         discardedCards[playerID - 1].emplace_back(std::move(cardToPlay));
 
     } else {
-        // unique_ptr<Enchantment> enchant {dynamic_cast<Enchantment*>(std::move(cardToPlay))};
-        attach(std::move(cardToPlay), playerID, targetCard);
+        unique_ptr<Enchantment> enchant = unique_ptr<Enchantment> (dynamic_cast<Enchantment*>(cardToPlay.release()));
+        attach(std::move(enchant), playerID, targetCard);
     }
 }
 
@@ -72,7 +75,9 @@ void Board::checkCardStates() {
                 Card &targetNotify = dynamic_cast<Card&>(*minions[i][j]);
                 notifyMinionLeave(i, targetNotify);
                 minions[i][j]->detachAllEnchant();
-                players[i]->returnToHand(std::move(minions[i][j])); // not sure if I need to cast to Card
+                
+                unique_ptr<Card> card = unique_ptr<Card> (dynamic_cast<Card*>(minions[i][j].release()));
+                players[i]->returnToHand(std::move(card)); // not sure if I need to cast to Card
             
             } else if (minions[i][j]->getDefence() <= 0) {
                 Card &targetNotify = dynamic_cast<Card&> (*minions[i][j]);
@@ -84,7 +89,8 @@ void Board::checkCardStates() {
 
         if (static_cast<int> (rituals[i].size()) > 0) {
             if (rituals[i][0]->getReturnToHand() && players[i]->getHandSize() < MAX_HAND) {
-                players[i]->returnToHand(std::move(rituals[i][0])); // not sure about cast again
+                unique_ptr<Card> card = unique_ptr<Card> (dynamic_cast<Card*>(rituals[i][0].release()));
+                players[i]->returnToHand(std::move(card)); // not sure about cast again
             }
         }
     }
@@ -227,7 +233,7 @@ void Board::increaseRitualCharges(int playerID, int amount) {
 
 void Board::raiseDead(int playerID) {
     if (static_cast<int> (players[playerID - 1]->getGraveyard().size()) > 0 && static_cast<int> (minions[playerID - 1].size()) < MAX_MINIONS) {
-        unique_ptr<Minion> raisedMinion {players[playerID - 1]->returnTopFromGraveyard()};
+        unique_ptr<Minion> raisedMinion = players[playerID - 1]->returnTopFromGraveyard();
         raisedMinion->setDefence(1);
         minions[playerID - 1].emplace_back(std::move(raisedMinion));
     }
@@ -235,6 +241,7 @@ void Board::raiseDead(int playerID) {
 
 void Board::removeRitual(int playerTarget) {
     if (static_cast<int> (rituals[playerTarget].size()) > 0) {
+        unique_ptr<Card> enchant = unique_ptr<Card> (dynamic_cast<Card*>(rituals[playerTarget][0].release()));
         discardedCards[playerTarget - 1].emplace_back(rituals[playerTarget][0]);
     } else {
         // print error message
