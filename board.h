@@ -4,6 +4,8 @@
 #include <vector>
 #include <memory>
 #include <fstream>
+#include <sstream>
+#include "card.h"
 #include "player.h"
 #include "minion.h"
 #include "ritual.h"
@@ -14,15 +16,16 @@ class Board {
   vector<vector<unique_ptr<Minion>>> minions;
   vector<vector<unique_ptr<Ritual>>> rituals;
   vector<unique_ptr<Player>> players;
+  vector<vector<unique_ptr<Card>>> discardedCards;
   // other fields (deck, graveyard, removedFromPlay?)
 
   public:
     Board();
     ~Board();
-    void initPlayers(string p1Name, string p2Name, ifstream ifs1, ifstream ifs2);
+    void initPlayer(int playerID, string pName, string deckfile);
     void damageAll(int n);
     void healAll(int n);
-    void playACard(unique_ptr<Card> card, int playerID);
+    void playACard(int cardInd, int playerID, int targetPlayer = -1, int targetCard = -1);
     void summon(unique_ptr<Card> card, int n);
     void attach(unique_ptr<Card> card);
     void detach(unique_ptr<Card> card);
@@ -34,7 +37,12 @@ class Board {
     vector<vector<Minion&>> getMinions();
     vector<vector<Ritual&>> getRituals();
     vector<Card&> getGraveyard(int playerID);
-    void receiveCommand();
+    void endCommand();
+    void attackCommand(int minionInd, int playerID, int enemyMinion = -1);
+    void useMinionAbilityCommand(int minion, int playerID, int targetPlayer = -1, int targetCard = -1);
+    void increaseRitualCharges(int playerID, int amount);
+    void raiseDead();
+    void removeRitual();
 };
 
 #endif
