@@ -81,9 +81,7 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
 
     } else {
         // unique_ptr<Enchantment> enchant {dynamic_cast<Enchantment*>(std::move(cardToPlay))};
-        unique_ptr<Enchantment> enchant = unique_ptr<Enchantment> (dynamic_cast<Enchantment*>(cardToPlay.release()));
-        // unique_ptr<Enchantment> enchant = 
-        minions[playerID - 1][targetCard]->attachEnchant(std::move(enchant));
+        attach(std::move(cardToPlay), playerID, targetCard);
     }
 }
 
@@ -97,11 +95,15 @@ void Board::summon(string card, int n, int playerID) {
     }
 }
 
-void Board::attach(unique_ptr<Card> card) {
-
+void Board::attach(unique_ptr<Card> card, int playerID, int targetCard) {
+    unique_ptr<Enchantment> enchant = unique_ptr<Enchantment> (dynamic_cast<Enchantment*>(card.release()));
+    // unique_ptr<Enchantment> enchant = make_unique<Enchantment> (dynamic_cast<Enchantment*> (card.get()));
+    minions[playerID - 1][targetCard]->attachEnchant(std::move(enchant));
 }
 
-void Board::detach(unique_ptr<Card> card) {}
+void Board::detach(int playerID, int targetCard) {
+    minions[playerID - 1][targetCard]->detachEnchant();
+}
 
 void Board::notifyTurnStart() {
     const int numPlayers = 2;
@@ -220,11 +222,20 @@ void Board::checkCardStates() {
             if (minions[i][j]->getReturnToHand()) {
                 Card &targetNotify = dynamic_cast<Card&>(*minions[i][j]);
                 notifyMinionLeave(i, targetNotify);
+                minions[i][j]->detachAllEnchant();
                 players[i]->returnToHand(std::move(minions[i][j])); // not sure if I need to cast to Card
+            
             } else if (minions[i][j]->getDefence() <= 0) {
                 Card &targetNotify = dynamic_cast<Card&> (*minions[i][j]);
                 notifyMinionLeave(i, targetNotify);
+                minions[i][j]->detachAllEnchant();
                 players[i]->sendToGraveyard(std::move(minions[i][j]));
+            }
+        }
+
+        if (rituals[i].size() > 0) {
+            if (rituals[i][0]->getReturnToHand()) {
+                players[i]->returnToHand(std::move(rituals[i][0])); // not sure about cast again
             }
         }
     }

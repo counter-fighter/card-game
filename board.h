@@ -29,8 +29,8 @@ class Board {
     void healAll(int n);
     void playACard(int cardInd, int playerID, int targetPlayer = -1, int targetCard = -1);
     void summon(string card, int n, int playerID);
-    void attach(unique_ptr<Card> card);
-    void detach(unique_ptr<Card> card);
+    void attach(unique_ptr<Card> card, int playerID, int targetCard);
+    void detach(int playerID, int targetCard);
     void notifyTurnStart();
     void notifyTurnEnd();
     void notifyMinionEnter(int playerID);
