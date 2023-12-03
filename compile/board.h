@@ -24,7 +24,7 @@ class Board {
   public:
     Board();
     ~Board();
-    void initPlayer(int playerID, string pName, string deckfile); // initializes a player
+    void initPlayer(string pName, int playerID, string deckfile, bool shuffle); // initializes a player
 
     // plays a card from hand, discards spell after use or places minion/ritual/enchanment on board
     void playACard(int cardInd, int playerID, int targetPlayer = -1, int targetCard = -1); 
