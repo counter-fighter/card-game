@@ -6,5 +6,5 @@ NovicePyromancer::~NovicePyromancer() {};
 
 void NovicePyromancer::activateAbility(Board &brd, Minion &target) {
   target.setDefence(target.getDefence() - 1);
-  this->actCount--;
+  actCount -= actCost;
 };
