@@ -76,7 +76,7 @@ int main (int argc, char *argv []) {
             // print the help
         } else if (cmd == "end") {
             board.endCommand();
-            currentPlayerID = (currentPlayerID) ? 0 : 1;
+            currentPlayerID = (currentPlayerID == 1) ? 2 : 1;
             board.startCommand(currentPlayerID);
 
         } else if (cmd == "quit") {
@@ -112,7 +112,7 @@ int main (int argc, char *argv []) {
                 // do some error checking for incorrect input
                 board.useMinionAbilityCommand(minion, currentPlayerID);
             }
-            
+
         } else if (cmd == "inspect") {
             // call printer command for inspect
         } else if (cmd == "hand") {
