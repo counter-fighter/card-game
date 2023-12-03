@@ -84,7 +84,7 @@ void Board::checkCardStates() {
         }
 
         if (rituals[i].size() > 0) {
-            if (rituals[i][0]->getReturnToHand()) {
+            if (rituals[i][0]->getReturnToHand() && players[i]->getHandSize() < MAX_HAND) {
                 players[i]->returnToHand(std::move(rituals[i][0])); // not sure about cast again
             }
         }
