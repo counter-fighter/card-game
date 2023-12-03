@@ -126,7 +126,7 @@ int main (int argc, char *argv []) {
 
         } else if (cmd == "hand") {
             // printer command for hand
-            printer.printHand(board.getPlayer().getHand());
+            printer.printHand(board.getPlayer(currentPlayerID).getHand());
 
         } else if (cmd == "board") {
             // printer command for board
