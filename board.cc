@@ -50,9 +50,9 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
     if (cardToPlay->getCardType() == CardType::Minion) {
         if (minions[playerID - 1].size() < 5) {
             minions[playerID - 1].emplace_back(std::move(cardToPlay));
-            notifyMinionEnter();
+            notifyMinionEnter(playerID);
         } else {
-            players[playerID - 1]->returnToHand(cardToPlay);
+            players[playerID - 1]->returnToHand(std::move(cardToPlay));
             // error message for full minion board
         }
         
@@ -80,14 +80,26 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         discardedCards[playerID - 1].emplace_back(std::move(cardToPlay));
 
     } else {
-        unique_ptr<Enchantment> enchant {dynamic_cast<Enchantment*>(std::move(cardToPlay))};
-        minions[playerID - 1][targetCard]->attachEnchant(enchant);
+        // unique_ptr<Enchantment> enchant {dynamic_cast<Enchantment*>(std::move(cardToPlay))};
+        unique_ptr<Enchantment> enchant = unique_ptr<Enchantment> (dynamic_cast<Enchantment*>(cardToPlay.release()));
+        // unique_ptr<Enchantment> enchant = 
+        minions[playerID - 1][targetCard]->attachEnchant(std::move(enchant));
     }
 }
 
-void Board::summon(unique_ptr<Card> card, int n) {}
+void Board::summon(string card, int n, int playerID) {
+    for (int i = 0; i < n; i++) {
+        if (minions[playerID - 1].size() < MAX_MINIONS) {
+            // add minion to vector, either by creating new from string or std::move(card)
+            minions[playerID - 1].emplace_back(players[playerID - 1]->allocCard(card, playerID - 1));
+            notifyMinionEnter(playerID);
+        }
+    }
+}
 
-void Board::attach(unique_ptr<Card> card) {}
+void Board::attach(unique_ptr<Card> card) {
+
+}
 
 void Board::detach(unique_ptr<Card> card) {}
 
@@ -95,7 +107,10 @@ void Board::notifyTurnStart() {
     const int numPlayers = 2;
     for (int i = 0; i < numPlayers; i++) {
         for (int j = 0; j < minions[i].size(); j++) {
-            minions[i][j]->notifyCardTurnStart();
+            minions[i][j]->notifyCardTurnStart(*this);
+        }
+        if (rituals[i].size() > 0) {
+            rituals[i][0]->notifyCardTurnStart(*this);
         }
     }
 }
@@ -104,25 +119,34 @@ void Board::notifyTurnEnd() {
     const int numPlayers = 2;
     for (int i = 0; i < numPlayers; i++) {
         for (int j = 0; j < minions[i].size(); j++) {
-            minions[i][j]->notifyCardTurnEnd();
+            minions[i][j]->notifyCardTurnEnd(*this);
+        }
+        if (rituals[i].size() > 0) {
+            rituals[i][0]->notifyCardTurnEnd(*this);
         }
     }
 }
 
-void Board::notifyMinionEnter() {
+void Board::notifyMinionEnter(int playerID) {
     const int numPlayers = 2;
     for (int i = 0; i < numPlayers; i++) {
         for (int j = 0; j < minions[i].size(); j++) {
-            minions[i][j]->notifyCardMinionEnter();
+            minions[i][j]->notifyCardMinionEnter(*this, *minions[playerID - 1][minions[playerID - 1].size() - 1]);
+        }
+        if (rituals[i].size() > 0) {
+            rituals[i][0]->notifyCardMinionEnter(*this, *minions[playerID - 1][minions[playerID - 1].size() - 1]);
         }
     }
 }
 
-void Board::notifyMinionLeave() {
+void Board::notifyMinionLeave(int playerID, Card &target) {
     const int numPlayers = 2;
     for (int i = 0; i < numPlayers; i++) {
         for (int j = 0; j < minions[i].size(); j++) {
-            minions[i][j]->notifyCardTurnStart();
+            minions[i][j]->notifyCardMinionLeave(*this, target);
+        }
+        if (rituals[i].size() > 0) {
+            rituals[i][0]->notifyCardMinionEnter(*this, target);
         }
     }
 }
@@ -144,7 +168,7 @@ vector<Card&> Board::getGraveyard(int playerID) {
 }
 
 void Board::endCommand() {
-
+    notifyTurnEnd();
 }
 
 void Board::attackCommand(int minionInd, int playerID, int enemyMinion) {
@@ -159,22 +183,50 @@ void Board::attackCommand(int minionInd, int playerID, int enemyMinion) {
 
 void Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlayer, int targetCard) {
     if (targetCard == 'r') {
-        minions[playerID - 1][minionInd]->activateAbility(*this, rituals[targetPlayer - 1][0]);
+        // minions[playerID - 1][minionInd]->activateAbility(*this, *rituals[targetPlayer - 1][0]);
+        // print error message for now because we don't have any cards that do this
     } else if (targetCard == -1) {
         minions[playerID - 1][minionInd]->activateAbility(*this);
     } else {
-        minions[playerID - 1][minionInd]->activateAbility(*this, minions[targetPlayer - 1][targetCard]);
+        minions[playerID - 1][minionInd]->activateAbility(*this, *minions[targetPlayer - 1][targetCard]);
     }
 }
 
 void Board::increaseRitualCharges(int playerID, int amount) {
-
+    rituals[playerID - 1][0]->setCharges(rituals[playerID - 1][0]->getCharges() + amount);
 }
 
-void Board::raiseDead() {
-
+void Board::raiseDead(int playerID) {
+    if (players[playerID - 1]->getGraveyard().size() > 0 && minions[playerID - 1].size() < MAX_MINIONS) {
+        unique_ptr<Minion> raisedMinion {players[playerID - 1]->returnTopFromGraveyard()};
+        raisedMinion->setDefence(1);
+        minions[playerID - 1].emplace_back(std::move(raisedMinion));
+    }
 }
 
-void Board::removeRitual() {
+void Board::removeRitual(int playerTarget) {
+    if (rituals[playerTarget].size() > 0) {
+        discardedCards[playerTarget - 1].emplace_back(rituals[playerTarget][0]);
+    } else {
+        // print error message
+    }
     
 }
+
+void Board::checkCardStates() {
+    const int numPlayers = 2;
+    for (int i = 0; i < numPlayers; i++) {
+        for (int j = 0; j < minions[i].size(); j++) {
+            if (minions[i][j]->getReturnToHand()) {
+                Card &targetNotify = dynamic_cast<Card&>(*minions[i][j]);
+                notifyMinionLeave(i, targetNotify);
+                players[i]->returnToHand(std::move(minions[i][j])); // not sure if I need to cast to Card
+            } else if (minions[i][j]->getDefence() <= 0) {
+                Card &targetNotify = dynamic_cast<Card&> (*minions[i][j]);
+                notifyMinionLeave(i, targetNotify);
+                players[i]->sendToGraveyard(std::move(minions[i][j]));
+            }
+        }
+    }
+}
+
