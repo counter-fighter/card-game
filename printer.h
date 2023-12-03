@@ -2,10 +2,10 @@
 #define __PRINTER_H__
 #include <vector>
 #include "board.h"
-#include "card.h"
-#include "minion.h"
-#include "ritual.h"
-#include "spell.h"
+// #include "card.h"
+// #include "minion.h"
+// #include "ritual.h"
+// #include "spell.h"
 #include "ascii_graphics.h"
 
 using namespace std;

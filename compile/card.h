@@ -1,7 +1,7 @@
 #ifndef __CARD_H__
 #define __CARD_H__
 #include <string>
-#include "board.h"
+// #include "board.h"
 class Board;
 
 using namespace std;

@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "player.h"
-#include "card.h"
+// #include "player.h"
+// #include "card.h"
 #include "board.h"
 #include "printer.h"
 

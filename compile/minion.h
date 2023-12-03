@@ -1,8 +1,9 @@
 #ifndef __MINION_H__
 #define __MINION_H__
 #include <memory>
-#include "enchantment.h"
+#include <vector>
 #include "card.h"
+
 class Player; // Replace with Player class when ready
 class Enchantment; // Replace with Player class when ready
 
