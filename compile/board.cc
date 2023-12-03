@@ -181,7 +181,7 @@ vector<vector<Ritual>> Board::getRituals() {
     vector<vector<Ritual>> ritualsCopy;
     for (int i = 0; i < NUM_PLAYERS; i++) {
         if (static_cast<int> (rituals[i].size()) > 0) {
-            ritualsCopy.emplace_back(*rituals[i][0]);
+            ritualsCopy[i].emplace_back(*rituals[i][0]);
         }
     }
     return ritualsCopy;
