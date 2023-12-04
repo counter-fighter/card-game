@@ -1,6 +1,6 @@
 #include "aura_of_power.h"
 
-AuraOfPower::AuraOfPower(int player) : Ritual{"Aura of Power", "", 1, player, 4, 1} {};
+AuraOfPower::AuraOfPower(int player) : Ritual{"Aura of Power", "Whenever a minion enters play under your control, it gains +1/+1", 1, player, 4, 1} {};
 
 AuraOfPower::~AuraOfPower() {};
 
