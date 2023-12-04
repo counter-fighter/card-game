@@ -97,6 +97,7 @@ int main (int argc, char *argv []) {
         } else if (cmd == "play") {
             int cardToPlay, targetPlayer, targetCard;
             lineCmd >> cardToPlay;
+            cardToPlay--;
             if (lineCmd >> targetPlayer >> targetCard) {
                 if (targetCard != 'r') targetCard--;
                 board.playACard(cardToPlay, currentPlayerID, targetPlayer, targetCard);
