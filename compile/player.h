@@ -78,6 +78,7 @@ class Player {
         unique_ptr<Minion> returnTopFromGraveyard();
         void returnToHand(unique_ptr<Card> c);
         vector<reference_wrapper<Card>> getHand ();
+        void discard(int i);
 
 };
 

@@ -62,12 +62,12 @@ int main (int argc, char *argv []) {
         if (i == 0) { 
             p1Name = cmd;
             i++;
-            board.initPlayer(p1Name, i, deckfile1, testing);
+            board.initPlayer(p1Name, i, deckfile1, !testing);
             continue;
         } else if (i == 1) { 
             p2Name = cmd; 
             i++;            
-            board.initPlayer(p2Name, i, deckfile2, testing);
+            board.initPlayer(p2Name, i, deckfile2, !testing);
             continue; 
         }
 
@@ -132,10 +132,25 @@ int main (int argc, char *argv []) {
             // printer command for board
             printer.printBoard(board);
 
+        } else if (cmd == "draw") {
+            if (testing) {
+                board.getPlayer(currentPlayerID).drawCard();
+            } else {
+                // print error message
+                cout << "A valid command was not entered, please enter a valid command" << endl;
+            }
+            
+        } else if (cmd == "discard") {
+            if (testing) {
+                int i;
+                if (lineCmd >> i) {
+                    board.getPlayer(currentPlayerID).discard(i);
+                }
+            }
         } else {
             cout << "A valid command was not entered, please enter a valid command" << endl;
         }
-        cout << cmd << endl; // just echoing commands, remove later
+        // cout << cmd << endl; // just echoing commands, remove later
     }
 
 }

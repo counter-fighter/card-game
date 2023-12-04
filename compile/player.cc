@@ -133,3 +133,7 @@ vector<reference_wrapper<Card>> Player::getHand() {
 
   return ret;
 };
+
+void Player::discard(int i) {
+  hand.pop_back();
+}

@@ -6,6 +6,9 @@ Board::~Board() {}
 
 void Board::initPlayer(string pName, int playerID, string deckfile, bool shuffle) {
     unique_ptr<Player> player = make_unique<Player> (pName, playerID, deckfile, shuffle);
+    for (int i = 0; i < MAX_HAND; i++) {
+        player->drawCard();
+    }
     players.emplace_back(std::move(player));
 }
 
