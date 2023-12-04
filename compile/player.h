@@ -43,6 +43,7 @@ const int MAX_HAND = 5;
 class Player {
     string name;
     int id, magic, health;
+    bool testing;
     vector<unique_ptr<Card>> deck;
     vector<unique_ptr<Card>> hand;
     vector<unique_ptr<Minion>> graveyard;

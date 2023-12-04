@@ -34,13 +34,13 @@ template<typename T> void Player::moveVec (vector<T> &source, vector<T> &dest) {
   }
 };
 
-Player::Player(Player&& p) : name{p.name}, id{p.id}, magic{p.magic}, health{p.health} {
+Player::Player(Player&& p) : name{p.name}, id{p.id}, magic{p.magic}, health{p.health}, testing{p.testing} {
   moveVec(p.deck, deck);
   moveVec(p.hand, hand);
   moveVec(p.graveyard, graveyard);
 };
 
-Player::Player(Player& p) : name{p.name}, id{p.id}, magic{p.magic}, health{p.health} {
+Player::Player(Player& p) : name{p.name}, id{p.id}, magic{p.magic}, health{p.health}, testing{p.testing} {
   moveVec(p.deck, deck);
   moveVec(p.hand, hand);
   moveVec(p.graveyard, graveyard);
@@ -51,7 +51,7 @@ Player::~Player() {};
 
 
 Player::Player(string name, int id, string filename, bool testing): 
-name{name}, id{id}, magic{MAGIC_RESET}, health{HEALTH_RESET}, deck{}, hand{}, graveyard{} {
+name{name}, id{id}, magic{MAGIC_RESET}, health{HEALTH_RESET}, testing{testing}, deck{}, hand{}, graveyard{} {
   ifstream ifs(filename);
   string line;
   while (getline(ifs, line)) {
