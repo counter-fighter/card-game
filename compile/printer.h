@@ -3,10 +3,8 @@
 #include <vector>
 #include <functional>
 #include "board.h"
-// #include "minion.h"
-// #include "ritual.h"
-// #include "spell.h"
 #include "ascii_graphics.h"
+#include "window.h"
 
 using namespace std;
 
@@ -14,11 +12,12 @@ class Printer {
     const int cardHeight = 11;
     const int maxCardPerRow = 5;
     const int boarderWidthNoCorner = 165;
-    //bool enableGraphics;
+    bool enableGraphics;
     vector<card_template_t> cards;
-    // window pointer
-
-    void printOuterRow(vector<reference_wrapper<Ritual>> ritual, const Player& player, vector<reference_wrapper<Minion>> graveyard);
+    Xwindow* window;
+    
+    void printOuterRow(vector<reference_wrapper<Ritual>> ritual, const Player& player, 
+                       vector<reference_wrapper<Minion>> graveyard);
     void printInnerRow(vector<reference_wrapper<Minion>> minions);
     void printUpperBoarder();
     void printCentreGraphic();
@@ -33,12 +32,13 @@ class Printer {
     card_template_t enchantmentToCardTemplateT(const Enchantment& enchantment);
 
     public:
-        Printer(); //window pointer
+        Printer(bool enableGraphics, Xwindow &window);
         ~Printer();
         void printHelp();
-        void printBoard(const Board& board); //clear window (except hand) if enabled print board
-        void printHand(vector<reference_wrapper<Card>> hand); //constantly displayed, updated when changes r made, 
-        void printInspect(Minion& minion); //clear window (except hand) if enabled print inspect
+        void printBoard(const Board& board);
+        void printHand(vector<reference_wrapper<Card>> hand); 
+        void printInspect(Minion& minion);
+        void updateHand(vector<reference_wrapper<Card>> hand); // Requires enableGraphics == true
 };
 
 #endif
