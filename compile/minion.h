@@ -13,16 +13,14 @@ class Enchantment; // Replace with Player class when ready
 class Minion : public Card {
     protected :
         int atck, atckReset, def, defReset, actCount, actReset, actCost;
+        bool silenced = false;
         const CardType ct = CardType::Minion;
         const TargetType tt = TargetType::NoTarget;
         vector <unique_ptr<Enchantment>> enchants;
 
-
-
         // I'm thinking play should be handled between player and board
         //virtual void play(Board &board);
 
-        
 
     public :
         Minion(string name, string desc, int cost, int player, int atck, int def, int actReset, int actCost);
