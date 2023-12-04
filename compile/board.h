@@ -13,10 +13,11 @@
 
 using namespace std;
 
+const int MAX_MINIONS = 5;
+const int MAX_RITUALS = 1;
+const int NUM_PLAYERS = 2;
+
 class Board {
-  const int MAX_MINIONS = 5;
-  const int MAX_RITUALS = 1;
-  const int NUM_PLAYERS = 2;
   vector<vector<unique_ptr<Minion>>> minions;
   vector<vector<unique_ptr<Ritual>>> rituals;
   vector<unique_ptr<Player>> players;
