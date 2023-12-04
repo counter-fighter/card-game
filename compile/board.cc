@@ -177,7 +177,8 @@ void Board::detach(int playerID, int targetCard) {
 void Board::notifyTurnStart() {
     for (int i = 0; i < NUM_PLAYERS; i++) {
         for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
-            minions[i][j]->notifyCardTurnStart(*this);
+            if (!minions[i][j]->getSilenced()) minions[i][j]->notifyCardTurnStart(*this);
+            else minions[i][j]->setActionCount(minions[i][j]->getActionReset());
         }
 
         if (static_cast<int> (rituals[i].size()) > 0 && rituals[i][0]->getCharges() < rituals[i][0]->getActionCost()) {
@@ -189,7 +190,7 @@ void Board::notifyTurnStart() {
 void Board::notifyTurnEnd() {
     for (int i = 0; i < NUM_PLAYERS; i++) {
         for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
-            minions[i][j]->notifyCardTurnEnd(*this);
+            if (!minions[i][j]->getSilenced()) minions[i][j]->notifyCardTurnEnd(*this);
         }
 
         if (static_cast<int> (rituals[i].size()) > 0 && rituals[i][0]->getCharges() < rituals[i][0]->getActionCost()) {
@@ -201,7 +202,9 @@ void Board::notifyTurnEnd() {
 void Board::notifyMinionEnter(int playerID) {
     for (int i = 0; i < NUM_PLAYERS; i++) {
         for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
-            minions[i][j]->notifyCardMinionEnter(*this, *minions[playerID - 1][static_cast<int>(minions[playerID - 1].size()) - 1]);
+            if (!minions[i][j]->getSilenced()) {
+                minions[i][j]->notifyCardMinionEnter(*this, *minions[playerID - 1][static_cast<int>(minions[playerID - 1].size()) - 1]);
+            }
         }
         if (static_cast<int> (rituals[i].size()) > 0 && rituals[i][0]->getCharges() < rituals[i][0]->getActionCost()) {
             rituals[i][0]->notifyCardMinionEnter(*this, *minions[playerID - 1][static_cast<int> (minions[playerID - 1].size()) - 1]);
@@ -212,7 +215,7 @@ void Board::notifyMinionEnter(int playerID) {
 void Board::notifyMinionLeave(int playerID, Card &target) {
     for (int i = 0; i < NUM_PLAYERS; i++) {
         for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
-            minions[i][j]->notifyCardMinionLeave(*this, target);
+            if (!minions[i][j]->getSilenced()) minions[i][j]->notifyCardMinionLeave(*this, target);
         }
         if (static_cast<int> (rituals[i].size()) > 0) {
             rituals[i][0]->notifyCardMinionEnter(*this, target);
@@ -288,6 +291,10 @@ void Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlaye
         // print error message, no more actions
         cout << "Not enough actions to use ability" << endl;
         return;
+    } else if (minions[playerID - 1][minionInd]->getSilenced()) {
+        // print error message, minion is silenced
+        cout << minions[playerID - 1][minionInd]->getName() << " is silenced, the ability will not activate." << endl;
+        return;
     }
 
     if (targetCard == 'r') {
@@ -303,7 +310,7 @@ void Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlaye
                 players[playerID - 1]->setPlayerMagic(0);
             }
 
-        } else if (targetCard >= 0 && targetCard < static_cast<int> (minions[playerID - 1].size())) {
+        } else if (targetCard >= 0 && targetCard <static_cast<int> (minions[playerID - 1].size())) {
             minions[playerID - 1][minionInd]->activateAbility(*this, *minions[targetPlayer - 1][targetCard]);
             players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() -  minions[playerID - 1][minionInd]->getActivationCost());
             
