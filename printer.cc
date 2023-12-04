@@ -6,19 +6,19 @@ using namespace std;
 void Printer::printOuterRow(vector<reference_wrapper<Ritual>> ritual, const Player& player, 
                             vector<reference_wrapper<Minion>> graveyard) {
     if (ritual.empty()) cards.emplace_back(CARD_TEMPLATE_BORDER); 
-    else emplaceBackCard(ritual[0].get());
+    else emplaceBackCard(ritual[0]);
     cards.emplace_back(CARD_TEMPLATE_EMPTY);
     emplaceBackPlayerCard(player);
     cards.emplace_back(CARD_TEMPLATE_EMPTY);
     if (graveyard.empty()) cards.emplace_back(CARD_TEMPLATE_BORDER);
-    else emplaceBackCard(graveyard[0].get());
+    else emplaceBackCard(graveyard[0]);
     printCardsWithBoarder();
 }
 
 void Printer::printInnerRow(vector<reference_wrapper<Minion>> minions) {
     int cardEmplaced = 0;
-    for (reference_wrapper<Minion> minion:minions) {
-        emplaceBackCard(minion.get());
+    for (Minion& minion:minions) {
+        emplaceBackCard(minion);
         cardEmplaced++;
     }
     for (; cardEmplaced < maxCardPerRow; cardEmplaced++) cards.emplace_back(CARD_TEMPLATE_BORDER);
@@ -161,24 +161,24 @@ void Printer::printHelp() {
 }
 
 void Printer::printBoard(const Board& board) {
-    vector<vector<reference_wrapper<Minion>>> minions = board.getMinions();
-    vector<vector<reference_wrapper<Ritual>>> rituals = board.getRituals();
-    vector<reference_wrapper<Player>> players{board.getPlayer(1), board.getPlayer(2)};
-    vector<vector<reference_wrapper<Minion>>> graveyards{players[0].get().getGraveyard(), players[1].get().getGraveyard()};
+    vector<vector<Minion&>> minions = board.getMinions();
+    vector<vector<Ritual&>> rituals = board.getRituals();
+    vector<Player> players{board.getPlayer(1), board.getPlayer(2)};
+    vector<vector<Minion&>> graveyards{players[0].getGraveyard(), players[1].getGraveyard()};
 
     if (enableGraphics) window->clearAreaUnderHand();
     printUpperBoarder();
-    printOuterRow(rituals[0], players[0].get(), graveyards[0]);
+    printOuterRow(rituals[0], players[0], graveyards[0]);
     printInnerRow(minions[0]);
     printCentreGraphic();
     printInnerRow(minions[1]);
-    printOuterRow(rituals[1], players[1].get(), graveyards[1]);
+    printOuterRow(rituals[1], players[1], graveyards[1]);
     printLowerBoarder();
 }
 
 void Printer::printHand(vector<reference_wrapper<Card>> hand) {
     if (enableGraphics) window->clearAreaUnderHand();
-    for (reference_wrapper<Card> card:hand) emplaceBackCard(card.get());
+    for (Card& card:hand) emplaceBackCard(card);
     printCards();
 }
 
@@ -194,6 +194,6 @@ void Printer::printInspect(Minion& minion) {
 void Printer::updateHand(vector<reference_wrapper<Card>> hand) {
     window->clearHandArea();
     window->drawString(window->getX(), window->getY(), "Current Player Hand:");
-    for (reference_wrapper<Card> card:hand) emplaceBackCard(card.get());
+    for (Card& card:hand) emplaceBackCard(card);
     printCards();
 }

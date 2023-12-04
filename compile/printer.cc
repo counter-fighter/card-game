@@ -194,6 +194,13 @@ void Printer::printInspect(Minion& minion) {
 void Printer::updateHand(vector<reference_wrapper<Card>> hand) {
     window->clearHandArea();
     window->drawString(window->getX(), window->getY(), "Current Player Hand:");
-    for (reference_wrapper<Card> card:hand) emplaceBackCard(card.get());
+    for (Card& card:hand) emplaceBackCard(card);
+    printCards();
+}
+
+void Printer::updateHand(vector<reference_wrapper<Card>> hand) {
+    window->clearHandArea();
+    window->drawString(window->getX(), window->getY(), "Current Player Hand:");
+    for (reference_wrapper<Card> card:hand) emplaceBackCard(card);
     printCards();
 }
