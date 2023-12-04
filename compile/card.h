@@ -18,17 +18,17 @@ class Card {
     public:
         Card(string name, string desc, int cost, int player);
         virtual ~Card() = 0; // Not virtual
-        virtual CardType getCardType() = 0;
-        virtual TargetType getTargetType() = 0;
+        virtual CardType getCardType() const = 0;
+        virtual TargetType getTargetType() const = 0;
         virtual void notifyCardTurnStart(Board &brd);
         virtual void notifyCardTurnEnd(Board &brd);
         virtual void notifyCardMinionEnter(Board &brd, Card &target);
         virtual void notifyCardMinionLeave(Board &brd, Card &target);
 
-        int getCost();
-        int getPlayer();
-        string getName();
-        string getDesc();
+        int getCost() const;
+        int getPlayer() const;
+        string getName() const;
+        string getDesc() const;
         bool getReturnToHand();
         void setReturnToHand(bool tf);
 

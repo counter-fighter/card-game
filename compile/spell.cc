@@ -4,9 +4,9 @@ Spell::Spell(string name, string desc, int cost, int player, TargetType tt) : Ca
 
 Spell::~Spell() {};
 
-CardType Spell::getCardType() { return ct; };
+CardType Spell::getCardType() const { return ct; };
 
-TargetType Spell::getTargetType() { return tt; }; 
+TargetType Spell::getTargetType() const { return tt; }; 
 
 void Spell::useSpell(Board &brd, Card &target) {};
 

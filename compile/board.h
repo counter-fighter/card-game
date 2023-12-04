@@ -5,10 +5,11 @@
 #include <memory>
 #include <fstream>
 #include <sstream>
+#include <functional>
 // #include "card.h"
 #include "player.h"
 // #include "minion.h"
-// #include "ritual.h"
+#include "ritual.h"
 
 using namespace std;
 
@@ -38,10 +39,10 @@ class Board {
     void notifyMinionLeave(int playerID, Card &target); // notifies all minions/rituals that a minion left the board
 
     // For Printing
-    Player getPlayer(int playerID); // returns a player object
-    vector<vector<Minion>> getMinions(); // returns p1's minions in vector[0] and p2's minions in vector[1]
-    vector<vector<Ritual>> getRituals(); // returns p1's ritual in vector[0][0] and p2's ritual in vector[1][0] (if they exist)
-    vector<Minion> getGraveyard(int playerID); // do we need this?
+    Player &getPlayer(int playerID) const; // returns a player object
+    vector<vector<reference_wrapper<Minion>>> getMinions() const; // returns p1's minions in vector[0] and p2's minions in vector[1]
+    vector<vector<reference_wrapper<Ritual>>> getRituals() const; // returns p1's ritual in vector[0][0] and p2's ritual in vector[1][0] (if they exist)
+    vector<reference_wrapper<Minion>> getGraveyard(int playerID) const; // do we need this?
 
     // Commands called from main using input
     void startCommand(int playerID);

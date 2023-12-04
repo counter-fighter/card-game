@@ -1,6 +1,7 @@
 #ifndef __POTION_SELLER_H__
 #define __POTION_SELLER_H__
 #include "minion.h"
+#include "board.h"
 
 class PotionSeller : public Minion {
   public :

@@ -5,11 +5,11 @@ Card{name, desc, cost, player}, atck{atck}, def{def} {};
 
 Enchantment::~Enchantment() {};
 
-CardType Enchantment::getCardType() { return ct; }; 
+CardType Enchantment::getCardType() const { return ct; }; 
 
-TargetType Enchantment::getTargetType() { return tt; }; 
+TargetType Enchantment::getTargetType() const { return tt; }; 
 
 
 
-string Enchantment::getAttack() { return atck; };
-string Enchantment::getDefence() { return def; };
+string Enchantment::getAttack() const { return atck; };
+string Enchantment::getDefence() const { return def; };

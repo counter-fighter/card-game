@@ -8,10 +8,10 @@ void Card::notifyCardTurnEnd(Board &brd) {};
 void Card::notifyCardMinionEnter(Board &brd, Card &target) {};
 void Card::notifyCardMinionLeave(Board &brd, Card &target) {};
 
-int Card::getCost() {return cost;};
-int Card::getPlayer() {return player;};
-string Card::getName() {return name;};
-string Card::getDesc() {return desc;};
+int Card::getCost() const {return cost;};
+int Card::getPlayer() const {return player;};
+string Card::getName() const {return name;};
+string Card::getDesc() const {return desc;};
 
 bool Card::getReturnToHand() { return returnToHand; };
 void Card::setReturnToHand(bool tf) { returnToHand = tf; };

@@ -2,6 +2,7 @@
 #define __RECHARGE_H__
 #include "spell.h"
 #include "ritual.h"
+#include "board.h"
 
 class Recharge : public Spell {
     public:

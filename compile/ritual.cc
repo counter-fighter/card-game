@@ -4,12 +4,12 @@ Ritual::Ritual(string name, string desc, int cost, int player, int charges, int 
 
 Ritual::~Ritual() {};
 
-CardType Ritual::getCardType() { return ct; };
+CardType Ritual::getCardType() const { return ct; };
 
-TargetType Ritual::getTargetType() { return tt; }; 
+TargetType Ritual::getTargetType() const { return tt; }; 
 
-int Ritual::getCharges() { return charges; };
+int Ritual::getCharges() const { return charges; };
 
 void Ritual::setCharges(int n) { charges = n; };
 
-int Ritual::getActionCost() { return actCost; };
+int Ritual::getActionCost() const { return actCost; };

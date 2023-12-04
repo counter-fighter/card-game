@@ -2,6 +2,14 @@
 #include "player.h"
 #include "player.cc"
 
+template<typename T> void moveVec (vector<T> &source, vector<T> &dest) {
+  while (source.size() > 0) {
+    auto it = source.begin();
+    dest.push_back(move(*it));
+    source.erase(it);
+  }
+};
+
 Minion::Minion(string name, string desc, int cost, int player, int atck, int def, int actReset,int actCost) : 
   Card{name, desc, cost, player}, atck{atck}, atckReset{atck}, def{def}, defReset{def}, actCount(0), actReset{actReset}, actCost{actCost} {};
 
@@ -17,13 +25,6 @@ Minion::Minion(Minion &&other): Card{other.name, other.desc, other.cost, other.p
     moveVec(other.enchants, enchants);
 }
 
-template<typename T> void moveVec (vector<T> &source, vector<T> &dest) {
-  while (source.size() > 0) {
-    auto it = source.begin();
-    dest.push_back(move(*it));
-    source.erase(it);
-  }
-};
 
 Minion::~Minion() {};
 
@@ -59,32 +60,32 @@ void Minion::setActionCount(int n) {
 };
 
 
-int Minion::getAttack() {
+int Minion::getAttack() const {
   return atck;
 };
 
-int Minion::getDefence() {
+int Minion::getDefence() const {
   return def;
 };
 
-int Minion::getAttackReset() {
+int Minion::getAttackReset() const {
   return atckReset;
 };
 
-int Minion::getDefenceReset() {
+int Minion::getDefenceReset() const {
   return defReset;
 };
 
-int Minion::getActivationCost() {
+int Minion::getActivationCost() const {
   return actCost;
 };
 
-int Minion::getActionReset() {
+int Minion::getActionReset() const {
   return actReset;
 };
 
 
-CardType Minion::getCardType() {
+CardType Minion::getCardType() const {
   return ct;
 }; //Card type already determined
 
@@ -122,8 +123,8 @@ void Minion::detachAllEnchant () {
 
 };
 
-vector<Enchantment> Minion::getEnchantment() {
-  vector<Enchantment> ret;
+vector<reference_wrapper<Enchantment>> Minion::getEnchantment() {
+  vector<reference_wrapper<Enchantment>> ret;
 
   for (auto it = enchants.begin(); it != enchants.end(); it++) {
     ret.emplace_back(*(*it).get());
@@ -132,5 +133,5 @@ vector<Enchantment> Minion::getEnchantment() {
   return ret;
 };
 
-TargetType Minion::getTargetType() { return tt; }; 
+TargetType Minion::getTargetType() const { return tt; }; 
 

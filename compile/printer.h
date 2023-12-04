@@ -1,6 +1,7 @@
 #ifndef __PRINTER_H__
 #define __PRINTER_H__
 #include <vector>
+#include <functional>
 #include "board.h"
 // #include "minion.h"
 // #include "ritual.h"
@@ -17,12 +18,12 @@ class Printer {
     vector<card_template_t> cards;
     // window pointer
 
-    void printOuterRow(vector<Ritual&> ritual, const Player& player, vector<Minion&> graveyard);
-    void printInnerRow(vector<Minion&> minions);
+    void printOuterRow(vector<reference_wrapper<Ritual>> ritual, const Player& player, vector<reference_wrapper<Minion>> graveyard);
+    void printInnerRow(vector<reference_wrapper<Minion>> minions);
     void printUpperBoarder();
     void printCentreGraphic();
     void printLowerBoarder();
-    void Printer::printCardsWithBoarder();
+    void printCardsWithBoarder();
     void printCards();
     void emplaceBackCard(Card& card);
     void emplaceBackPlayerCard(const Player& player);
@@ -36,7 +37,7 @@ class Printer {
         ~Printer();
         void printHelp();
         void printBoard(const Board& board); //clear window (except hand) if enabled print board
-        void printHand(vector<Card&> hand); //constantly displayed, updated when changes r made, 
+        void printHand(vector<reference_wrapper<Card>> hand); //constantly displayed, updated when changes r made, 
         void printInspect(Minion& minion); //clear window (except hand) if enabled print inspect
 };
 

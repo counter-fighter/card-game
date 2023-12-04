@@ -12,8 +12,8 @@ class Spell : public Card {
         virtual ~Spell();
         virtual void useSpell(Board &brd, Card &target);
         virtual void useSpell(Board &brd);
-        CardType getCardType() override;
-        TargetType getTargetType() override; 
+        CardType getCardType() const override;
+        TargetType getTargetType() const override; 
 
 };
 

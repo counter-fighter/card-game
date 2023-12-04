@@ -13,10 +13,10 @@ class Enchantment : public Card {
         virtual ~Enchantment();
         virtual void attach(Minion &target) = 0;
         virtual void detach(Minion &target) = 0;
-        CardType getCardType() override; 
-        TargetType getTargetType() override; 
-        string getAttack();
-        string getDefence();
+        CardType getCardType() const override; 
+        TargetType getTargetType() const override; 
+        string getAttack() const;
+        string getDefence() const;
 };
 
 

@@ -12,11 +12,11 @@ class Ritual : public Card {
     public:
         Ritual(string name, string desc, int cost, int player, int charges, int actCost);
         virtual ~Ritual();
-        CardType getCardType() override;
-        TargetType getTargetType() override; 
-        int getCharges();
+        CardType getCardType() const override;
+        TargetType getTargetType() const override; 
+        int getCharges() const;
         void setCharges(int n);
-        int getActionCost();
+        int getActionCost() const;
 };
 
 

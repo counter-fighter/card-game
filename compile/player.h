@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <random>
 #include <chrono>
+#include <functional>
 
 #include "giant_strg.h"
 #include "enrage.h"
@@ -46,6 +47,7 @@ class Player {
     vector<unique_ptr<Card>> hand;
     vector<unique_ptr<Minion>> graveyard;
     // should graveyard and spells removed also be here? Or on board instead?
+    template<typename T> void moveVec (vector<T> &source, vector<T> &dest);
 
     public:
         Player(string name, int id, string filename, bool shuffle); // magic is initialized to 0 and hand is initially empty.
@@ -62,20 +64,20 @@ class Player {
         // void setDeck(const vector<string> deck);
         // vector<unique_ptr<Card>> getHand() const;
         unique_ptr<Card> allocCard(string name, int id);
-        vector<Minion> getGraveyard();
-        int getPlayerId();
-        string getPlayerName();
-        int getPlayerHealth();
-        int getPlayerMagic();
+        vector<reference_wrapper<Minion>> getGraveyard();
+        int getPlayerId() const;
+        string getPlayerName() const;
+        int getPlayerHealth() const;
+        int getPlayerMagic() const;
         void setPlayerMagic(int n);
-        int getHandSize();
+        int getHandSize() const;
         void setPlayerHealth(int n);
         bool drawCard();
         unique_ptr<Card> playFromHand (int index);
         void sendToGraveyard(unique_ptr<Minion> m);
         unique_ptr<Minion> returnTopFromGraveyard();
         void returnToHand(unique_ptr<Card> c);
-        vector<Card> getHand ();
+        vector<reference_wrapper<Card>> getHand ();
 
 };
 

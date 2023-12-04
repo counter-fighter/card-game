@@ -26,7 +26,7 @@ unique_ptr<Card> Player::allocCard (string name, int id) {
   return nullptr;
 }
 
-template<typename T> void moveVec (vector<T> &source, vector<T> &dest) {
+template<typename T> void Player::moveVec (vector<T> &source, vector<T> &dest) {
   while (source.size() > 0) {
     auto it = source.begin();
     dest.push_back(move(*it));
@@ -34,22 +34,13 @@ template<typename T> void moveVec (vector<T> &source, vector<T> &dest) {
   }
 };
 
-Player::Player(Player&& p) {
-  name = p.name;
-  id = p.id;
-  magic = p.magic;
-  health = p.health;
+Player::Player(Player&& p) : name{p.name}, id{p.id}, magic{p.magic}, health{p.health} {
   moveVec(p.deck, deck);
   moveVec(p.hand, hand);
   moveVec(p.graveyard, graveyard);
-  
 };
 
-Player::Player(Player& p) {
-  name = p.name;
-  id = p.id;
-  magic = p.magic;
-  health = p.health;
+Player::Player(Player& p) : name{p.name}, id{p.id}, magic{p.magic}, health{p.health} {
   moveVec(p.deck, deck);
   moveVec(p.hand, hand);
   moveVec(p.graveyard, graveyard);
@@ -79,8 +70,8 @@ name{name}, id{id}, magic{MAGIC_RESET}, health{HEALTH_RESET}, deck{}, hand{}, gr
 
 };
 
-vector<Minion> Player::getGraveyard() {
-  vector<Minion> ret;
+vector<reference_wrapper<Minion>> Player::getGraveyard() {
+  vector<reference_wrapper<Minion>> ret;
 
   for (auto it = graveyard.begin(); it != graveyard.end(); it++) {
     ret.emplace_back(*(*it).get());
@@ -89,13 +80,13 @@ vector<Minion> Player::getGraveyard() {
   return ret;
 };
 
-int Player::getPlayerId() { return id; };
+int Player::getPlayerId() const { return id; };
 
-string Player::getPlayerName() { return name; };
+string Player::getPlayerName() const { return name; };
 
-int Player::getPlayerHealth() { return health; };
+int Player::getPlayerHealth() const { return health; };
 
-int Player::getPlayerMagic() { return magic; };
+int Player::getPlayerMagic() const { return magic; };
 
 void Player::setPlayerMagic(int n) { magic = n; }
 
@@ -103,17 +94,20 @@ void Player::setPlayerHealth(int n) { health = n; };
 
 bool Player::drawCard() {
   if ((int)hand.size() < MAX_HAND) {
-    hand.emplace_back(deck.back());
+    hand.emplace_back(move(deck.back()));
     deck.pop_back();
+    return true;
   }
+  return false;
 };
 
 unique_ptr<Card> Player::playFromHand (int index) {
   if (index >= 0 && index < static_cast<int>(hand.size())) {
-    unique_ptr<Card> temp = move(hand[index]);
+    unique_ptr<Card> temp {move(hand[index])};
     hand.erase(hand.begin() + index);
-    return move(temp);
+    return temp;
   }
+  return nullptr;
 };
 
 void Player::sendToGraveyard(unique_ptr<Minion> m) {
@@ -128,10 +122,10 @@ void Player::returnToHand(unique_ptr<Card> c) {
   hand.emplace_back(move(c));
 };
 
-int Player::getHandSize() {return static_cast<int>(hand.size()); };
+int Player::getHandSize() const {return static_cast<int>(hand.size()); };
 
-vector<Card> Player::getHand() {
-  vector<Card> ret;
+vector<reference_wrapper<Card>> Player::getHand() {
+  vector<reference_wrapper<Card>> ret;
 
   for (auto it = hand.begin(); it != hand.end(); it++) {
     ret.emplace_back(*(*it).get());

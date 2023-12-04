@@ -163,12 +163,12 @@ void Board::notifyMinionLeave(int playerID, Card &target) {
     }
 }
 
-Player Board::getPlayer(int playerID) {
+Player& Board::getPlayer(int playerID) const {
     return *players[playerID - 1].get();
 }
 
-vector<vector<Minion>> Board::getMinions() {
-    vector<vector<Minion>> minionsCopy;
+vector<vector<reference_wrapper<Minion>>> Board::getMinions() const {
+    vector<vector<reference_wrapper<Minion>>> minionsCopy;
     for (int i = 0; i < NUM_PLAYERS; i++) {
         for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
             Minion m = *minions[i][j];
@@ -178,8 +178,8 @@ vector<vector<Minion>> Board::getMinions() {
     return minionsCopy;
 }
 
-vector<vector<Ritual>> Board::getRituals() {
-    vector<vector<Ritual>> ritualsCopy;
+vector<vector<reference_wrapper<Ritual>>> Board::getRituals() const {
+    vector<vector<reference_wrapper<Ritual>>> ritualsCopy;
     for (int i = 0; i < NUM_PLAYERS; i++) {
         if (static_cast<int> (rituals[i].size()) > 0) {
             ritualsCopy[i].emplace_back(*rituals[i][0]);
@@ -188,7 +188,7 @@ vector<vector<Ritual>> Board::getRituals() {
     return ritualsCopy;
 }
 
-vector<Minion> Board::getGraveyard(int playerID) {
+vector<reference_wrapper<Minion>> Board::getGraveyard(int playerID) const {
     return players[playerID - 1]->getGraveyard();
 }
 

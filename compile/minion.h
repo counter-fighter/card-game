@@ -56,17 +56,17 @@ class Minion : public Card {
         void setActReset(int n);
         void setActCost(int n);
 
-        int getAttack();
-        int getDefence();
-        int getAttackReset();
-        int getDefenceReset();
-        int getActivationCost();
-        int getActionReset();
+        int getAttack() const;
+        int getDefence() const;
+        int getAttackReset() const;
+        int getDefenceReset() const;
+        int getActivationCost() const;
+        int getActionReset() const;
 
-        vector<Enchantment> getEnchantment();
+        vector<reference_wrapper<Enchantment>> getEnchantment();
 
-        CardType getCardType() override; //Card type already determined
-        TargetType getTargetType() override; 
+        CardType getCardType() const override; //Card type already determined
+        TargetType getTargetType() const override; 
 
         // Minions dont have a deafault activity, only override with enchantment or if card has default ability.
         virtual void activateAbility(Board &brd);
