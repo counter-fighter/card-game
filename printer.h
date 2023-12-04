@@ -1,11 +1,8 @@
 #ifndef __PRINTER_H__
 #define __PRINTER_H__
 #include <vector>
+#include <functional>
 #include "board.h"
-// #include "card.h"
-// #include "minion.h"
-// #include "ritual.h"
-// #include "spell.h"
 #include "ascii_graphics.h"
 #include "window.h"
 
@@ -17,15 +14,15 @@ class Printer {
     const int boarderWidthNoCorner = 165;
     bool enableGraphics;
     vector<card_template_t> cards;
-    Window *window;
-
-    // incorporate window where applicable
-    void printOuterRow(vector<Ritual&> ritual, const Player& player, vector<Minion&> graveyard);
-    void printInnerRow(vector<Minion&> minions);
+    Xwindow* window;
+    
+    void printOuterRow(vector<reference_wrapper<Ritual>> ritual, const Player& player, 
+                       vector<reference_wrapper<Minion>> graveyard);
+    void printInnerRow(vector<reference_wrapper<Minion>> minions);
     void printUpperBoarder();
     void printCentreGraphic();
     void printLowerBoarder();
-    void Printer::printCardsWithBoarder();
+    void printCardsWithBoarder();
     void printCards();
     void emplaceBackCard(Card& card);
     void emplaceBackPlayerCard(const Player& player);
@@ -35,13 +32,13 @@ class Printer {
     card_template_t enchantmentToCardTemplateT(const Enchantment& enchantment);
 
     public:
-        Printer(bool enableGraphics, Xwindow &w);
+        Printer(bool enableGraphics, Xwindow &window);
         ~Printer();
         void printHelp();
-        void printBoard(const Board& board); //clear window (except hand) if enabled print board
-        void printHand(vector<Card&> hand); //constantly displayed, updated when changes r made, 
-        void printInspect(Minion& minion); //clear window (except hand) if enabled print inspect
-        void updateHnad(vector<Card&> hand); // for graphics
+        void printBoard(const Board& board);
+        void printHand(vector<reference_wrapper<Card>> hand); 
+        void printInspect(Minion& minion);
+        void updateHand(vector<reference_wrapper<Card>> hand); // Requires enableGraphics == true
 };
 
 #endif
