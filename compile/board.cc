@@ -147,11 +147,13 @@ void Board::checkCardStates() {
     }
 }
 
-bool Board::summon(string card, int n, int playerID) {
+bool Board::summon(string card, int n, int playerID, int magicCost) {
+    // if the board is full, reset magic cost and return false
     if (static_cast<int>(minions[playerID - 1].size()) == MAX_MINIONS) {
+        players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() + magicCost);
         return false;
     }
-    
+
     for (int i = 0; i < n; i++) {
         if (static_cast<int> (minions[playerID - 1].size()) < MAX_MINIONS) {
             // add minion to vector, either by creating new from string or std::move(card)

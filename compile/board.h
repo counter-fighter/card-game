@@ -51,7 +51,7 @@ class Board {
     void useMinionAbilityCommand(int minion, int playerID, int targetPlayer = -1, int targetCard = -1); // uses a minion ability
 
     // Functions that get called from Card Effects/Abilities that affect the board or things on the board
-    bool summon(string card, int n, int playerID); // summons a minion to the board
+    bool summon(string card, int n, int playerID, int magicCost); // summons a minion to the board
     void attach(unique_ptr<Card> card, int playerID, int targetCard); // attaches an enchantment to a minion
     void detach(int playerID, int targetCard); // detaches an enchantment to a minion
     void raiseDead(int playerID); // moves the top card from graveyard to the board (if it exists)
