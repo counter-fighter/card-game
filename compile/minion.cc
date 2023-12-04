@@ -1,6 +1,5 @@
 #include "minion.h"
 #include "player.h"
-#include "player.cc"
 
 template<typename T> void moveVec (vector<T> &source, vector<T> &dest) {
   while (source.size() > 0) {
