@@ -59,24 +59,8 @@ Xwindow::~Xwindow() {
   XCloseDisplay(d);
 }
 
-int Xwindow::getX() const { return xPadding; }
-
-int Xwindow::getY() const { return y; }
-
-int Xwindow::yNextLine() { return y += stringHeight; }
-
 void Xwindow::clearArea(int x, int y, int width, int height) {
   XClearArea(d, w, x, y, width, height, true);
-}
-
-void Xwindow::clearHandArea() {
-  clearArea(0, 0, boardWidth, cardHeight);
-  y = yCurrHand; // Resetting to y position to current hand.
-}
-
-void Xwindow::clearAreaUnderHand() {
-  clearArea(0, cardHeight, boardWidth, boardHeight);
-  y = yBelowCurrHand; // Resetting to y position to under current hand.
 }
 
 void Xwindow::drawString(int x, int y, string msg) {
