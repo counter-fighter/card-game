@@ -18,8 +18,6 @@ int main (int argc, char *argv []) {
     bool testing = false, graphics = false;
     int currentPlayerID = 1;
     bool fileInput = false, gameOn = true;
-    vector<string> validCards {};
-
 
 
     for (int i = 0; i < argc; i++) {
@@ -69,6 +67,9 @@ int main (int argc, char *argv []) {
             i++;            
             board.initPlayer(p2Name, i, deckfile2, !testing);
             continue; 
+        } else if (i == 2) {
+            board.startCommand(currentPlayerID);
+            i++;
         }
 
 
@@ -85,13 +86,26 @@ int main (int argc, char *argv []) {
             break;
         } else if (cmd == "attack") {
             int ownMinion, enemyMinion;
-            lineCmd >> ownMinion;
-            if (lineCmd >> enemyMinion) {
-                // attack minion
-                board.attackCommand(ownMinion, currentPlayerID, enemyMinion);
-            } else {
-                // attack player
-                board.attackCommand(ownMinion, currentPlayerID);
+            if (lineCmd >> ownMinion) {
+                if (ownMinion < 1 || ownMinion > static_cast<int> (board.getMinions()[currentPlayerID - 1].size())) {
+                    // print error message
+                    cout << "Invalid minion to attack with" << endl;
+                    continue;
+                }
+                ownMinion--;
+                if (lineCmd >> enemyMinion) {
+                    // attack minion
+                    int enemyPlayerID = (currentPlayerID == 1) ? 2 : 1;
+                    if (enemyMinion > static_cast<int> (board.getMinions()[enemyPlayerID - 1].size()) || enemyMinion < 1) {
+                        //print error message
+                        cout << "Invalid attack target" << endl;
+                        continue;
+                    }
+                    board.attackCommand(ownMinion, currentPlayerID, enemyMinion--);
+                } else {
+                    // attack player
+                    board.attackCommand(ownMinion, currentPlayerID);
+                }
             }
 
         } else if (cmd == "play") {
@@ -148,6 +162,9 @@ int main (int argc, char *argv []) {
                 if (lineCmd >> i) {
                     board.getPlayer(currentPlayerID).discard(i);
                 }
+            } else {
+                // print error message
+                cout << "A valid command was not entered, please enter a valid command" << endl;
             }
         } else {
             cout << "A valid command was not entered, please enter a valid command" << endl;

@@ -50,7 +50,7 @@ Player::Player(Player& p) : name{p.name}, id{p.id}, magic{p.magic}, health{p.hea
 Player::~Player() {};
 
 
-Player::Player(string name, int id, string filename, bool shuffle): 
+Player::Player(string name, int id, string filename, bool testing): 
 name{name}, id{id}, magic{MAGIC_RESET}, health{HEALTH_RESET}, deck{}, hand{}, graveyard{} {
   ifstream ifs(filename);
   string line;
@@ -58,7 +58,7 @@ name{name}, id{id}, magic{MAGIC_RESET}, health{HEALTH_RESET}, deck{}, hand{}, gr
     deck.emplace_back(move(allocCard(line, id)));
   }
 
-  if (shuffle) {
+  if (!testing) {
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 
     std::default_random_engine rng{seed};

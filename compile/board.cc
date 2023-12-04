@@ -1,6 +1,15 @@
 #include "board.h"
 
-Board::Board(): minions{}, rituals{}, players{}, discardedCards{} {}
+Board::Board(): minions{}, rituals{}, players{}, discardedCards{} {
+    for (int i = 0; i < NUM_PLAYERS; i++) {
+        vector<unique_ptr<Minion>> m {};
+        minions.emplace_back(std::move(m));
+        vector<unique_ptr<Ritual>> r {};
+        rituals.emplace_back(std::move(r));
+        vector<unique_ptr<Card>> disc {};
+        discardedCards.emplace_back(std::move(disc));
+    }
+}
 
 Board::~Board() {}
 
@@ -26,14 +35,18 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
     unique_ptr<Card> cardToPlay = players[playerID - 1]->playFromHand(cardInd);
 
     if (targetType != cardToPlay->getTargetType()) {
-        players[playerID - 1]->returnToHand(std::move(cardToPlay));
         // print error message wrong args
+        cout << "wrong args for card " + cardToPlay->getName() << endl;
+        players[playerID - 1]->returnToHand(std::move(cardToPlay));
+        
         return;
     }
 
     if (cardToPlay->getCost() > players[playerID - 1]->getPlayerMagic()) {
-        players[playerID - 1]->returnToHand(std::move(cardToPlay));
         // print error message not enough magic
+        cout << "not enough magic" << endl;
+        players[playerID - 1]->returnToHand(std::move(cardToPlay));
+        
         return;
     }
     
@@ -42,11 +55,13 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
     if (cardToPlay->getCardType() == CardType::Minion) {
         if (static_cast<int>(minions[playerID - 1].size()) < MAX_MINIONS) {
             unique_ptr<Minion> minionToPlay = unique_ptr<Minion> (dynamic_cast<Minion*>(cardToPlay.release()));
+            players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() - minionToPlay->getCost());
             minions[playerID - 1].emplace_back(std::move(minionToPlay));
             notifyMinionEnter(playerID);
         } else {
             players[playerID - 1]->returnToHand(std::move(cardToPlay));
             // error message for full minion board
+            cout << "The board is full for minions" << endl;
         }
         
     } else if (cardToPlay->getCardType() == CardType::Ritual) {
@@ -55,29 +70,38 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
             discardedCards[playerID - 1].emplace_back(std::move(discard));
         }
         unique_ptr<Ritual> ritualToPlay = unique_ptr<Ritual> (dynamic_cast<Ritual*>(cardToPlay.release()));
+        players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() - ritualToPlay->getCost());
         rituals[playerID - 1].emplace_back(std::move(ritualToPlay));
 
     } else if (cardToPlay->getCardType() == CardType::Spell) {
         Card &cardCast = *cardToPlay.get();
         Spell& spellCast = dynamic_cast<Spell&> (cardCast);
 
-        if (targetType == TargetType::RitualTarget) {
-            if (rituals[playerID - 1].size() > 0) {
-                Card &target = *rituals[playerID - 1][0];
+        try {
+            if (targetType == TargetType::RitualTarget) {
+                if (rituals[playerID - 1].size() > 0) {
+                    Card &target = *rituals[playerID - 1][0];
+                    spellCast.useSpell(*this, target);
+                }
+                
+            } else if (targetType == TargetType::MinionTarget) {
+                Card &target = *minions[playerID - 1][targetCard];
                 spellCast.useSpell(*this, target);
+
+            } else {
+                spellCast.useSpell(*this);
             }
-            
-        } else if (targetType == TargetType::MinionTarget) {
-            Card &target = *minions[playerID - 1][targetCard];
-            spellCast.useSpell(*this, target);
-        } else {
-            spellCast.useSpell(*this);
+
+            players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() - spellCast.getCost());
+            discardedCards[playerID - 1].emplace_back(std::move(cardToPlay));
+        } catch (std::logic_error &e) {
+            players[playerID - 1]->returnToHand(std::move(cardToPlay));
+            // print error message, use printer class to do it later
+            cout << e.what() << endl;
         }
-
-        discardedCards[playerID - 1].emplace_back(std::move(cardToPlay));
-
+        
     } else {
-        if (targetCard != -1) {
+        if (targetCard != -1 && targetCard < static_cast<int> (minions[playerID - 1].size())) {
             unique_ptr<Enchantment> enchant = unique_ptr<Enchantment> (dynamic_cast<Enchantment*>(cardToPlay.release()));
             attach(std::move(enchant), playerID, targetCard);
         } else {
@@ -190,6 +214,8 @@ Player& Board::getPlayer(int playerID) const {
 vector<vector<reference_wrapper<Minion>>> Board::getMinions() const {
     vector<vector<reference_wrapper<Minion>>> minionsCopy;
     for (int i = 0; i < NUM_PLAYERS; i++) {
+        vector<reference_wrapper<Minion>> m {};
+        minionsCopy.emplace_back(m);
         for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
             Minion m = *minions[i][j];
             minionsCopy[i].emplace_back(m);
@@ -201,6 +227,8 @@ vector<vector<reference_wrapper<Minion>>> Board::getMinions() const {
 vector<vector<reference_wrapper<Ritual>>> Board::getRituals() const {
     vector<vector<reference_wrapper<Ritual>>> ritualsCopy;
     for (int i = 0; i < NUM_PLAYERS; i++) {
+        vector<reference_wrapper<Ritual>> r {};
+        ritualsCopy.emplace_back(r);
         if (static_cast<int> (rituals[i].size()) > 0) {
             ritualsCopy[i].emplace_back(*rituals[i][0]);
         }
@@ -224,26 +252,34 @@ void Board::endCommand() {
 
 void Board::attackCommand(int minionInd, int playerID, int enemyMinion) {
     int enemyPlayer = (playerID == 1) ? 2 : 1;
+    if (minions[playerID - 1][minionInd]->getActionCount() <= 0) {
+        // print error not enough actions on minion
+        cout << "Not enough actions to attack" << endl;
+        return;
+    }
     
     if (enemyMinion != -1) {
         minions[playerID - 1][minionInd]->attack(*minions[enemyPlayer - 1][minionInd]);
     } else {
         minions[playerID - 1][minionInd]->attack(*players[enemyPlayer - 1]);
     }
+    minions[playerID - 1][minionInd]->setActionCount(minions[playerID - 1][minionInd]->getActionCount() - 1);
 }
 
 void Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlayer, int targetCard) {
     if (minions[playerID - 1][minionInd]->getActionCount() < minions[playerID - 1][minionInd]->getActivationCost()) {
         // print error message, not enough action count
+        cout << "Not enough action count" << endl;
         return;
     }
 
     if (targetCard == 'r') {
         // minions[playerID - 1][minionInd]->activateAbility(*this, *rituals[targetPlayer - 1][0]);
         // print error message for now because we don't have any cards that do this
+        cout << "Ritual is not a valid target" << endl;
     } else if (targetCard == -1) {
         minions[playerID - 1][minionInd]->activateAbility(*this);
-    } else {
+    } else if (targetCard >= 0 && targetCard < static_cast<int> (minions[playerID - 1].size())) {
         minions[playerID - 1][minionInd]->activateAbility(*this, *minions[targetPlayer - 1][targetCard]);
     }
 }
@@ -253,10 +289,14 @@ void Board::increaseRitualCharges(int playerID, int amount) {
 }
 
 void Board::raiseDead(int playerID) {
-    if (static_cast<int> (players[playerID - 1]->getGraveyard().size()) > 0 && static_cast<int> (minions[playerID - 1].size()) < MAX_MINIONS) {
-        unique_ptr<Minion> raisedMinion = players[playerID - 1]->returnTopFromGraveyard();
-        raisedMinion->setDefence(1);
-        minions[playerID - 1].emplace_back(std::move(raisedMinion));
+    if (static_cast<int> (players[playerID - 1]->getGraveyard().size()) > 0) {
+        if (static_cast<int> (minions[playerID - 1].size()) < MAX_MINIONS) {
+            unique_ptr<Minion> raisedMinion = players[playerID - 1]->returnTopFromGraveyard();
+            raisedMinion->setDefence(1);
+            minions[playerID - 1].emplace_back(std::move(raisedMinion));
+        }
+    } else {
+        throw std::logic_error("Raise Dead cannot be played with no cards in graveyard");
     }
 }
 
@@ -266,6 +306,7 @@ void Board::removeRitual(int playerTarget) {
         discardedCards[playerTarget - 1].emplace_back(std::move(card));
     } else {
         // print error message
+        throw logic_error("There is no ritual to target.");
     }
     
 }
@@ -278,6 +319,7 @@ void Board::rechargeRitual(int playerID, int charges) {
     if (static_cast<int>(rituals[playerID - 1].size()) > 0) {
         rituals[playerID - 1][0]->setCharges(rituals[playerID - 1][0]->getCharges() + charges);
     } else {
+        throw logic_error("Cannot play Recharge with no Ritual on Board");
         // print error message
     }
 }
