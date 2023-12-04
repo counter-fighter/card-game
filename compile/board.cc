@@ -147,7 +147,11 @@ void Board::checkCardStates() {
     }
 }
 
-void Board::summon(string card, int n, int playerID) {
+bool Board::summon(string card, int n, int playerID) {
+    if (static_cast<int>(minions[playerID - 1].size()) == MAX_MINIONS) {
+        return false;
+    }
+    
     for (int i = 0; i < n; i++) {
         if (static_cast<int> (minions[playerID - 1].size()) < MAX_MINIONS) {
             // add minion to vector, either by creating new from string or std::move(card)
@@ -155,6 +159,7 @@ void Board::summon(string card, int n, int playerID) {
             notifyMinionEnter(playerID);
         }
     }
+    return true;
 }
 
 void Board::attach(unique_ptr<Card> card, int playerID, int targetCard) {
@@ -295,7 +300,7 @@ void Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlaye
             if (players[playerID - 1]->getPlayerMagic() < 0 && players[playerID - 1]->getTesting()) {
                 players[playerID - 1]->setPlayerMagic(0);
             }
-            
+
         } else if (targetCard >= 0 && targetCard < static_cast<int> (minions[playerID - 1].size())) {
             minions[playerID - 1][minionInd]->activateAbility(*this, *minions[targetPlayer - 1][targetCard]);
             players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() -  minions[playerID - 1][minionInd]->getActivationCost());
