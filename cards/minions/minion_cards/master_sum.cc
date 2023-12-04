@@ -6,5 +6,5 @@ MasterSummoner::~MasterSummoner() {};
 
 void MasterSummoner::activateAbility(Board &brd) {
   brd.summon("Air Elemental", 3, player);
-  actCount -= actCost;
+  actCount--;
 };

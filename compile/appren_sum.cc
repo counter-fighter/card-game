@@ -7,5 +7,5 @@ ApprenticeSummoner::~ApprenticeSummoner() {};
 
 void ApprenticeSummoner::activateAbility(Board &brd) {
   brd.summon("Air Elemental", 1, player);
-  actCount -= actCost;
+  actCount--;
 };
