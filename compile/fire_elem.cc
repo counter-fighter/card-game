@@ -1,6 +1,6 @@
 #include "fire_elem.h"
 
-FireElemental::FireElemental(int player) : Minion{"Fire Elemental", "Whenever an opponent’s minion enters play, deal 1 damage to it", 2, player, 2, 2, 1, 0} {};
+FireElemental::FireElemental(int player) : Minion{"Fire Elemental", "Whenever an opponent\'s minion enters play, deal 1 damage to it", 2, player, 2, 2, 1, 0} {};
 
 FireElemental::~FireElemental() {};
 
