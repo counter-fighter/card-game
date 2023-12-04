@@ -92,6 +92,8 @@ void Player::setPlayerMagic(int n) { magic = n; }
 
 void Player::setPlayerHealth(int n) { health = n; };
 
+bool Player::getTesting() const { return testing; }
+
 bool Player::drawCard() {
   if ((int)hand.size() < MAX_HAND) {
     hand.emplace_back(move(deck.back()));

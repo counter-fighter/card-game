@@ -73,6 +73,7 @@ class Player {
         void setPlayerMagic(int n);
         int getHandSize() const;
         void setPlayerHealth(int n);
+        bool getTesting() const;
         bool drawCard();
         unique_ptr<Card> playFromHand (int index);
         void sendToGraveyard(unique_ptr<Minion> m);
@@ -80,7 +81,6 @@ class Player {
         void returnToHand(unique_ptr<Card> c);
         vector<reference_wrapper<Card>> getHand ();
         void discard(int i);
-
 };
 
 #endif

@@ -43,11 +43,12 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
     }
 
     if (cardToPlay->getCost() > players[playerID - 1]->getPlayerMagic()) {
-        // print error message not enough magic
-        cout << "not enough magic" << endl;
-        players[playerID - 1]->returnToHand(std::move(cardToPlay));
-        
-        return;
+        if (!players[playerID - 1]->getTesting() || cardToPlay->getCardType() != CardType::Spell) {
+            // print error message not enough magic
+            cout << "not enough magic" << endl;
+            players[playerID - 1]->returnToHand(std::move(cardToPlay));
+            return;
+        }
     }
     
 
@@ -93,6 +94,11 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
             }
 
             players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() - spellCast.getCost());
+
+            // if testing mode and not enough magic
+            if (players[playerID - 1]->getTesting() && players[playerID - 1]->getPlayerMagic() < 0) {
+                players[playerID - 1]->setPlayerMagic(0);
+            }
             discardedCards[playerID - 1].emplace_back(std::move(cardToPlay));
         } catch (std::logic_error &e) {
             players[playerID - 1]->returnToHand(std::move(cardToPlay));
@@ -267,9 +273,13 @@ void Board::attackCommand(int minionInd, int playerID, int enemyMinion) {
 }
 
 void Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlayer, int targetCard) {
-    if (minions[playerID - 1][minionInd]->getActionCount() < minions[playerID - 1][minionInd]->getActivationCost()) {
-        // print error message, not enough action count
-        cout << "Not enough action count" << endl;
+    if (players[playerID - 1]->getPlayerMagic() < minions[playerID - 1][minionInd]->getActivationCost() && !players[playerID - 1]->getTesting()) {
+        // print error message, not enough magic
+        cout << "Not enough Magic" << endl;
+        return;
+    } else if (minions[playerID - 1][minionInd]->getActionCount() < 1) {
+        // print error message, no more actions
+        cout << "Not enough actions to use ability" << endl;
         return;
     }
 
@@ -277,10 +287,23 @@ void Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlaye
         // minions[playerID - 1][minionInd]->activateAbility(*this, *rituals[targetPlayer - 1][0]);
         // print error message for now because we don't have any cards that do this
         cout << "Ritual is not a valid target" << endl;
-    } else if (targetCard == -1) {
-        minions[playerID - 1][minionInd]->activateAbility(*this);
-    } else if (targetCard >= 0 && targetCard < static_cast<int> (minions[playerID - 1].size())) {
-        minions[playerID - 1][minionInd]->activateAbility(*this, *minions[targetPlayer - 1][targetCard]);
+    } else {
+        if (targetCard == -1) {
+            minions[playerID - 1][minionInd]->activateAbility(*this);
+            players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() -  minions[playerID - 1][minionInd]->getActivationCost());
+            
+            if (players[playerID - 1]->getPlayerMagic() < 0 && players[playerID - 1]->getTesting()) {
+                players[playerID - 1]->setPlayerMagic(0);
+            }
+            
+        } else if (targetCard >= 0 && targetCard < static_cast<int> (minions[playerID - 1].size())) {
+            minions[playerID - 1][minionInd]->activateAbility(*this, *minions[targetPlayer - 1][targetCard]);
+            players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() -  minions[playerID - 1][minionInd]->getActivationCost());
+            
+            if (players[playerID - 1]->getPlayerMagic() < 0 && players[playerID - 1]->getTesting()) {
+                players[playerID - 1]->setPlayerMagic(0);
+            }
+        }
     }
 }
 
