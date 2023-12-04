@@ -1,7 +1,6 @@
 #ifndef __DARKRITUAL_H__
 #define __DARKRITUAL_H__
 #include "ritual.h"
-#include "board.h"
 
 class DarkRitual : public Ritual {
     public:
