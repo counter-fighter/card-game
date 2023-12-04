@@ -53,6 +53,7 @@ class Minion : public Card {
         void setDefenceReset(int n);
         void setActReset(int n);
         void setActCost(int n);
+        void setSilenced(bool tf);
 
         int getAttack() const;
         int getDefence() const;
@@ -60,6 +61,7 @@ class Minion : public Card {
         int getDefenceReset() const;
         int getActivationCost() const;
         int getActionReset() const;
+        bool getSilenced() const;
 
         vector<reference_wrapper<Enchantment>> getEnchantment();
 

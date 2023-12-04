@@ -58,6 +58,9 @@ void Minion::setActionCount(int n) {
   actCount = n;
 };
 
+void Minion::setSilenced(bool tf) { silenced = tf; }
+
+bool Minion::getSilenced() const { return silenced; }
 
 int Minion::getAttack() const {
   return atck;
