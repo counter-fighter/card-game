@@ -25,8 +25,16 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
 
     unique_ptr<Card> cardToPlay = players[playerID - 1]->playFromHand(cardInd);
 
-    if (cardToPlay->getCost() < players[playerID - 1]->getPlayerMagic()) {
+    if (targetType != cardToPlay->getTargetType()) {
         players[playerID - 1]->returnToHand(std::move(cardToPlay));
+        // print error message wrong args
+        return;
+    }
+
+    if (cardToPlay->getCost() > players[playerID - 1]->getPlayerMagic()) {
+        players[playerID - 1]->returnToHand(std::move(cardToPlay));
+        // print error message not enough magic
+        return;
     }
     
 
@@ -54,8 +62,11 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         Spell& spellCast = dynamic_cast<Spell&> (cardCast);
 
         if (targetType == TargetType::RitualTarget) {
-            Card &target = *rituals[playerID - 1][0];
-            spellCast.useSpell(*this, target);
+            if (rituals[playerID - 1].size() > 0) {
+                Card &target = *rituals[playerID - 1][0];
+                spellCast.useSpell(*this, target);
+            }
+            
         } else if (targetType == TargetType::MinionTarget) {
             Card &target = *minions[playerID - 1][targetCard];
             spellCast.useSpell(*this, target);
@@ -66,8 +77,14 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         discardedCards[playerID - 1].emplace_back(std::move(cardToPlay));
 
     } else {
-        unique_ptr<Enchantment> enchant = unique_ptr<Enchantment> (dynamic_cast<Enchantment*>(cardToPlay.release()));
-        attach(std::move(enchant), playerID, targetCard);
+        if (targetCard != -1) {
+            unique_ptr<Enchantment> enchant = unique_ptr<Enchantment> (dynamic_cast<Enchantment*>(cardToPlay.release()));
+            attach(std::move(enchant), playerID, targetCard);
+        } else {
+            //print error message no target
+            players[playerID - 1]->returnToHand(std::move(cardToPlay));
+        }
+        
     }
 }
 

@@ -102,7 +102,7 @@ bool Player::drawCard() {
 };
 
 unique_ptr<Card> Player::playFromHand (int index) {
-  if (index >= 0 && index < static_cast<int>(hand.size())) {
+  if (index >= 0 && index < getHandSize()) {
     unique_ptr<Card> temp {move(hand[index])};
     hand.erase(hand.begin() + index);
     return temp;
@@ -122,7 +122,7 @@ void Player::returnToHand(unique_ptr<Card> c) {
   hand.emplace_back(move(c));
 };
 
-int Player::getHandSize() const {return static_cast<int>(hand.size()); };
+int Player::getHandSize() const { return static_cast<int>(hand.size()); };
 
 vector<reference_wrapper<Card>> Player::getHand() {
   vector<reference_wrapper<Card>> ret;

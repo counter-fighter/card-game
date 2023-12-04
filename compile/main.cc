@@ -16,7 +16,7 @@ int main (int argc, char *argv []) {
     const string deck1Arg = "-deck1", deck2Arg = "-deck2";
     string initFile, cmd, cardName, deckfile1, deckfile2;
     bool testing = false, graphics = false;
-    int currentPlayerID = 0;
+    int currentPlayerID = 1;
     bool fileInput = false, gameOn = true;
     vector<string> validCards {};
 
@@ -96,15 +96,16 @@ int main (int argc, char *argv []) {
 
         } else if (cmd == "play") {
             int cardToPlay, targetPlayer, targetCard;
-            lineCmd >> cardToPlay;
-            cardToPlay--;
-            if (lineCmd >> targetPlayer >> targetCard) {
-                if (targetCard != 'r') targetCard--;
-                board.playACard(cardToPlay, currentPlayerID, targetPlayer, targetCard);
-            } else {
-                board.playACard(cardToPlay, currentPlayerID);
+            if (lineCmd >> cardToPlay) {
+                cardToPlay--;
+                if (lineCmd >> targetPlayer >> targetCard) {
+                    if (targetCard != 'r') targetCard--;
+                    board.playACard(cardToPlay, currentPlayerID, targetPlayer, targetCard);
+                } else {
+                    board.playACard(cardToPlay, currentPlayerID);
+                }
             }
-
+            
         } else if (cmd == "use") {
             int minion, targetPlayer, targetCard;
             lineCmd >> minion;
