@@ -158,7 +158,6 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
             if (players[playerID - 1]->getTesting() && players[playerID - 1]->getPlayerMagic() < 0) {
                 players[playerID - 1]->setPlayerMagic(0);
             }
-            return true;
 
         } else {
             cout << "Incorrect target index" << endl;
@@ -390,7 +389,8 @@ void Board::checkCardStates(int playerID) {
 bool Board::summon(string card, int n, int playerID, int magicCost) {
     // if the board is full, reset magic cost and return false
     if (static_cast<int>(minions[playerID - 1].size()) >= MAX_MINIONS || magicCost == -1) {
-        throw std::logic_error("Board is full. Failed to summon " + card + ".")
+        players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() + magicCost);
+        throw std::logic_error("Board is full. Failed to summon " + card + ".");
     }
 
     for (int i = 0; i < n; i++) {
