@@ -287,10 +287,10 @@ int main (int argc, char *argv []) {
 
             // print winner
             if (board.getPlayer(enemyPlayerID).getPlayerHealth() <= 0) {
-                printer.printWinner(board.getPlayer(enemyPlayerID).getPlayerName(), enemyPlayerID);
+                printer.printWinner(board.getPlayer(currentPlayerID).getPlayerName(), currentPlayerID);
                 break;
             } else if (board.getPlayer(currentPlayerID).getPlayerHealth() <= 0) {
-                printer.printWinner(board.getPlayer(currentPlayerID).getPlayerName(), currentPlayerID);
+                printer.printWinner(board.getPlayer(enemyPlayerID).getPlayerName(), enemyPlayerID);
                 break;
             }
         } catch (std::logic_error& e) {
