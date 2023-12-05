@@ -16,7 +16,7 @@ int main (int argc, char *argv []) {
     const string deck1Arg = "-deck1", deck2Arg = "-deck2";
     string initFile, cmd, cardName, deckfile1, deckfile2;
     bool testing = false, graphics = false;
-    int currentPlayerID = 1;
+    int currentPlayerID = 1, turn = 1;
     bool fileInput = false, gameOn = true;
 
 
@@ -36,7 +36,8 @@ int main (int argc, char *argv []) {
         }
     }
 
-    Printer printer{};
+    Xwindow window{graphics};
+    Printer printer{graphics, window};
     Board board;
     
     ifstream init{initFile};
@@ -52,12 +53,14 @@ int main (int argc, char *argv []) {
                 getline(cin, line);
             }
         } else {
+            if (i < 2) printer.printPlayerNamePrompt(i + 1);
+            else printer.printPlayersMovePrompt(currentPlayerID);
             if(!getline(cin, line)) break;
         }
         istringstream lineCmd (line);
         lineCmd >> cmd;
 
-        if (i == 0) { 
+        if (i == 0) {
             p1Name = cmd;
             i++;
             board.initPlayer(p1Name, i, deckfile1, testing);
@@ -67,9 +70,6 @@ int main (int argc, char *argv []) {
             i++;            
             board.initPlayer(p2Name, i, deckfile2, testing);
             continue; 
-        } else if (i == 2) {
-            board.startCommand(currentPlayerID);
-            i++;
         }
 
         int enemyPlayerID = (currentPlayerID == 1) ? 2 : 1;
@@ -81,9 +81,9 @@ int main (int argc, char *argv []) {
         } else if (cmd == "end") {
             board.endCommand(currentPlayerID);
             currentPlayerID = (currentPlayerID == 1) ? 2 : 1;
-            // printer.printStartTurn("");
-            cout << "Player " << currentPlayerID << "'s Turn" << endl;
-            board.startCommand(currentPlayerID);
+            if (turn > 1) board.startCommand(currentPlayerID);
+            printer.printStartTurn(currentPlayerID);
+            turn++;
 
         } else if (cmd == "quit") {
             break;
@@ -91,26 +91,27 @@ int main (int argc, char *argv []) {
             int ownMinion, enemyMinion;
             if (lineCmd >> ownMinion) {
                 if (ownMinion < 1 || ownMinion > static_cast<int> (board.getMinions()[currentPlayerID - 1].size())) {
-                    // print error message
-                    cout << "Invalid minion to attack with" << endl;
+                    printer.printError("Invalid minion to attack with");
                     continue;
                 }
                 ownMinion--;
                 if (lineCmd >> enemyMinion) {
                     // attack minion
                     if (enemyMinion > static_cast<int> (board.getMinions()[enemyPlayerID - 1].size()) || enemyMinion < 1) {
-                        //print error message
-                        cout << "Invalid attack target" << endl;
+                        printer.printError("Invalid attack target");
                         continue;
                     }
-                    board.attackCommand(ownMinion, currentPlayerID, enemyMinion--);
+
+                    if (board.attackCommand(ownMinion, currentPlayerID, enemyMinion--)) {
+                        board.checkCardStates();
+                    }
+                    
                 } else {
                     // attack player
                     board.attackCommand(ownMinion, currentPlayerID);
                 }
             } else {
-                // printer.printError("");
-                cout << "Invalid number of arguments for attack" << endl;
+                printer.printError("Invalid number of arguments for attack");
                 continue;
             }
 
@@ -119,38 +120,38 @@ int main (int argc, char *argv []) {
             if (lineCmd >> cardToPlay) {
                 cardToPlay--;
                 if (cardToPlay < 0 || cardToPlay >= board.getPlayer(currentPlayerID).getHandSize()) {
-                    // printer.printError("");
-                    cout << "Card index " << cardToPlay + 1 << " does not exist in hand" << endl;
+                    printer.printError("Card index " + to_string(cardToPlay + 1) + " does not exist in hand");
                     continue;
                 }
 
                 if (lineCmd >> targetPlayer >> targetCard) {
                     if (targetPlayer <= 0 || targetPlayer > NUM_PLAYERS) {
-                        // printer.printError("");
-                        cout << "Target player " << targetPlayer << " not valid" << endl;;
+                        printer.printError("Target player " + to_string(targetPlayer) + " not valid");
                         continue;
                     }
 
                     if (targetCard != 'r' && targetCard <= 0 && 
                         targetCard > static_cast<int>(board.getMinions()[targetPlayer - 1].size())) {
-                        // printer.printError("");
-                        cout << "Target minion is not in range" << endl;
+                        printer.printError("Target minion is not in range");
                         continue;
                     }
 
                     if (targetCard != 'r') targetCard--;
-                    board.playACard(cardToPlay, currentPlayerID, targetPlayer, targetCard);
+                    if (board.playACard(cardToPlay, currentPlayerID, targetPlayer, targetCard)) {
+                        board.checkCardStates();
+                    }
+
                 } else {
                     if (targetPlayer != INT32_MIN) {
-                        // printer.printError("");
-                        cout << "Invalid number of arguments for play" << endl;
+                        printer.printError("Invalid number of arguments for play");
                         continue;
                     }
-                    board.playACard(cardToPlay, currentPlayerID);
+                    if (board.playACard(cardToPlay, currentPlayerID)) {
+                        board.checkCardStates();
+                    }
                 }
             } else {
-                // printer.printError("");
-                cout << "Invalid number of arguments for play" << endl;
+                printer.printError("Invalid number of arguments for play");
                 continue;
             }
             
@@ -159,40 +160,39 @@ int main (int argc, char *argv []) {
             if (lineCmd >> minion) {
                 minion--;
                 if (minion < 0 || minion >= static_cast<int>(board.getMinions()[currentPlayerID - 1].size())) {
-                    // printer.printError("");
-                    cout << "Minion index " << minion + 1 << " does not exist on your board" << endl;
+                    printer.printError("Minion index " + to_string(minion + 1) + " does not exist on your board");
                     continue;
                 }
 
                 if (lineCmd >> targetPlayer >> targetCard) {
                     if (targetPlayer <= 0 || targetPlayer > NUM_PLAYERS) {
-                        // printer.printError("");
-                        cout << "Target player " << targetPlayer << " not valid" << endl;;
+                        printer.printError("Target player " + to_string(targetPlayer) + " not valid");
                         continue;
                     }
 
                     if (targetCard != 'r' && targetCard <= 0 && 
                         targetCard > static_cast<int>(board.getMinions()[targetPlayer - 1].size())) {
-                        // printer.printError("");
-                        cout << "Target minion is not in range" << endl;
+                        printer.printError("Target minion is not in range");
                         continue;
                     }
 
 
                     if (targetCard != 'r') targetCard--;
-                    board.useMinionAbilityCommand(minion, currentPlayerID, targetPlayer, targetCard);
+                    if (board.useMinionAbilityCommand(minion, currentPlayerID, targetPlayer, targetCard)) {
+                        board.checkCardStates();
+                    }
                 } else {
                     if (targetPlayer != INT32_MIN) {
-                        // printer.printError("");
-                        cout << "Invalid number of arguments for use" << endl;
+                        printer.printError("Invalid number of arguments for use");
                         continue;
                     }
-                    board.useMinionAbilityCommand(minion, currentPlayerID);
+                    if (board.useMinionAbilityCommand(minion, currentPlayerID)) {
+                        board.checkCardStates();
+                    }
                 }
 
             } else {
-                // printer.printError("");
-                cout << "Invalid number of arguments for use" << endl;
+                printer.printError("Invalid number of arguments for use");
                 continue;
             }
             
@@ -201,15 +201,13 @@ int main (int argc, char *argv []) {
             int minion;
             if (lineCmd >> minion) {
                 if (minion <= 0 || minion > static_cast<int>(board.getMinions()[currentPlayerID - 1].size())) {
-                    // printer.printError("");
-                    cout << "Minion index " << minion << " does not exist on the board." << endl;
+                    printer.printError("Minion index " + to_string(minion) + " does not exist on the board.");
                     continue;
                 }
                 Card& inspectMinion = board.getMinions()[currentPlayerID - 1][minion - 1];
                 printer.printInspect(inspectMinion);
             } else {
-                // printer.printError("");
-                cout << "Invalid number of arguments for inspect" << endl;
+                printer.printError("Invalid number of arguments for inspect");
                 continue;
             }
 
@@ -225,8 +223,7 @@ int main (int argc, char *argv []) {
             if (testing) {
                 board.getPlayer(currentPlayerID).drawCard();
             } else {
-                // print error message
-                cout << "A valid command was not entered, please enter a valid command" << endl;
+                printer.printError("A valid command was not entered, please enter a valid command");
             }
             
         } else if (cmd == "discard") {
@@ -236,22 +233,19 @@ int main (int argc, char *argv []) {
                     board.getPlayer(currentPlayerID).discard(i);
                 }
             } else {
-                // print error message
-                cout << "A valid command was not entered, please enter a valid command" << endl;
+                printer.printError("A valid command was not entered, please enter a valid command");
             }
         } else {
-            cout << "A valid command was not entered, please enter a valid command" << endl;
+            printer.printError("A valid command was not entered, please enter a valid command");
         }
 
         
         if (board.getPlayer(enemyPlayerID).getPlayerHealth() <= 0) {
             // print winner
-            // printer.printWinner(board.getPlayer(currentPlayerID).getPlayerName(), currentPlayerID)
-            cout << "Player " << currentPlayerID << ", " << board.getPlayer(currentPlayerID).getPlayerName() << " has won the game!";
+            printer.printWinner(board.getPlayer(enemyPlayerID).getPlayerName(), enemyPlayerID);
             break;
         } else if (board.getPlayer(currentPlayerID).getPlayerHealth() <= 0) {
-            // printer.printWinner(board.getPlayer(currentPlayerID).getPlayerName(), currentPlayerID)
-            cout << "Player " << enemyPlayerID << ", " << board.getPlayer(currentPlayerID).getPlayerName() << " has won the game!";
+            printer.printWinner(board.getPlayer(currentPlayerID).getPlayerName(), currentPlayerID);
             break;
         }
     }

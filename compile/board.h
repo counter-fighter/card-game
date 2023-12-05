@@ -30,7 +30,7 @@ class Board {
     void initPlayer(string pName, int playerID, string deckfile, bool shuffle); // initializes a player
 
     // plays a card from hand, discards spell after use or places minion/ritual/enchanment on board
-    void playACard(int cardInd, int playerID, int targetPlayer = -1, int targetCard = -1); 
+    bool playACard(int cardInd, int playerID, int targetPlayer = -1, int targetCard = -1); 
 
 
     // Notify all cards on board
@@ -48,8 +48,8 @@ class Board {
     // Commands called from main using input
     void startCommand(int playerID);
     void endCommand(int playerID); // ends the turn, notifies all cards of Turn End
-    void attackCommand(int minionInd, int playerID, int enemyMinion = -1); // performs an attack on an enemy minion or player
-    void useMinionAbilityCommand(int minion, int playerID, int targetPlayer = -1, int targetCard = -1); // uses a minion ability
+    bool attackCommand(int minionInd, int playerID, int enemyMinion = -1); // performs an attack on an enemy minion or player
+    bool useMinionAbilityCommand(int minion, int playerID, int targetPlayer = -1, int targetCard = -1); // uses a minion ability
 
     // Functions that get called from Card Effects/Abilities that affect the board or things on the board
     bool summon(string card, int n, int playerID, int magicCost); // summons a minion to the board
