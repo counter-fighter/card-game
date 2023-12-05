@@ -144,37 +144,35 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
     return false;
 }
 
-void Board::checkCardStates() {
-    const int numPlayers = 2;
-    for (int i = 0; i < numPlayers; i++) {
-        for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
+void Board::checkCardStates(int playerID) {
+    int i = playerID - 1;
+    for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
             cout << "checking player " << i << "'s " << j << " card with " << minions[i][j]->getDefence() << "defence" << endl;
-            if (minions[i][j]->getReturnToHand() && players[i]->getHandSize() < MAX_HAND) {
-                Card &targetNotify = static_cast<Card&>(*minions[i][j]);
-                notifyMinionLeave(i, targetNotify);
-                minions[i][j]->detachAllEnchant();
-                minions[i][j]->setReturnToHand(false);
-                
-                unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(minions[i][j].release()));
-                minions[i].erase(minions[i].begin() + j);
-                players[i]->returnToHand(std::move(card)); // not sure if I need to cast to Card
-                
-            } else if (minions[i][j]->getDefence() <= 0 || (minions[i][j]->getReturnToHand() && players[i]->getHandSize() >= MAX_HAND)) {
-                if (minions[i][j]->getReturnToHand()) cout << "hand is full, card discarded" << endl;
-                Card &targetNotify = static_cast<Card&> (*minions[i][j]);
-                notifyMinionLeave(i, targetNotify);
-                minions[i][j]->detachAllEnchant();
-                players[i]->sendToGraveyard(std::move(minions[i][j]));
-                minions[i].erase(minions[i].begin() + j);
-            }
+        if (minions[i][j]->getReturnToHand() && players[i]->getHandSize() < MAX_HAND) {
+            Card &targetNotify = static_cast<Card&>(*minions[i][j]);
+            notifyMinionLeave(i, targetNotify);
+            minions[i][j]->detachAllEnchant();
+            minions[i][j]->setReturnToHand(false);
+            
+            unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(minions[i][j].release()));
+            minions[i].erase(minions[i].begin() + j);
+            players[i]->returnToHand(std::move(card));
+            
+        } else if (minions[i][j]->getDefence() <= 0 || (minions[i][j]->getReturnToHand() && players[i]->getHandSize() >= MAX_HAND)) {
+            if (minions[i][j]->getReturnToHand()) cout << "hand is full, card discarded" << endl;
+            Card &targetNotify = static_cast<Card&> (*minions[i][j]);
+            notifyMinionLeave(i, targetNotify);
+            minions[i][j]->detachAllEnchant();
+            players[i]->sendToGraveyard(std::move(minions[i][j]));
+            minions[i].erase(minions[i].begin() + j);
         }
+    }
 
-        if (static_cast<int> (rituals[i].size()) > 0) {
-            if (rituals[i][0]->getReturnToHand() && players[i]->getHandSize() < MAX_HAND) {
-                unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(rituals[i][0].release()));
-                rituals[i].erase(rituals[i].begin());
-                players[i]->returnToHand(std::move(card)); // not sure about cast again
-            }
+    if (static_cast<int> (rituals[i].size()) > 0) {
+        if (rituals[i][0]->getReturnToHand() && players[i]->getHandSize() < MAX_HAND) {
+            unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(rituals[i][0].release()));
+            rituals[i].erase(rituals[i].begin());
+            players[i]->returnToHand(std::move(card));
         }
     }
 }
@@ -213,7 +211,7 @@ void Board::notifyTurnStart(int playerID) {
         else minions[ID][j]->setActionCount(minions[ID][j]->getActionReset());
     }
 
-    if (static_cast<int> (rituals[ID].size()) > 0 && rituals[ID][0]->getCharges() < rituals[ID][0]->getActionCost()) {
+    if (static_cast<int> (rituals[ID].size()) > 0 && rituals[ID][0]->getCharges() >= rituals[ID][0]->getActionCost()) {
         rituals[ID][0]->notifyCardTurnStart(*this);
     }
 }
@@ -224,7 +222,7 @@ void Board::notifyTurnEnd(int playerID) {
         if (!minions[ID][j]->getSilenced()) minions[ID][j]->notifyCardTurnEnd(*this);
     }
 
-    if (static_cast<int> (rituals[ID].size()) > 0 && rituals[ID][0]->getCharges() < rituals[ID][0]->getActionCost()) {
+    if (static_cast<int> (rituals[ID].size()) > 0 && rituals[ID][0]->getCharges() >= rituals[ID][0]->getActionCost()) {
         rituals[ID][0]->notifyCardTurnEnd(*this);
     }
 }
@@ -236,7 +234,7 @@ void Board::notifyMinionEnter(int playerID) {
                 minions[i][j]->notifyCardMinionEnter(*this, *minions[playerID - 1][static_cast<int>(minions[playerID - 1].size()) - 1]);
             }
         }
-        if (static_cast<int> (rituals[i].size()) > 0 && rituals[i][0]->getCharges() < rituals[i][0]->getActionCost()) {
+        if (static_cast<int> (rituals[i].size()) > 0 && rituals[i][0]->getCharges() >= rituals[i][0]->getActionCost()) {
             rituals[i][0]->notifyCardMinionEnter(*this, *minions[playerID - 1][static_cast<int> (minions[playerID - 1].size()) - 1]);
         }
     }
@@ -247,7 +245,7 @@ void Board::notifyMinionLeave(int playerID, Card &target) {
         for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
             if (!minions[i][j]->getSilenced()) minions[i][j]->notifyCardMinionLeave(*this, target);
         }
-        if (static_cast<int> (rituals[i].size()) > 0) {
+        if (static_cast<int> (rituals[i].size()) > 0 && rituals[i][0]->getCharges() >= rituals[i][0]->getActionCost()) {
             rituals[i][0]->notifyCardMinionEnter(*this, target);
         }
     }
