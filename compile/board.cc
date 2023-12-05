@@ -148,22 +148,28 @@ void Board::checkCardStates() {
     const int numPlayers = 2;
     for (int i = 0; i < numPlayers; i++) {
         for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
-            cout << "checking player " << i << "'s " << j << " card with " << minions[i][j]->getDefence() << "defence" << endl;
-            if (minions[i][j]->getReturnToHand() && players[i]->getHandSize() < MAX_HAND) {
-                Card &targetNotify = static_cast<Card&>(*minions[i][j]);
+            Minion &target = *minions[i][j];
+            Card &targetNotify = static_cast<Card&>(*minions[i][j]);
+            if (target.getReturnToHand() && players[i]->getHandSize() < MAX_HAND) {
                 notifyMinionLeave(i, targetNotify);
-                minions[i][j]->detachAllEnchant();
-                minions[i][j]->setReturnToHand(false);
+                target.detachAllEnchant();
+                target.setReturnToHand(false);
                 
                 unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(minions[i][j].release()));
                 minions[i].erase(minions[i].begin() + j);
                 players[i]->returnToHand(std::move(card)); // not sure if I need to cast to Card
                 
-            } else if (minions[i][j]->getDefence() <= 0 || (minions[i][j]->getReturnToHand() && players[i]->getHandSize() >= MAX_HAND)) {
-                if (minions[i][j]->getReturnToHand()) cout << "hand is full, card discarded" << endl;
-                Card &targetNotify = static_cast<Card&> (*minions[i][j]);
+            } else if (target.getBannished()) {
                 notifyMinionLeave(i, targetNotify);
-                minions[i][j]->detachAllEnchant();
+                target.detachAllEnchant();
+                target.setBannished(false);
+                players[i]->sendToGraveyard(std::move(minions[i][j]));
+                minions[i].erase(minions[i].begin() + j);
+
+            } else if (target.getDefence() <= 0 || (target.getReturnToHand() && players[i]->getHandSize() >= MAX_HAND)) {
+                if (target.getReturnToHand()) cout << "hand is full, card discarded" << endl;
+                notifyMinionLeave(i, targetNotify);
+                target.detachAllEnchant();
                 players[i]->sendToGraveyard(std::move(minions[i][j]));
                 minions[i].erase(minions[i].begin() + j);
             }

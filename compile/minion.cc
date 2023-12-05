@@ -137,3 +137,6 @@ vector<reference_wrapper<Enchantment>> Minion::getEnchantment() {
 
 TargetType Minion::getTargetType() const { return tt; }; 
 
+void Minion::setBannished(bool tf) { bannished = tf; };
+
+bool Minion::getBannished() const { return bannished; };

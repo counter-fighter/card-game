@@ -14,6 +14,7 @@ class Minion : public Card {
     protected :
         int atck, atckReset, def, defReset, actCount, actReset, actCost;
         bool silenced = false;
+        bool bannished = false;
         const CardType ct = CardType::Minion;
         const TargetType tt = TargetType::NoTarget;
         vector <unique_ptr<Enchantment>> enchants;
@@ -54,6 +55,7 @@ class Minion : public Card {
         void setActReset(int n);
         void setActCost(int n);
         void setSilenced(bool tf);
+        void setBannished(bool tf);
 
         int getAttack() const;
         int getDefence() const;
@@ -62,6 +64,7 @@ class Minion : public Card {
         int getActivationCost() const;
         int getActionReset() const;
         bool getSilenced() const;
+        bool getBannished() const;
 
         vector<reference_wrapper<Enchantment>> getEnchantment();
 

@@ -10,7 +10,7 @@ void Banish::useSpell(Board &brd, Card &target) {
   if (target.getCardType() == CardType::Minion) {
     Minion &m = static_cast<Minion&>(target);
 
-    m.setDefence(-1);
+    m.setBannished(true);
   } else {
     brd.removeRitual(target.getPlayer());
   }
