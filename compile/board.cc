@@ -282,7 +282,7 @@ vector<vector<reference_wrapper<Ritual>>> Board::getRituals() const {
     return ritualsCopy;
 }
 
-vector<reference_wrapper<Minion>> Board::getGraveyard(int playerID) const {
+vector<reference_wrapper<Card>> Board::getGraveyard(int playerID) const {
     return players[playerID - 1]->getGraveyard();
 }
 

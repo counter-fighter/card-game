@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 #include <memory>
-// #include "player.h"
-// #include "card.h"
 #include "board.h"
 #include "printer.h"
 
@@ -47,13 +45,14 @@ int main (int argc, char *argv []) {
 
     // game loop from initFile
     while (gameOn) {
+        // try {}
         if (fileInput) {
             if (!getline(init, line)) {
                 fileInput = false;
                 getline(cin, line);
             }
         } else {
-            if (i < 2) printer.printPlayerNamePrompt(i + 1);
+            if (i < 2) printer.printPlayerNamePrompt(i + 1); // throw exception for name over 13 character and reprompt
             else printer.printPlayersMovePrompt(currentPlayerID);
             if(!getline(cin, line)) break;
         }
@@ -221,7 +220,9 @@ int main (int argc, char *argv []) {
 
         } else if (cmd == "draw") {
             if (testing) {
-                board.getPlayer(currentPlayerID).drawCard();
+                if (!board.getPlayer(currentPlayerID).drawCard()){
+                    printer.printError("Tried to draw, but your hand is full.");
+                }
             } else {
                 printer.printError("A valid command was not entered, please enter a valid command");
             }
@@ -230,7 +231,11 @@ int main (int argc, char *argv []) {
             if (testing) {
                 int i;
                 if (lineCmd >> i) {
-                    board.getPlayer(currentPlayerID).discard(i);
+                    if (i > 0 && i <= board.getPlayer(currentPlayerID).getHandSize()) {
+                        board.getPlayer(currentPlayerID).discard(i--);
+                    } else {
+                        printer.printError("Tried to discard card at invalid index " + to_string(i));
+                    }
                 }
             } else {
                 printer.printError("A valid command was not entered, please enter a valid command");
