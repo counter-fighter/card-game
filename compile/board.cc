@@ -322,7 +322,7 @@ bool Board::attackCommand(int minionInd, int playerID, int enemyMinion) {
     }
     
     if (enemyMinion != -1) {
-        minions[playerID - 1][minionInd]->attack(*minions[enemyPlayer - 1][minionInd]);
+        minions[playerID - 1][minionInd]->attack(*minions[enemyPlayer - 1][enemyMinion]);
     } else {
         minions[playerID - 1][minionInd]->attack(*players[enemyPlayer - 1]);
     }

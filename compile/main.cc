@@ -107,8 +107,9 @@ int main (int argc, char *argv []) {
                         printer.printError("Invalid attack target");
                         continue;
                     }
-
-                    if (board.attackCommand(ownMinion, currentPlayerID, enemyMinion--)) {
+                    
+                    enemyMinion--;
+                    if (board.attackCommand(ownMinion, currentPlayerID, enemyMinion)) {
                         board.checkCardStates(currentPlayerID);
                         board.checkCardStates(enemyPlayerID);
                     }
