@@ -145,42 +145,42 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
 }
 
 void Board::checkCardStates(int playerID) {
-    playerID--;
-    for (int j = 0; j < static_cast<int> (minions[playerID].size()); j++) {
-        Minion &target = *minions[playerID][j];
-        Card &targetNotify = static_cast<Card&>(*minions[i][j]);
-        if (target.getReturnToHand() && players[playerID]->getHandSize() < MAX_HAND) {
+    int ID = playerID - 1;
+    for (int j = 0; j < static_cast<int> (minions[ID].size()); j++) {
+        Minion &target = *minions[ID][j];
+        Card &targetNotify = static_cast<Card&>(*minions[ID][j]);
+        if (target.getReturnToHand() && players[ID]->getHandSize() < MAX_HAND) {
             notifyMinionLeave(playerID, targetNotify);
             target.detachAllEnchant();
             target.setReturnToHand(false);
                 
-            unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(minions[playerID][j].release()));
-            minions[playerID].erase(minions[playerID].begin() + j);
-            players[playerID]->returnToHand(std::move(card)); // not sure if I need to cast to Card
+            unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(minions[ID][j].release()));
+            minions[ID].erase(minions[ID].begin() + j);
+            players[ID]->returnToHand(std::move(card)); // not sure if I need to cast to Card
                 
         } else if (target.getBannished()) {
             notifyMinionLeave(playerID, targetNotify);
             target.detachAllEnchant();
             target.setBannished(false);
-            players[playerID]->sendToGraveyard(std::move(minions[playerID][j]));
-            minions[playerID].erase(minions[playerID].begin() + j);
+            players[ID]->sendToGraveyard(std::move(minions[ID][j]));
+            minions[ID].erase(minions[ID].begin() + j);
 
-        } else if (target.getDefence() <= 0 || (target.getReturnToHand() && players[playerID]->getHandSize() >= MAX_HAND)) {
+        } else if (target.getDefence() <= 0 || (target.getReturnToHand() && players[ID]->getHandSize() >= MAX_HAND)) {
             if (target.getReturnToHand()) cout << "hand is full, card discarded" << endl;
             notifyMinionLeave(playerID, targetNotify);
             target.detachAllEnchant();
-            players[playerID]->sendToGraveyard(std::move(minions[playerID][j]));
-            minions[playerID].erase(minions[playerID].begin() + j);
+            players[ID]->sendToGraveyard(std::move(minions[ID][j]));
+            minions[ID].erase(minions[ID].begin() + j);
         }
     }
     
 
-    if (static_cast<int> (rituals[playerID].size()) > 0) {
-        if (rituals[playerID][0]->getReturnToHand()) {
-                unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(rituals[playerID][0].release()));
-                rituals[playerID].pop_back();
-            if (players[playerID]->getHandSize() < MAX_HAND) {
-                players[playerID]->returnToHand(std::move(card));
+    if (static_cast<int> (rituals[ID].size()) > 0) {
+        if (rituals[ID][0]->getReturnToHand()) {
+                unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(rituals[ID][0].release()));
+                rituals[ID].pop_back();
+            if (players[ID]->getHandSize() < MAX_HAND) {
+                players[ID]->returnToHand(std::move(card));
             } else {
                 cout << "hand is full, card discarded" << endl;
             }
