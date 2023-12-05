@@ -102,7 +102,8 @@ int main (int argc, char *argv []) {
                     }
 
                     if (board.attackCommand(ownMinion, currentPlayerID, enemyMinion--)) {
-                        board.checkCardStates();
+                        board.checkCardStates(currentPlayerID);
+                        board.checkCardStates(enemyPlayerID);
                     }
                     
                 } else {
@@ -137,7 +138,8 @@ int main (int argc, char *argv []) {
 
                     if (targetCard != 'r') targetCard--;
                     if (board.playACard(cardToPlay, currentPlayerID, targetPlayer, targetCard)) {
-                        board.checkCardStates();
+                        board.checkCardStates(currentPlayerID);
+                        board.checkCardStates(enemyPlayerID);
                     }
 
                 } else {
@@ -146,7 +148,8 @@ int main (int argc, char *argv []) {
                         continue;
                     }
                     if (board.playACard(cardToPlay, currentPlayerID)) {
-                        board.checkCardStates();
+                        board.checkCardStates(currentPlayerID);
+                        board.checkCardStates(enemyPlayerID);
                     }
                 }
             } else {
@@ -178,7 +181,8 @@ int main (int argc, char *argv []) {
 
                     if (targetCard != 'r') targetCard--;
                     if (board.useMinionAbilityCommand(minion, currentPlayerID, targetPlayer, targetCard)) {
-                        board.checkCardStates();
+                        board.checkCardStates(currentPlayerID);
+                        board.checkCardStates(enemyPlayerID);
                     }
                 } else {
                     if (targetPlayer != INT32_MIN) {
@@ -186,7 +190,8 @@ int main (int argc, char *argv []) {
                         continue;
                     }
                     if (board.useMinionAbilityCommand(minion, currentPlayerID)) {
-                        board.checkCardStates();
+                        board.checkCardStates(currentPlayerID);
+                        board.checkCardStates(enemyPlayerID);
                     }
                 }
 

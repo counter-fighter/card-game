@@ -49,7 +49,7 @@ class Board {
     void endCommand(int playerID); // ends the turn, notifies all cards of Turn End
     bool attackCommand(int minionInd, int playerID, int enemyMinion = -1); // performs an attack on an enemy minion or player
     bool useMinionAbilityCommand(int minion, int playerID, int targetPlayer = -1, int targetCard = -1); // uses a minion ability
-    void checkCardStates(); // checks all card states and moves a card to different area if conditions are met
+    void checkCardStates(int playerID); // checks all card states and moves a card to different area if conditions are met
 
     // Functions that get called from Card Effects/Abilities that affect the board or things on the board
     bool summon(string card, int n, int playerID, int magicCost); // summons a minion to the board
