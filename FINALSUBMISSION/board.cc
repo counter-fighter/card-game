@@ -280,8 +280,7 @@ bool Board::attackCommand(int minionInd, int playerID, int enemyMinion) {
     int enemyPlayer = (playerID == 1) ? 2 : 1;
     if (minions[playerID - 1][minionInd]->getActionCount() <= 0) {
         // print error not enough actions on minion
-        cout << "Not enough actions to attack" << endl;
-        return false;
+        throw std::logic_error("Not enough actions to attack");
     }
     
     if (enemyMinion != -1) {
@@ -296,7 +295,7 @@ bool Board::attackCommand(int minionInd, int playerID, int enemyMinion) {
 bool Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlayer, int targetCard) {
     if (players[playerID - 1]->getPlayerMagic() < minions[playerID - 1][minionInd]->getActivationCost() && !players[playerID - 1]->getTesting()) {
         // print error message, not enough magic
-        cout << "Not enough Magic" << endl;
+        throw std::logic_error("Not enough Magic");
         return false;
     } else if (minions[playerID - 1][minionInd]->getActionCount() < 1 && !players[playerID - 1]->getTesting()) {
         // print error message, no more actions
@@ -357,6 +356,7 @@ void Board::checkCardStates(int playerID) {
             target.setBannished(false);
             players[ID]->sendToGraveyard(std::move(minions[ID][j]));
             minions[ID].erase(minions[ID].begin() + j);
+            j--;
 
         } else if (target.getDefence() <= 0 || (target.getReturnToHand() && players[ID]->getHandSize() >= MAX_HAND)) {
             if (target.getReturnToHand()) cout << "hand is full, card discarded" << endl;
