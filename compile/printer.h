@@ -39,7 +39,7 @@ class Printer {
         void printHelp();
         void printBoard(const Board& board); //clear window (except hand) if enabled print board
         void printHand(vector<reference_wrapper<Card>> hand); //constantly displayed, updated when changes r made, 
-        void printInspect(Minion& minion); //clear window (except hand) if enabled print inspect
+        void printInspect(Card& minion); //clear window (except hand) if enabled print inspect
 };
 
 #endif

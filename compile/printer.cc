@@ -176,10 +176,10 @@ void Printer::printHand(vector<reference_wrapper<Card>> hand) {
     printCards();
 }
 
-void Printer::printInspect(Minion& minion) {
+void Printer::printInspect(Card& minion) {
     emplaceBackCard(minion);
     printCards();
-    vector<reference_wrapper<Enchantment>> enchantments = minion.getEnchantment();
+    vector<reference_wrapper<Enchantment>> enchantments = static_cast<Minion&>(minion).getEnchantment();
     for (reference_wrapper<Enchantment> echantment:enchantments) emplaceBackCard(echantment.get());
     printCards();
 }
