@@ -5,6 +5,6 @@ MasterSummoner::MasterSummoner(int player) : Minion{"Master Summoner", "Summon u
 MasterSummoner::~MasterSummoner() {};
 
 void MasterSummoner::activateAbility(Board &brd) {
-  int psuedoCost = (actCount >= actCost)? actCost : -1;
-  if (brd.summon("Air Elemental", 3, player, psuedoCost)) actCount -= actCost;
+  int psuedoCost = (actCount > 0)? actCost : -1;
+  if (brd.summon("Air Elemental", 3, player, psuedoCost)) actCount--;
 };

@@ -24,6 +24,8 @@ void Board::initPlayer(string pName, int playerID, string deckfile, bool shuffle
 bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCard) {
     TargetType targetType = TargetType::NoTarget;
     
+    if (targetPlayer == -1) targetPlayer = playerID;
+
     if (targetCard != -1) {
         if (targetCard == 'r') {
             targetType = TargetType::RitualTarget;
@@ -34,7 +36,7 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
 
     unique_ptr<Card> cardToPlay = players[playerID - 1]->playFromHand(cardInd);
 
-    if (targetType != cardToPlay->getTargetType()) {
+    if (targetType != cardToPlay->getTargetType() && cardToPlay->getTargetType() != TargetType::AllTarget) {
         // print error message wrong args
         cout << "wrong args for card " + cardToPlay->getName() << endl;
         players[playerID - 1]->returnToHand(std::move(cardToPlay));
@@ -94,12 +96,12 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         try {
             if (targetType == TargetType::RitualTarget) {
                 if (rituals[playerID - 1].size() > 0) {
-                    Card &target = *rituals[playerID - 1][0];
+                    Card &target = *rituals[targetPlayer - 1][0];
                     spellCast.useSpell(*this, target);
                 }
                 
             } else if (targetType == TargetType::MinionTarget) {
-                Card &target = *minions[playerID - 1][targetCard];
+                Card &target = *minions[targetPlayer - 1][targetCard];
                 spellCast.useSpell(*this, target);
 
             } else {
@@ -114,6 +116,7 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
             }
             discardedCards[playerID - 1].emplace_back(std::move(cardToPlay));
 
+            return true;
         } catch (std::logic_error &e) {
             players[playerID - 1]->returnToHand(std::move(cardToPlay));
             // print error message, use printer class to do it later
@@ -121,10 +124,10 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         }
         
     } else {
-        if (targetCard != -1 && targetCard < static_cast<int> (minions[playerID - 1].size())) {
+        if (targetCard != -1 && targetCard < static_cast<int> (minions[targetPlayer - 1].size())) {
             unique_ptr<Enchantment> enchant = unique_ptr<Enchantment> (dynamic_cast<Enchantment*>(cardToPlay.release()));
             players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() - enchant->getCost());
-            attach(std::move(enchant), playerID, targetCard);
+            attach(std::move(enchant), targetPlayer, targetCard);
 
             // if testing mode and not enough magic
             if (players[playerID - 1]->getTesting() && players[playerID - 1]->getPlayerMagic() < 0) {
@@ -132,6 +135,7 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
             }
 
         } else {
+            cout << "Incorrect target index" << endl;
             //print error message no target
             players[playerID - 1]->returnToHand(std::move(cardToPlay));
         }
@@ -144,10 +148,12 @@ void Board::checkCardStates() {
     const int numPlayers = 2;
     for (int i = 0; i < numPlayers; i++) {
         for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
+            cout << "checking player " << i << "'s " << j << " card with " << minions[i][j]->getDefence() << "defence" << endl;
             if (minions[i][j]->getReturnToHand() && players[i]->getHandSize() < MAX_HAND) {
                 Card &targetNotify = static_cast<Card&>(*minions[i][j]);
                 notifyMinionLeave(i, targetNotify);
                 minions[i][j]->detachAllEnchant();
+                minions[i][j]->setReturnToHand(false);
                 
                 unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(minions[i][j].release()));
                 minions[i].erase(minions[i].begin() + j);

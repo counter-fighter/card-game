@@ -96,8 +96,8 @@ bool Player::getTesting() const { return testing; }
 
 bool Player::drawCard() {
   if (static_cast<int>(hand.size()) < MAX_HAND && static_cast<int>(deck.size()) > 0) {
-    hand.emplace_back(move(deck.back()));
-    deck.pop_back();
+    hand.emplace_back(move(deck.front()));
+    deck.erase(deck.begin());
     return true;
   }
   return false;
@@ -117,7 +117,9 @@ void Player::sendToGraveyard(unique_ptr<Minion> m) {
 };
 
 unique_ptr<Minion> Player::returnTopFromGraveyard() {
-  return std::move(graveyard[ static_cast<int>(graveyard.size()) - 1]);
+  unique_ptr<Minion> ret {move(graveyard.back())};
+  graveyard.pop_back();
+  return ret;
 }
 
 void Player::returnToHand(unique_ptr<Card> c) {
