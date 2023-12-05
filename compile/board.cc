@@ -198,7 +198,7 @@ bool Board::summon(string card, int n, int playerID, int magicCost) {
     for (int i = 0; i < n; i++) {
         if (static_cast<int> (minions[playerID - 1].size()) < MAX_MINIONS) {
             // add minion to vector, either by creating new from string or std::move(card)
-            minions[playerID - 1].emplace_back(static_cast<Minion*>((players[playerID - 1]->allocCard(card, playerID - 1)).release()));
+            minions[playerID - 1].emplace_back(static_cast<Minion*>((players[playerID - 1]->allocCard(card, playerID)).release()));
             notifyMinionEnter(playerID);
         }
     }
@@ -322,7 +322,7 @@ bool Board::attackCommand(int minionInd, int playerID, int enemyMinion) {
     }
     
     if (enemyMinion != -1) {
-        minions[playerID - 1][minionInd]->attack(*minions[enemyPlayer - 1][minionInd]);
+        minions[playerID - 1][minionInd]->attack(*minions[enemyPlayer - 1][enemyMinion]);
     } else {
         minions[playerID - 1][minionInd]->attack(*players[enemyPlayer - 1]);
     }
