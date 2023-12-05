@@ -50,18 +50,16 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
     // Checks for sufficient arguments
     if (targetType != cardToPlay->getTargetType() && cardToPlay->getTargetType() != TargetType::AllTarget) {
         // print error message wrong args
-        cout << "wrong args for card " + cardToPlay->getName() << endl;
         players[playerID - 1]->returnToHand(std::move(cardToPlay));
-        
+        throw std::logic_error("Incorrect arguments");
         return false;
     }
 
     // Checks for sufficient magic
     if (cardToPlay->getCost() > players[playerID - 1]->getPlayerMagic() && !players[playerID - 1]->getTesting()) {
         // print error message not enough magic
-        cout << "not enough magic" << endl;
         players[playerID - 1]->returnToHand(std::move(cardToPlay));
-        return false;
+        throw std::logic_error("not enough magic");
     }
     
 
@@ -84,8 +82,7 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
             return true;
         } else {
             players[playerID - 1]->returnToHand(std::move(cardToPlay));
-            // error message for full minion board
-            cout << "The board is full for minions" << endl;
+            return false;
         }
         
     // -------------------------------------------------------------------------
@@ -141,8 +138,8 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
             return true;
         } catch (std::logic_error &e) {
             players[playerID - 1]->returnToHand(std::move(cardToPlay));
-            // print error message, use printer class to do it later
-            cout << e.what() << endl;
+            // print error message
+            throw;
         }
         
     // -------------------------------------------------------------------------
@@ -161,9 +158,9 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
             return true;
 
         } else {
-            cout << "Incorrect target index" << endl;
             //print error message no target
             players[playerID - 1]->returnToHand(std::move(cardToPlay));
+            throw std::logic_error("Incorrect target index");
         }
         
     }
@@ -296,20 +293,17 @@ bool Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlaye
     if (players[playerID - 1]->getPlayerMagic() < minions[playerID - 1][minionInd]->getActivationCost() && !players[playerID - 1]->getTesting()) {
         // print error message, not enough magic
         throw std::logic_error("Not enough Magic");
-        return false;
     } else if (minions[playerID - 1][minionInd]->getActionCount() < 1 && !players[playerID - 1]->getTesting()) {
         // print error message, no more actions
-        cout << "Not enough actions to use ability" << endl;
-        return false;
+        throw std::logic_error("Not enough actions to use ability");
     } else if (minions[playerID - 1][minionInd]->getSilenced()) {
         // print error message, minion is silenced
-        cout << minions[playerID - 1][minionInd]->getName() << " is silenced, the ability will not activate." << endl;
-        return false;
+        throw std::logic_error("Minion is silenced, the ability will not activate.");
     }
 
     if (targetCard == 'r') {
         // print error message for now because we don't have any cards that do this
-        cout << "Ritual is not a valid target" << endl;
+        throw std::logic_error("Ritual is not a valid target");
     } else if (minions[playerID - 1][minionInd]->getActionCount() >= 1){
         if (targetCard == -1) {
             minions[playerID - 1][minionInd]->activateAbility(*this);
@@ -329,7 +323,7 @@ bool Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlaye
         return true;
     
     } else {
-        cout << minions[playerID - 1][minionInd]->getName() << " does not have enough actions" << endl;    
+        throw std::logic_error("Not enough enough actions to use ability");
     }
 
     return false;
@@ -338,6 +332,7 @@ bool Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlaye
 // Runs through the whole board and discard cards that need to be discarded
 void Board::checkCardStates(int playerID) {
     int ID = playerID - 1;
+    string e;
     for (int j = 0; j < static_cast<int> (minions[ID].size()); j++) {
         Minion &target = *minions[ID][j];
         Card &targetNotify = static_cast<Card&>(*minions[ID][j]);
@@ -359,7 +354,7 @@ void Board::checkCardStates(int playerID) {
             j--;
 
         } else if (target.getDefence() <= 0 || (target.getReturnToHand() && players[ID]->getHandSize() >= MAX_HAND)) {
-            if (target.getReturnToHand()) cout << "hand is full, card discarded" << endl;
+            if (target.getReturnToHand()) e = "hand is full, card discarded";
             notifyMinionLeave(playerID, targetNotify);
             target.detachAllEnchant();
             players[ID]->sendToGraveyard(std::move(minions[ID][j]));
@@ -375,9 +370,13 @@ void Board::checkCardStates(int playerID) {
             if (players[ID]->getHandSize() < MAX_HAND) {
                 players[ID]->returnToHand(std::move(card));
             } else {
-                cout << "hand is full, card discarded" << endl;
+                e = "hand is full, card discarded";
             }
         }
+    }
+
+    if (e != "") {
+        throw std::logic_error(e);
     }
 }
 
@@ -389,7 +388,7 @@ bool Board::summon(string card, int n, int playerID, int magicCost) {
     // if the board is full, reset magic cost and return false
     if (static_cast<int>(minions[playerID - 1].size()) >= MAX_MINIONS || magicCost == -1) {
         players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() + magicCost);
-        throw std::logic_error("Board is full. Failed to summon " + card + ".");
+        throw std::logic_error("Board is full. Failed to summon.");
     }
 
     for (int i = 0; i < n; i++) {
