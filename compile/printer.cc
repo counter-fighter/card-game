@@ -165,10 +165,14 @@ void Printer::printHelp() {
     cout << "          board -- Describe all cards on the board." << endl;
 }
 
+void Printer::printPlayerNamePrompt(int playerID) { cout << "Enter Player " << playerID << "'s name: "; }
+
+void Printer::printPlayersMovePrompt(int playerID) { cout << "Player " << playerID << "'s move: "; }
+
 void Printer::printError(string error) { cout << error << endl; }
 
 void Printer::printWinner(string name, int playerID) {
-    cout << "Player " << playerID << ", " << name << " has won the game!";
+    cout << "Player " << playerID << ", " << name << " has won the game!" << endl;
 }
 
 void Printer::printStartTurn(int playerID) { cout << "Player " << playerID << "'s Turn" << endl; }

@@ -36,6 +36,8 @@ class Printer {
         Printer(bool enableGraphics, Xwindow &window);
         ~Printer();
         void printHelp();
+        void printPlayerNamePrompt(int playerID);
+        void printPlayersMovePrompt(int playerID);
         void printError(string error);
         void printWinner(string name, int playerID);
         void printStartTurn(int playerID);
