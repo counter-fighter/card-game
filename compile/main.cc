@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 #include <memory>
-// #include "player.h"
-// #include "card.h"
 #include "board.h"
 #include "printer.h"
 
@@ -230,7 +228,11 @@ int main (int argc, char *argv []) {
             if (testing) {
                 int i;
                 if (lineCmd >> i) {
-                    board.getPlayer(currentPlayerID).discard(i);
+                    if (i > 0 && i <= board.getPlayer(currentPlayerID).getHandSize()) {
+                        board.getPlayer(currentPlayerID).discard(i--);
+                    } else {
+                        printer.printError("Tried to discard card at invalid index " + to_string(i));
+                    }
                 }
             } else {
                 printer.printError("A valid command was not entered, please enter a valid command");
