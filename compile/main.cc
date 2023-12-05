@@ -14,6 +14,7 @@ int main (int argc, char *argv []) {
     const string deck1Arg = "-deck1", deck2Arg = "-deck2", bonusArg = "-enableBonus";
     string initFile, cmd, cardName, deckfile1, deckfile2;
     bool testing = false, graphics = false;
+    const int NAME_LIMIT = 13;
     int currentPlayerID = 1, turn = 1;
     bool fileInput = false, gameOn = true;
     bool enableBonus = false;
@@ -47,225 +48,237 @@ int main (int argc, char *argv []) {
 
     // game loop from initFile
     while (gameOn) {
-        // try {}
-        if (graphics && i > 1) {
-            printer.updateHand(board.getPlayer(currentPlayerID).getHand()); // update after every move.
-            if (cmd != "inspect") printer.updateBoard(board); // updateBoard unless inspecting minion.
-        }
-
-        if (fileInput) {
-            if (!getline(init, line)) {
-                fileInput = false;
-                getline(cin, line);
+        try {
+            if (graphics && i > 1) {
+                printer.updateHand(board.getPlayer(currentPlayerID).getHand()); // update after every move.
+                if (cmd != "inspect") printer.updateBoard(board); // updateBoard unless inspecting minion.
             }
-        } else {
-            if (i < 2) printer.printPlayerNamePrompt(i + 1); // throw exception for name over 13 character and reprompt
-            else printer.printPlayersMovePrompt(currentPlayerID);
-            if(!getline(cin, line)) break;
-        }
-        istringstream lineCmd (line);
-        lineCmd >> cmd;
 
-        if (i == 0) {
-            p1Name = cmd;
-            i++;
-            board.initPlayer(p1Name, i, deckfile1, testing);
-            continue;
-        } else if (i == 1) { 
-            p2Name = cmd; 
-            i++;            
-            board.initPlayer(p2Name, i, deckfile2, testing);
-            continue; 
-        }
-
-        int enemyPlayerID = (currentPlayerID == 1) ? 2 : 1;
-
-        if (cmd == "help") {
-            // print the help menu
-            printer.printHelp();
-
-        } else if (cmd == "end") {
-            board.endCommand(currentPlayerID);
-            currentPlayerID = (currentPlayerID == 1) ? 2 : 1;
-            if (turn > 1) board.startCommand(currentPlayerID);
-            printer.printStartTurn(currentPlayerID);
-            turn++;
-
-        } else if (cmd == "quit") {
-            break;
-        } else if (cmd == "attack") {
-            int ownMinion, enemyMinion;
-            if (lineCmd >> ownMinion) {
-                if (ownMinion < 1 || ownMinion > static_cast<int> (board.getMinions()[currentPlayerID - 1].size())) {
-                    printer.printError("Invalid minion to attack with");
-                    continue;
+            if (fileInput) { // exhaust file input before cin
+                if (!getline(init, line)) {
+                    fileInput = false;
+                    getline(cin, line);
                 }
-                ownMinion--;
-                if (lineCmd >> enemyMinion) {
-                    // attack minion
-                    if (enemyMinion > static_cast<int> (board.getMinions()[enemyPlayerID - 1].size()) || enemyMinion < 1) {
-                        printer.printError("Invalid attack target");
+            } else {
+                if (i < 2) printer.printPlayerNamePrompt(i + 1); // throw exception for name over 13 character and reprompt
+                else printer.printPlayersMovePrompt(currentPlayerID);
+                if (!getline(cin, line)) break;
+                if (line.length() > NAME_LIMIT && i < 2) { throw std::logic_error("Exceeded maximum 13 character limit for player name"); }
+            }
+            istringstream lineCmd (line);
+            lineCmd >> cmd;
+
+            if (i == 0) {
+                p1Name = cmd;
+                i++;
+                board.initPlayer(p1Name, i, deckfile1, testing);
+                continue;
+            } else if (i == 1) { 
+                p2Name = cmd; 
+                i++;            
+                board.initPlayer(p2Name, i, deckfile2, testing);
+                continue; 
+            }
+
+            int enemyPlayerID = (currentPlayerID == 1) ? 2 : 1;
+
+            if (cmd == "help") {
+                // print the help menu
+                printer.printHelp();
+
+            } else if (cmd == "end") {
+                board.endCommand(currentPlayerID);
+                currentPlayerID = (currentPlayerID == 1) ? 2 : 1;
+                if (turn > 1) board.startCommand(currentPlayerID);
+                printer.printStartTurn(currentPlayerID);
+                turn++;
+
+            } else if (cmd == "quit") {
+                break;
+            } else if (cmd == "attack") {
+                int ownMinion, enemyMinion;
+                if (lineCmd >> ownMinion) {
+                    if (ownMinion < 1 || ownMinion > static_cast<int> (board.getMinions()[currentPlayerID - 1].size())) {
+                        printer.printError("Invalid minion to attack with");
                         continue;
                     }
+
+                    ownMinion--;
                     
-                    enemyMinion--;
-                    if (board.attackCommand(ownMinion, currentPlayerID, enemyMinion)) {
-                        board.checkCardStates(currentPlayerID);
-                        board.checkCardStates(enemyPlayerID);
-                    }
-                    
-                } else {
-                    // attack player
-                    board.attackCommand(ownMinion, currentPlayerID);
-                }
-            } else {
-                printer.printError("Invalid number of arguments for attack");
-                continue;
-            }
-
-        } else if (cmd == "play") {
-            int cardToPlay, targetPlayer = INT32_MIN, targetCard;
-            if (lineCmd >> cardToPlay) {
-                cardToPlay--;
-                if (cardToPlay < 0 || cardToPlay >= board.getPlayer(currentPlayerID).getHandSize()) {
-                    printer.printError("Card index " + to_string(cardToPlay + 1) + " does not exist in hand");
-                    continue;
-                }
-
-                if (lineCmd >> targetPlayer >> targetCard) {
-                    if (targetPlayer <= 0 || targetPlayer > NUM_PLAYERS) {
-                        printer.printError("Target player " + to_string(targetPlayer) + " not valid");
-                        continue;
-                    }
-
-                    if (targetCard != 'r' && targetCard <= 0 && 
-                        targetCard > static_cast<int>(board.getMinions()[targetPlayer - 1].size())) {
-                        printer.printError("Target minion is not in range");
-                        continue;
-                    }
-
-                    if (targetCard != 'r') targetCard--;
-                    if (board.playACard(cardToPlay, currentPlayerID, targetPlayer, targetCard)) {
-                        board.checkCardStates(currentPlayerID);
-                        board.checkCardStates(enemyPlayerID);
-                    }
-
-                } else {
-                    if (targetPlayer != INT32_MIN) {
-                        printer.printError("Invalid number of arguments for play");
-                        continue;
-                    }
-                    if (board.playACard(cardToPlay, currentPlayerID)) {
-                        board.checkCardStates(currentPlayerID);
-                        board.checkCardStates(enemyPlayerID);
-                    }
-                }
-            } else {
-                printer.printError("Invalid number of arguments for play");
-                continue;
-            }
-            
-        } else if (cmd == "use") {
-            int minion, targetPlayer = INT32_MIN, targetCard;
-            if (lineCmd >> minion) {
-                minion--;
-                if (minion < 0 || minion >= static_cast<int>(board.getMinions()[currentPlayerID - 1].size())) {
-                    printer.printError("Minion index " + to_string(minion + 1) + " does not exist on your board");
-                    continue;
-                }
-
-                if (lineCmd >> targetPlayer >> targetCard) {
-                    if (targetPlayer <= 0 || targetPlayer > NUM_PLAYERS) {
-                        printer.printError("Target player " + to_string(targetPlayer) + " not valid");
-                        continue;
-                    }
-
-                    if (targetCard != 'r' && targetCard <= 0 && 
-                        targetCard > static_cast<int>(board.getMinions()[targetPlayer - 1].size())) {
-                        printer.printError("Target minion is not in range");
-                        continue;
-                    }
-
-
-                    if (targetCard != 'r') targetCard--;
-                    if (board.useMinionAbilityCommand(minion, currentPlayerID, targetPlayer, targetCard)) {
-                        board.checkCardStates(currentPlayerID);
-                        board.checkCardStates(enemyPlayerID);
-                    }
-                } else {
-                    if (targetPlayer != INT32_MIN) {
-                        printer.printError("Invalid number of arguments for use");
-                        continue;
-                    }
-                    if (board.useMinionAbilityCommand(minion, currentPlayerID)) {
-                        board.checkCardStates(currentPlayerID);
-                        board.checkCardStates(enemyPlayerID);
-                    }
-                }
-
-            } else {
-                printer.printError("Invalid number of arguments for use");
-                continue;
-            }
-            
-
-        } else if (cmd == "inspect") {
-            int minion;
-            if (lineCmd >> minion) {
-                if (minion <= 0 || minion > static_cast<int>(board.getMinions()[currentPlayerID - 1].size())) {
-                    printer.printError("Minion index " + to_string(minion) + " does not exist on the board.");
-                    continue;
-                }
-                Card& inspectMinion = board.getMinions()[currentPlayerID - 1][minion - 1];
-                printer.printInspect(inspectMinion);
-            } else {
-                printer.printError("Invalid number of arguments for inspect");
-                continue;
-            }
-
-        } else if (cmd == "hand") {
-            // printer command for hand
-            printer.printHand(board.getPlayer(currentPlayerID).getHand());
-
-        } else if (cmd == "board") {
-            // printer command for board
-            printer.printBoard(board);
-
-        } else if (cmd == "draw") {
-            if (testing) {
-                if (!board.getPlayer(currentPlayerID).drawCard()){
-                    printer.printError("Tried to draw, but your hand is full.");
-                }
-            } else {
-                printer.printError("A valid command was not entered, please enter a valid command");
-            }
-            
-        } else if (cmd == "discard") {
-            if (testing) {
-                int i;
-                if (lineCmd >> i) {
-                    if (i > 0 && i <= board.getPlayer(currentPlayerID).getHandSize()) {
-                        board.getPlayer(currentPlayerID).discard(i--);
+                    if (lineCmd >> enemyMinion) {
+                        if (enemyMinion > static_cast<int> (board.getMinions()[enemyPlayerID - 1].size()) || enemyMinion < 1) {
+                            printer.printError("Invalid attack target");
+                            continue;
+                        }
+                        
+                        enemyMinion--;
+                        // attack minion, if success, check state on board
+                        if (board.attackCommand(ownMinion, currentPlayerID, enemyMinion)) {
+                            board.checkCardStates(currentPlayerID);
+                            board.checkCardStates(enemyPlayerID);
+                        }
+                        
                     } else {
-                        printer.printError("Tried to discard card at invalid index " + to_string(i));
+                        // attack player
+                        board.attackCommand(ownMinion, currentPlayerID);
                     }
+                } else {
+                    printer.printError("Invalid number of arguments for attack");
+                    continue;
+                }
+
+            } else if (cmd == "play") {
+                int cardToPlay, targetPlayer = INT32_MIN, targetCard;
+                if (lineCmd >> cardToPlay) {
+                    cardToPlay--;
+                    if (cardToPlay < 0 || cardToPlay >= board.getPlayer(currentPlayerID).getHandSize()) {
+                        printer.printError("Card index " + to_string(cardToPlay + 1) + " does not exist in hand");
+                        continue;
+                    }
+
+                    if (lineCmd >> targetPlayer >> targetCard) {
+                        if (targetPlayer <= 0 || targetPlayer > NUM_PLAYERS) {
+                            printer.printError("Target player " + to_string(targetPlayer) + " not valid");
+                            continue;
+                        }
+
+                        if (targetCard != 'r' && targetCard <= 0 && 
+                            targetCard > static_cast<int>(board.getMinions()[targetPlayer - 1].size())) {
+                            printer.printError("Target minion is not in range");
+                            continue;
+                        }
+
+                        if (targetCard != 'r') targetCard--;
+                        // play a card, if success, check state on board
+                        if (board.playACard(cardToPlay, currentPlayerID, targetPlayer, targetCard)) {
+                            board.checkCardStates(currentPlayerID);
+                            board.checkCardStates(enemyPlayerID);
+                        }
+
+                    } else {
+                        if (targetPlayer != INT32_MIN) {
+                            printer.printError("Invalid number of arguments for play");
+                            continue;
+                        }
+
+                        // play a card, if success, check state on board
+                        if (board.playACard(cardToPlay, currentPlayerID)) {
+                            board.checkCardStates(currentPlayerID);
+                            board.checkCardStates(enemyPlayerID);
+                        }
+                    }
+                } else {
+                    printer.printError("Invalid number of arguments for play");
+                    continue;
+                }
+                
+            } else if (cmd == "use") {
+                int minion, targetPlayer = INT32_MIN, targetCard;
+                if (lineCmd >> minion) {
+                    minion--;
+                    if (minion < 0 || minion >= static_cast<int>(board.getMinions()[currentPlayerID - 1].size())) {
+                        printer.printError("Minion index " + to_string(minion + 1) + " does not exist on your board");
+                        continue;
+                    }
+
+                    if (lineCmd >> targetPlayer >> targetCard) {
+                        if (targetPlayer <= 0 || targetPlayer > NUM_PLAYERS) {
+                            printer.printError("Target player " + to_string(targetPlayer) + " not valid");
+                            continue;
+                        }
+
+                        if (targetCard != 'r' && targetCard <= 0 && 
+                            targetCard > static_cast<int>(board.getMinions()[targetPlayer - 1].size())) {
+                            printer.printError("Target minion is not in range");
+                            continue;
+                        }
+
+
+                        if (targetCard != 'r') targetCard--;
+                        // use ability, if success, check state on board
+                        if (board.useMinionAbilityCommand(minion, currentPlayerID, targetPlayer, targetCard)) {
+                            board.checkCardStates(currentPlayerID);
+                            board.checkCardStates(enemyPlayerID);
+                        }
+                    } else {
+                        if (targetPlayer != INT32_MIN) {
+                            printer.printError("Invalid number of arguments for use");
+                            continue;
+                        }
+
+                        // use ability, if success, check state on board
+                        if (board.useMinionAbilityCommand(minion, currentPlayerID)) {
+                            board.checkCardStates(currentPlayerID);
+                            board.checkCardStates(enemyPlayerID);
+                        }
+                    }
+
+                } else {
+                    printer.printError("Invalid number of arguments for use");
+                    continue;
+                }
+                
+
+            } else if (cmd == "inspect") {
+                int minion;
+                if (lineCmd >> minion) {
+                    if (minion <= 0 || minion > static_cast<int>(board.getMinions()[currentPlayerID - 1].size())) {
+                        printer.printError("Minion index " + to_string(minion) + " does not exist on the board.");
+                        continue;
+                    }
+                    Card& inspectMinion = board.getMinions()[currentPlayerID - 1][minion - 1];
+                    printer.printInspect(inspectMinion);
+                } else {
+                    printer.printError("Invalid number of arguments for inspect");
+                    continue;
+                }
+
+            } else if (cmd == "hand") {
+                // printer command for hand
+                printer.printHand(board.getPlayer(currentPlayerID).getHand());
+
+            } else if (cmd == "board") {
+                // printer command for board
+                printer.printBoard(board);
+
+            } else if (cmd == "draw") {
+                if (testing) {
+                    if (!board.getPlayer(currentPlayerID).drawCard()){
+                        printer.printError("Tried to draw, but your hand is full.");
+                    }
+                } else {
+                    printer.printError("A valid command was not entered, please enter a valid command");
+                }
+            
+            } else if (cmd == "discard") {
+                if (testing) {
+                    int i;
+                    if (lineCmd >> i) {
+                        if (i > 0 && i <= board.getPlayer(currentPlayerID).getHandSize()) {
+                            board.getPlayer(currentPlayerID).discard(i--);
+                        } else {
+                            printer.printError("Tried to discard card at invalid index " + to_string(i));
+                        }
+                    }
+                } else {
+                    printer.printError("A valid command was not entered, please enter a valid command");
                 }
             } else {
                 printer.printError("A valid command was not entered, please enter a valid command");
             }
-        } else {
-            printer.printError("A valid command was not entered, please enter a valid command");
-        }
 
-        
-        if (board.getPlayer(enemyPlayerID).getPlayerHealth() <= 0) {
             // print winner
-            printer.printWinner(board.getPlayer(enemyPlayerID).getPlayerName(), enemyPlayerID);
-            break;
-        } else if (board.getPlayer(currentPlayerID).getPlayerHealth() <= 0) {
-            printer.printWinner(board.getPlayer(currentPlayerID).getPlayerName(), currentPlayerID);
-            break;
-        }
-    }
+            if (board.getPlayer(enemyPlayerID).getPlayerHealth() <= 0) {
+                printer.printWinner(board.getPlayer(enemyPlayerID).getPlayerName(), enemyPlayerID);
+                break;
+            } else if (board.getPlayer(currentPlayerID).getPlayerHealth() <= 0) {
+                printer.printWinner(board.getPlayer(currentPlayerID).getPlayerName(), currentPlayerID);
+                break;
+            }
+        } catch (std::logic_error& e) {
+            printer.printError(e.what());
+            continue;
+        } // try
+    } // while
 
 }
