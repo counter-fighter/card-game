@@ -158,6 +158,7 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
             if (players[playerID - 1]->getTesting() && players[playerID - 1]->getPlayerMagic() < 0) {
                 players[playerID - 1]->setPlayerMagic(0);
             }
+            return true;
 
         } else {
             cout << "Incorrect target index" << endl;
