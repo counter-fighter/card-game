@@ -10,8 +10,8 @@ void Printer::printOuterRow(vector<reference_wrapper<Ritual>> ritual, const Play
     cards.emplace_back(CARD_TEMPLATE_EMPTY); 
     emplaceBackPlayerCard(player);
     cards.emplace_back(CARD_TEMPLATE_EMPTY);
-    if (graveyard.empty()) cards.emplace_back(CARD_TEMPLATE_BORDER); // No cards in graveyard
-    else emplaceBackCard(graveyard[0].get()); // At least one card in graveyard
+    if (graveyard.empty()) cards.emplace_back(CARD_TEMPLATE_BORDER);
+    else emplaceBackCard(graveyard[static_cast<int>(graveyard.size()) - 1].get());
     printCardsWithBoarder(showText, showWindow);
 }
 
