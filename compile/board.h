@@ -54,7 +54,6 @@ class Board {
     void detach(int playerID, int targetCard); // detaches an enchantment to a minion
     void raiseDead(int playerID); // moves the top card from graveyard to the board (if it exists)
     void removeRitual(int playerTarget); // discards the player's ritual on the board
-    void increaseRitualCharges(int playerID, int amount); // increase the number of charges left on ritual
     void addMagic(int playerID, int magic); // increases the player's magic
     void rechargeRitual(int playerID, int charges); // increases the ritual's charges of the player
     void damageAll(int n); // damages all minions on board

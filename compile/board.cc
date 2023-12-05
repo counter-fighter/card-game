@@ -439,10 +439,6 @@ void Board::removeRitual(int playerTarget) {
     
 }
 
-void Board::increaseRitualCharges(int playerID, int amount) {
-    rituals[playerID - 1][0]->setCharges(rituals[playerID - 1][0]->getCharges() + amount);
-}
-
 void Board::addMagic(int playerID, int magic) {
     players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() + magic);
 }
