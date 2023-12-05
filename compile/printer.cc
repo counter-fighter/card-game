@@ -70,7 +70,7 @@ void Printer::printCards(bool noText) {
                 cardLine += cards[i][line];
             }
             if (!noText) cout << cardLine << endl;
-            if (enableGraphics) window->drawString(window->getX(), window->yNextLine(), cardLine);
+            if (noText && enableGraphics) window->drawString(window->getX(), window->yNextLine(), cardLine);
         } 
         cardsPrinted += maxCardPerRow;
     }
@@ -165,7 +165,7 @@ void Printer::printHelp() {
     cout << "          board -- Describe all cards on the board." << endl;
 }
 
-void Printer::printPlayerNamePrompt(int playerID) { cout << "Enter Player " << playerID << "'s name: "; }
+void Printer::printPlayerNamePrompt(int playerID) { cout << "Enter Player " << playerID << "'s name (Maximum 13 Characters): "; }
 
 void Printer::printPlayersMovePrompt(int playerID) { cout << "Player " << playerID << "'s move: "; }
 

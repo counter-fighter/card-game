@@ -52,7 +52,7 @@ int main (int argc, char *argv []) {
                 getline(cin, line);
             }
         } else {
-            if (i < 2) printer.printPlayerNamePrompt(i + 1);
+            if (i < 2) printer.printPlayerNamePrompt(i + 1); // throw exception for name over 13 character and reprompt
             else printer.printPlayersMovePrompt(currentPlayerID);
             if(!getline(cin, line)) break;
         }
