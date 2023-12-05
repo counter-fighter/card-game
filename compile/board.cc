@@ -136,7 +136,6 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         }
         
     }
-    checkCardStates();
     return false;
 }
 
@@ -302,7 +301,6 @@ bool Board::attackCommand(int minionInd, int playerID, int enemyMinion) {
     }
     //minions[playerID - 1][minionInd]->setActionCount(minions[playerID - 1][minionInd]->getActionCount() - 1);
 
-    checkCardStates();
     return true;
 }
 
@@ -348,7 +346,6 @@ bool Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlaye
         }
     }
 
-    checkCardStates();
     return false;
 }
 
@@ -366,7 +363,6 @@ void Board::raiseDead(int playerID) {
     } else {
         throw std::logic_error("Raise Dead cannot be played with no cards in graveyard");
     }
-    checkCardStates();
 }
 
 void Board::removeRitual(int playerTarget) {
