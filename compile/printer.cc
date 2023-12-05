@@ -154,6 +154,14 @@ void Printer::printHelp() {
     cout << "          board -- Describe all cards on the board." << endl;
 }
 
+void Printer::printError(string error) { cout << error << endl; }
+
+void Printer::printWinner(string name, int playerID) {
+    cout << "Player " << playerID << ", " << name << " has won the game!";
+}
+
+void Printer::printStartTurn(int playerID) { cout << "Player " << playerID << "'s Turn" << endl; }
+
 void Printer::printBoard(const Board& board) {
     vector<vector<reference_wrapper<Card>>> minions = board.getMinions();
     vector<vector<reference_wrapper<Ritual>>> rituals = board.getRituals();
@@ -167,8 +175,6 @@ void Printer::printBoard(const Board& board) {
     printInnerRow(minions[1]);
     printOuterRow(rituals[1], players[1].get(), graveyards[1]);
     printLowerBoarder();
-
-    
 }
 
 void Printer::printHand(vector<reference_wrapper<Card>> hand) {
