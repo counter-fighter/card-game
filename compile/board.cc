@@ -227,13 +227,13 @@ Player& Board::getPlayer(int playerID) const {
     return *players[playerID - 1].get();
 }
 
-vector<vector<reference_wrapper<Minion>>> Board::getMinions() const {
-    vector<vector<reference_wrapper<Minion>>> minionsCopy;
+vector<vector<reference_wrapper<Card>>> Board::getMinions() const {
+    vector<vector<reference_wrapper<Card>>> minionsCopy;
     for (int i = 0; i < NUM_PLAYERS; i++) {
-        vector<reference_wrapper<Minion>> m {};
+        vector<reference_wrapper<Card>> m {};
         minionsCopy.emplace_back(m);
         for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
-            Minion m = *minions[i][j];
+            Card& m = static_cast<Card&>(*minions[i][j]);
             minionsCopy[i].emplace_back(m);
         }
     }

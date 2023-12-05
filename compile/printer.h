@@ -19,13 +19,14 @@ class Printer {
     // window pointer
 
     void printOuterRow(vector<reference_wrapper<Ritual>> ritual, const Player& player, vector<reference_wrapper<Minion>> graveyard);
-    void printInnerRow(vector<reference_wrapper<Minion>> minions);
+    void printInnerRow(vector<reference_wrapper<Card>> minions);
     void printUpperBoarder();
     void printCentreGraphic();
     void printLowerBoarder();
     void printCardsWithBoarder();
     void printCards();
     void emplaceBackCard(Card& card);
+    void emplaceBackCard(Minion& minion);
     void emplaceBackPlayerCard(const Player& player);
     card_template_t minionToCardTemplateT(const Minion& minion);
     card_template_t ritualToCardTemplateT(const Ritual& ritual); 

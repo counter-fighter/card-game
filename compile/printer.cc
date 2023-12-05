@@ -15,10 +15,10 @@ void Printer::printOuterRow(vector<reference_wrapper<Ritual>> ritual, const Play
     printCardsWithBoarder();
 }
 
-void Printer::printInnerRow(vector<reference_wrapper<Minion>> minions) {
+void Printer::printInnerRow(vector<reference_wrapper<Card>> minions) {
     int cardEmplaced = 0;
-    for (reference_wrapper<Minion> minion:minions) {
-        emplaceBackCard(minion.get());
+    for (int i = 0; i < static_cast<int>(minions.size()); i++) {
+        emplaceBackCard(minions[i].get());
         cardEmplaced++;
     }
     for (; cardEmplaced < maxCardPerRow; cardEmplaced++) cards.emplace_back(CARD_TEMPLATE_BORDER);
@@ -77,6 +77,11 @@ void Printer::emplaceBackCard(Card& card) {
     } else {
         convertedCard = enchantmentToCardTemplateT(static_cast<Enchantment&>(card));
     }
+    cards.emplace_back(convertedCard);
+}
+
+void Printer::emplaceBackCard(Minion &minion) {
+    card_template_t convertedCard = minionToCardTemplateT(std::move(minion));
     cards.emplace_back(convertedCard);
 }
 
@@ -150,7 +155,7 @@ void Printer::printHelp() {
 }
 
 void Printer::printBoard(const Board& board) {
-    vector<vector<reference_wrapper<Minion>>> minions = board.getMinions();
+    vector<vector<reference_wrapper<Card>>> minions = board.getMinions();
     vector<vector<reference_wrapper<Ritual>>> rituals = board.getRituals();
     vector<reference_wrapper<Player>> players{board.getPlayer(1), board.getPlayer(2)};
     vector<vector<reference_wrapper<Minion>>> graveyards {players[0].get().getGraveyard(), players[1].get().getGraveyard()};
