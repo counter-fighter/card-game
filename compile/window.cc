@@ -62,12 +62,6 @@ Xwindow::~Xwindow() {
     }
 }
 
-int Xwindow::getX() const { return xPadding; }
-
-int Xwindow::getY() const { return y; }
-
-int Xwindow::yNextLine() { return y += stringHeight; }
-
 void Xwindow::clearArea(int x, int y, int width, int height) {
     XClearArea(d, w, x, y, width, height, true);
 }
@@ -82,6 +76,6 @@ void Xwindow::clearAreaUnderHand() {
     y = yBelowCurrHand; 
 }
 
-void Xwindow::drawString(int x, int y, string msg) {
-    XDrawString(d, w, DefaultGC(d, s), x, y, msg.c_str(), msg.length());
+void Xwindow::drawString(string msg) {
+    XDrawString(d, w, DefaultGC(d, s), xPadding, y += stringHeight, msg.c_str(), msg.length());
 }

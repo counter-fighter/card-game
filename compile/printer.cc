@@ -30,13 +30,13 @@ void Printer::printUpperBoarder(bool showText, bool showWindow) {
     for (int i = 0; i < boarderWidthNoCorner; i++) upperBoarder += EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
     upperBoarder += EXTERNAL_BORDER_CHAR_TOP_RIGHT;
     if (showText) cout << upperBoarder << endl;
-    if (showWindow && enableGraphics) window->drawString(window->getX(), window->yNextLine(), upperBoarder);
+    if (showWindow && enableGraphics) window->drawString(upperBoarder);
 }
 
 void Printer::printCentreGraphic(bool showText, bool showWindow) {
     for (string line:CENTRE_GRAPHIC) {
         if (showText) cout << line << endl;
-        if (showWindow && enableGraphics) window->drawString(window->getX(), window->yNextLine(), line);
+        if (showWindow && enableGraphics) window->drawString(line);
     }
 }
 
@@ -45,7 +45,7 @@ void Printer::printLowerBoarder(bool showText, bool showWindow) {
     for (int i = 0; i < boarderWidthNoCorner; i++) lowerBoarder += EXTERNAL_BORDER_CHAR_LEFT_RIGHT;
     lowerBoarder += EXTERNAL_BORDER_CHAR_BOTTOM_RIGHT;
     if (showText) cout << lowerBoarder << endl;
-    if (showWindow && enableGraphics) window->drawString(window->getX(), window->yNextLine(), lowerBoarder);
+    if (showWindow && enableGraphics) window->drawString(lowerBoarder);
 }
 
 void Printer::Printer::printCardsWithBoarder(bool showText, bool showWindow) {
@@ -56,7 +56,7 @@ void Printer::Printer::printCardsWithBoarder(bool showText, bool showWindow) {
         }
         cardLine += EXTERNAL_BORDER_CHAR_UP_DOWN;
         if (showText) cout << cardLine << endl;
-        if (showWindow && enableGraphics) window->drawString(window->getX(), window->yNextLine(), cardLine);
+        if (showWindow && enableGraphics) window->drawString(cardLine);
     } 
     cards.clear();
 }
@@ -70,7 +70,7 @@ void Printer::printCards(bool showText, bool showWindow) {
                 cardLine += cards[i][line];
             }
             if (showText) cout << cardLine << endl;
-            if (showWindow && enableGraphics) window->drawString(window->getX(), window->yNextLine(), cardLine);
+            if (showWindow && enableGraphics) window->drawString(cardLine);
         } 
         cardsPrinted += maxCardPerRow;
     }
@@ -183,7 +183,6 @@ void Printer::printBoard(const Board& board) {
     vector<reference_wrapper<Player>> players{board.getPlayer(1), board.getPlayer(2)};
     vector<vector<reference_wrapper<Card>>> graveyards {players[0].get().getGraveyard(), players[1].get().getGraveyard()};
     
-    if (enableGraphics) window->clearAreaUnderHand();
     printUpperBoarder(true, false);
     printOuterRow(rituals[0], players[0].get(), graveyards[0], true, false);
     printInnerRow(minions[0], true, false);
@@ -194,13 +193,15 @@ void Printer::printBoard(const Board& board) {
 }
 
 void Printer::printHand(vector<reference_wrapper<Card>> hand) {
-    if (enableGraphics) window->clearAreaUnderHand();
     for (reference_wrapper<Card> card:hand) emplaceBackCard(card.get());
     printCards(true, false);
 }
 
 void Printer::printInspect(Card& minion) {
-    if (enableGraphics) window->clearAreaUnderHand();
+    if (enableGraphics) {
+        window->clearAreaUnderHand();
+        window->drawString("Inspecting Minion:");
+    }
     emplaceBackCard(minion);
     printCards();
     vector<reference_wrapper<Enchantment>> enchantments = static_cast<Minion&>(minion).getEnchantment();
@@ -210,7 +211,7 @@ void Printer::printInspect(Card& minion) {
 
 void Printer::updateHand(vector<reference_wrapper<Card>> hand) {
     window->clearHandArea();
-    window->drawString(window->getX(), window->getY(), "Current Player Hand:");
+    window->drawString("Current Player Hand:");
     for (reference_wrapper<Card> card:hand) emplaceBackCard(card.get());
     printCards(false, true);
 }
@@ -221,7 +222,8 @@ void Printer::updateBoard(const Board& board) {
     vector<reference_wrapper<Player>> players{board.getPlayer(1), board.getPlayer(2)};
     vector<vector<reference_wrapper<Card>>> graveyards {players[0].get().getGraveyard(), players[1].get().getGraveyard()};
     
-    if (enableGraphics) window->clearAreaUnderHand();
+    window->clearAreaUnderHand();
+    window->drawString("Board:");
     printUpperBoarder(false, true);
     printOuterRow(rituals[0], players[0].get(), graveyards[0], false, true);
     printInnerRow(minions[0], false, true);

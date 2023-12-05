@@ -10,8 +10,8 @@ class Xwindow {
     const int boardHeight = 600;
     const int xPadding = 10;
     const int stringHeight = 10;
-    const int yCurrHand = 20;
-    const int yBelowCurrHand = 170;
+    const int yCurrHand = 10;
+    const int yBelowCurrHand = 150;
     Display *d;
     Window w;
     bool enableGraphics;
@@ -26,12 +26,6 @@ class Xwindow {
 
         enum {White=0, Black, Red, Green, Blue}; // Available colours.
 
-        int getX() const;
-
-        int getY() const;
-
-        int yNextLine();
-
         void clearArea(int x, int y, int width, int height); // Resets y position to current hand.
 
         void clearHandArea(); // Resets y position to under current hand.
@@ -39,7 +33,7 @@ class Xwindow {
         void clearAreaUnderHand();
 
         // Draws a string
-        void drawString(int x, int y, std::string msg);
+        void drawString(std::string msg);
 };
 
 #endif
