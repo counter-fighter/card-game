@@ -36,7 +36,8 @@ int main (int argc, char *argv []) {
         }
     }
 
-    Printer printer{};
+    Xwindow window{graphics};
+    Printer printer{graphics, window};
     Board board;
     
     ifstream init{initFile};
