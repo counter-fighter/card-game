@@ -239,26 +239,34 @@ void Board::notifyTurnEnd(int playerID) {
 }
 
 void Board::notifyMinionEnter(int playerID) {
-    for (int i = 0; i < NUM_PLAYERS; i++) {
-        for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
-            if (!minions[i][j]->getSilenced()) {
-                minions[i][j]->notifyCardMinionEnter(*this, *minions[playerID - 1][static_cast<int>(minions[playerID - 1].size()) - 1]);
+    int ID = playerID - 1;
+    int counter = 0;
+    while (counter <= 1) {
+        for (int j = 0; j < static_cast<int> (minions[ID].size()); j++) {
+            if (!minions[ID][j]->getSilenced()) {
+                minions[ID][j]->notifyCardMinionEnter(*this, *minions[playerID - 1][static_cast<int>(minions[playerID - 1].size()) - 1]);
             }
         }
-        if (static_cast<int> (rituals[i].size()) > 0 && rituals[i][0]->getCharges() >= rituals[i][0]->getActionCost()) {
-            rituals[i][0]->notifyCardMinionEnter(*this, *minions[playerID - 1][static_cast<int> (minions[playerID - 1].size()) - 1]);
+        if (static_cast<int> (rituals[ID].size()) > 0 && rituals[playerID - 1][0]->getCharges() >= rituals[playerID - 1][0]->getActionCost()) {
+            rituals[ID][0]->notifyCardMinionEnter(*this, *minions[playerID - 1][static_cast<int> (minions[playerID - 1].size()) - 1]);
         }
+        ID = (playerID == 1) ? 1 : 0;
+        counter++;
     }
 }
 
 void Board::notifyMinionLeave(int playerID, Card &target) {
-    for (int i = 0; i < NUM_PLAYERS; i++) {
-        for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
-            if (!minions[i][j]->getSilenced()) minions[i][j]->notifyCardMinionLeave(*this, target);
+    int ID = playerID - 1;
+    int counter = 0;
+    while (counter <= 1) {
+        for (int j = 0; j < static_cast<int> (minions[ID].size()); j++) {
+            if (!minions[ID][j]->getSilenced()) minions[ID][j]->notifyCardMinionLeave(*this, target);
         }
-        if (static_cast<int> (rituals[i].size()) > 0 && rituals[i][0]->getCharges() >= rituals[i][0]->getActionCost()) {
-            rituals[i][0]->notifyCardMinionEnter(*this, target);
+        if (static_cast<int> (rituals[ID].size()) > 0 && rituals[ID][0]->getCharges() >= rituals[ID][0]->getActionCost()) {
+            rituals[ID][0]->notifyCardMinionEnter(*this, target);
         }
+        ID = (playerID == 1) ? 1 : 0;
+        counter++;
     }
 }
 
