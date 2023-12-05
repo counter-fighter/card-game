@@ -263,7 +263,7 @@ void Board::notifyMinionLeave(int playerID, Card &target) {
             if (!minions[ID][j]->getSilenced()) minions[ID][j]->notifyCardMinionLeave(*this, target);
         }
         if (static_cast<int> (rituals[ID].size()) > 0 && rituals[ID][0]->getCharges() >= rituals[ID][0]->getActionCost()) {
-            rituals[ID][0]->notifyCardMinionEnter(*this, target);
+            rituals[ID][0]->notifyCardMinionLeave(*this, target);
         }
         ID = (playerID == 1) ? 1 : 0;
         counter++;
