@@ -1,6 +1,7 @@
 #ifndef __DISENCHANT_H__
 #define __DISENCHANT_H__
 #include "spell.h"
+#include <stdexcept>
 
 class Disenchant : public Spell {
     public:
