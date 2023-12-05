@@ -70,11 +70,11 @@ name{name}, id{id}, magic{MAGIC_RESET}, health{HEALTH_RESET}, testing{testing}, 
 
 };
 
-vector<reference_wrapper<Minion>> Player::getGraveyard() {
-  vector<reference_wrapper<Minion>> ret;
+vector<reference_wrapper<Card>> Player::getGraveyard() {
+  vector<reference_wrapper<Card>> ret;
 
   for (auto it = graveyard.begin(); it != graveyard.end(); it++) {
-    ret.emplace_back(*(*it).get());
+    ret.emplace_back(static_cast<Card&>(*(*it).get()));
   }
 
   return ret;

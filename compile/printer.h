@@ -16,9 +16,10 @@ class Printer {
     vector<card_template_t> cards;
     Xwindow* window;
 
-    void printOuterRow(vector<reference_wrapper<Ritual>> ritual, const Player& player, 
-                       vector<reference_wrapper<Minion>> graveyard);
-    void printInnerRow(vector<reference_wrapper<Card>> minions);
+    // Printing Board
+    void printOuterRow(vector<reference_wrapper<Ritual>> ritual, const Player& player, // Prints cards on the ritual, player, and graveyard slots.
+                       vector<reference_wrapper<Card>> graveyard);
+    void printInnerRow(vector<reference_wrapper<Card>> minions); // Prints cards on the player's minion slots.
     void printUpperBoarder();
     void printCentreGraphic();
     void printLowerBoarder();

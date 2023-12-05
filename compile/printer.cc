@@ -4,7 +4,7 @@
 using namespace std;
 
 void Printer::printOuterRow(vector<reference_wrapper<Ritual>> ritual, const Player& player, 
-                            vector<reference_wrapper<Minion>> graveyard) {
+                            vector<reference_wrapper<Card>> graveyard) {
     if (ritual.empty()) cards.emplace_back(CARD_TEMPLATE_BORDER);
     else emplaceBackCard(ritual[0].get());
     cards.emplace_back(CARD_TEMPLATE_EMPTY);
@@ -181,7 +181,7 @@ void Printer::printBoard(const Board& board) {
     vector<vector<reference_wrapper<Card>>> minions = board.getMinions();
     vector<vector<reference_wrapper<Ritual>>> rituals = board.getRituals();
     vector<reference_wrapper<Player>> players{board.getPlayer(1), board.getPlayer(2)};
-    vector<vector<reference_wrapper<Minion>>> graveyards {players[0].get().getGraveyard(), players[1].get().getGraveyard()};
+    vector<vector<reference_wrapper<Card>>> graveyards {players[0].get().getGraveyard(), players[1].get().getGraveyard()};
     
     if (enableGraphics) window->clearAreaUnderHand();
     printUpperBoarder();
