@@ -56,16 +56,9 @@ class Player {
         Player(Player&& p);
         Player(Player& p);
 
-        // void drawCard();
-        // void playCard();
-        // void setMagic(const int n);
-        // int getMagic() const;
-        // int getID() const;
-        // void setName(const string name);
-        // void setDeck(const vector<string> deck);
-        // vector<unique_ptr<Card>> getHand() const;
         unique_ptr<Card> allocCard(string name, int id);
         vector<reference_wrapper<Card>> getGraveyard();
+
         int getPlayerId() const;
         string getPlayerName() const;
         int getPlayerHealth() const;
@@ -75,6 +68,7 @@ class Player {
         void setPlayerHealth(int n);
         bool getTesting() const;
         bool drawCard();
+        
         unique_ptr<Card> playFromHand (int index);
         void sendToGraveyard(unique_ptr<Minion> m);
         unique_ptr<Minion> returnTopFromGraveyard();

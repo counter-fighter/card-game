@@ -289,7 +289,6 @@ bool Board::attackCommand(int minionInd, int playerID, int enemyMinion) {
     } else {
         minions[playerID - 1][minionInd]->attack(*players[enemyPlayer - 1]);
     }
-    //minions[playerID - 1][minionInd]->setActionCount(minions[playerID - 1][minionInd]->getActionCount() - 1);
 
     return true;
 }
@@ -310,7 +309,6 @@ bool Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlaye
     }
 
     if (targetCard == 'r') {
-        // minions[playerID - 1][minionInd]->activateAbility(*this, *rituals[targetPlayer - 1][0]);
         // print error message for now because we don't have any cards that do this
         cout << "Ritual is not a valid target" << endl;
     } else if (minions[playerID - 1][minionInd]->getActionCount() >= 1){
@@ -406,7 +404,6 @@ bool Board::summon(string card, int n, int playerID, int magicCost) {
 
 void Board::attach(unique_ptr<Card> card, int playerID, int targetCard) {
     unique_ptr<Enchantment> enchant = unique_ptr<Enchantment> (dynamic_cast<Enchantment*>(card.release()));
-    // unique_ptr<Enchantment> enchant = make_unique<Enchantment> (dynamic_cast<Enchantment*> (card.get()));
     minions[playerID - 1][targetCard]->attachEnchant(std::move(enchant));
 }
 
