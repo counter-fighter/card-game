@@ -66,14 +66,14 @@ void Xwindow::clearArea(int x, int y, int width, int height) {
     XClearArea(d, w, x, y, width, height, true);
 }
 
-void Xwindow::clearHandArea() {
+void Xwindow::clearHand() {
     clearArea(0, 0, boardWidth, cardHeight);
-    y = yCurrHand; 
+    y = yHand; 
 }
 
-void Xwindow::clearAreaUnderHand() {
+void Xwindow::clearBoard() {
     clearArea(0, cardHeight, boardWidth, boardHeight);
-    y = yBelowCurrHand; 
+    y = yBoard; 
 }
 
 void Xwindow::drawString(string msg) {

@@ -5,23 +5,23 @@ using namespace std;
 
 void Printer::printOuterRow(vector<reference_wrapper<Ritual>> ritual, const Player& player, 
                             vector<reference_wrapper<Card>> graveyard, bool showText, bool showWindow) {
-    if (ritual.empty()) cards.emplace_back(CARD_TEMPLATE_BORDER);
-    else emplaceBackCard(ritual[0].get());
-    cards.emplace_back(CARD_TEMPLATE_EMPTY);
+    if (ritual.empty()) cards.emplace_back(CARD_TEMPLATE_BORDER); // No ritual
+    else emplaceBackCard(ritual[0].get()); // Ritual
+    cards.emplace_back(CARD_TEMPLATE_EMPTY); 
     emplaceBackPlayerCard(player);
     cards.emplace_back(CARD_TEMPLATE_EMPTY);
-    if (graveyard.empty()) cards.emplace_back(CARD_TEMPLATE_BORDER);
-    else emplaceBackCard(graveyard[0].get());
+    if (graveyard.empty()) cards.emplace_back(CARD_TEMPLATE_BORDER); // No cards in graveyard
+    else emplaceBackCard(graveyard[0].get()); // At least one card in graveyard
     printCardsWithBoarder(showText, showWindow);
 }
 
 void Printer::printInnerRow(vector<reference_wrapper<Card>> minions, bool showText, bool showWindow) {
     int cardEmplaced = 0;
     for (int i = 0; i < static_cast<int>(minions.size()); i++) {
-        emplaceBackCard(minions[i].get());
+        emplaceBackCard(minions[i].get()); // Minions on board
         cardEmplaced++;
     }
-    for (; cardEmplaced < maxCardPerRow; cardEmplaced++) cards.emplace_back(CARD_TEMPLATE_BORDER);
+    for (; cardEmplaced < maxCardPerRow; cardEmplaced++) cards.emplace_back(CARD_TEMPLATE_BORDER); // maxCardPerRow - Minions on board
     printCardsWithBoarder(showText, showWindow);
 }
 
@@ -49,7 +49,7 @@ void Printer::printLowerBoarder(bool showText, bool showWindow) {
 }
 
 void Printer::Printer::printCardsWithBoarder(bool showText, bool showWindow) {
-    for (int line = 0; line < cardHeight; line++) {
+    for (int line = 0; line < cardHeight; line++) { // Printing one line at a time for maxCardPerRow
         string cardLine = EXTERNAL_BORDER_CHAR_UP_DOWN;
         for (int i = 0; i < maxCardPerRow; i++) {
             cardLine += cards[i][line];
@@ -64,7 +64,7 @@ void Printer::Printer::printCardsWithBoarder(bool showText, bool showWindow) {
 void Printer::printCards(bool showText, bool showWindow) {
     int cardsPrinted = 0;
     while (cardsPrinted < static_cast<int>(cards.size())) { 
-        for (int line = 0; line < cardHeight; line++) {
+        for (int line = 0; line < cardHeight; line++) { // Printing one line at a time for maxCardPerRow
             string cardLine = "";
             for (int i = cardsPrinted; i < cardsPrinted + maxCardPerRow && i < static_cast<int>(cards.size()); i++) {
                 cardLine += cards[i][line];
@@ -88,11 +88,6 @@ void Printer::emplaceBackCard(Card& card) {
     } else {
         convertedCard = enchantmentToCardTemplateT(static_cast<Enchantment&>(card));
     }
-    cards.emplace_back(convertedCard);
-}
-
-void Printer::emplaceBackCard(Minion &minion) {
-    card_template_t convertedCard = minionToCardTemplateT(std::move(minion));
     cards.emplace_back(convertedCard);
 }
 
@@ -199,7 +194,7 @@ void Printer::printHand(vector<reference_wrapper<Card>> hand) {
 
 void Printer::printInspect(Card& minion) {
     if (enableGraphics) {
-        window->clearAreaUnderHand();
+        window->clearBoard();
         window->drawString("Inspecting Minion:");
     }
     emplaceBackCard(minion);
@@ -210,7 +205,7 @@ void Printer::printInspect(Card& minion) {
 }
 
 void Printer::updateHand(vector<reference_wrapper<Card>> hand) {
-    window->clearHandArea();
+    window->clearHand();
     window->drawString("Current Player Hand:");
     for (reference_wrapper<Card> card:hand) emplaceBackCard(card.get());
     printCards(false, true);
@@ -222,7 +217,7 @@ void Printer::updateBoard(const Board& board) {
     vector<reference_wrapper<Player>> players{board.getPlayer(1), board.getPlayer(2)};
     vector<vector<reference_wrapper<Card>>> graveyards {players[0].get().getGraveyard(), players[1].get().getGraveyard()};
     
-    window->clearAreaUnderHand();
+    window->clearBoard();
     window->drawString("Board:");
     printUpperBoarder(false, true);
     printOuterRow(rituals[0], players[0].get(), graveyards[0], false, true);
