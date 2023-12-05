@@ -1,6 +1,7 @@
 #ifndef __APPRENSUM_H__
 #define __APPRENSUM_H__
 #include "minion.h"
+#include "board.h"
 
 class ApprenticeSummoner : public Minion {
   public :

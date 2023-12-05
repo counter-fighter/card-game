@@ -4,9 +4,11 @@ MagicFatigue::MagicFatigue(int player) : Enchantment{"MagicFatigue", "Enchanted 
 MagicFatigue::~MagicFatigue() {};
 
 void MagicFatigue::attach(Minion &target) {
-  target.setActCost(target.getActivationCost() + 2);
+  if (target.getActivationCost() != 0)
+    target.setActCost(target.getActivationCost() + 2);
 };
 
 void MagicFatigue::detach(Minion &target) {
-  target.setActCost(target.getActivationCost() - 2);
+  if (target.getActivationCost() != 0)
+    target.setActCost(target.getActivationCost() - 2);
 };

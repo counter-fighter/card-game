@@ -8,7 +8,6 @@ class Banish : public Spell {
         Banish(int player);
         virtual ~Banish();
         void useSpell(Board &brd, Card &target) override; // Destroy target minion or ritual
-   
 };
 
 

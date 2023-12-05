@@ -1,5 +1,9 @@
 #include "board.h"
 
+// =========================================================================
+//                      Board Object Initialization
+// =========================================================================
+
 Board::Board(): minions{}, rituals{}, players{}, discardedCards{} {
     for (int i = 0; i < NUM_PLAYERS; i++) {
         vector<unique_ptr<Minion>> m {};
@@ -21,6 +25,13 @@ void Board::initPlayer(string pName, int playerID, string deckfile, bool shuffle
     players.emplace_back(std::move(player));
 }
 
+
+// =========================================================================
+//                         Main Play Card Funnel
+// =========================================================================
+
+// targetPlayer and targetCard defaults to -1 if no input given
+// Returns true if changes require a call to checkCardState, false O.W.
 bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCard) {
     TargetType targetType = TargetType::NoTarget;
     
@@ -36,6 +47,7 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
 
     unique_ptr<Card> cardToPlay = players[playerID - 1]->playFromHand(cardInd);
 
+    // Checks for sufficient arguments
     if (targetType != cardToPlay->getTargetType() && cardToPlay->getTargetType() != TargetType::AllTarget) {
         // print error message wrong args
         cout << "wrong args for card " + cardToPlay->getName() << endl;
@@ -44,6 +56,7 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         return false;
     }
 
+    // Checks for sufficient magic
     if (cardToPlay->getCost() > players[playerID - 1]->getPlayerMagic() && !players[playerID - 1]->getTesting()) {
         // print error message not enough magic
         cout << "not enough magic" << endl;
@@ -53,6 +66,9 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
     
 
     // use the effect/place it down
+    // -------------------------------------------------------------------------
+    //                              Minion cond
+    // -------------------------------------------------------------------------
     if (cardToPlay->getCardType() == CardType::Minion) {
         if (static_cast<int>(minions[playerID - 1].size()) < MAX_MINIONS) {
             unique_ptr<Minion> minionToPlay = unique_ptr<Minion> (dynamic_cast<Minion*>(cardToPlay.release()));
@@ -72,6 +88,9 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
             cout << "The board is full for minions" << endl;
         }
         
+    // -------------------------------------------------------------------------
+    //                              Ritual cond
+    // -------------------------------------------------------------------------
     } else if (cardToPlay->getCardType() == CardType::Ritual) {
         if (static_cast<int>(rituals[playerID - 1].size()) > 0) {
             unique_ptr<Card> discard = unique_ptr<Card> (static_cast<Card*>(rituals[playerID - 1][0].release()));
@@ -89,6 +108,9 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         rituals[playerID - 1].emplace_back(std::move(ritualToPlay));
         return true;
 
+    // -------------------------------------------------------------------------
+    //                              Spell cond
+    // -------------------------------------------------------------------------
     } else if (cardToPlay->getCardType() == CardType::Spell) {
         Card &cardCast = *cardToPlay.get();
         Spell& spellCast = dynamic_cast<Spell&> (cardCast);
@@ -123,6 +145,9 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
             cout << e.what() << endl;
         }
         
+    // -------------------------------------------------------------------------
+    //                            Enchantment cond
+    // -------------------------------------------------------------------------
     } else {
         if (targetCard != -1 && targetCard < static_cast<int> (minions[targetPlayer - 1].size())) {
             unique_ptr<Enchantment> enchant = unique_ptr<Enchantment> (dynamic_cast<Enchantment*>(cardToPlay.release()));
@@ -144,76 +169,9 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
     return false;
 }
 
-void Board::checkCardStates(int playerID) {
-    int ID = playerID - 1;
-    for (int j = 0; j < static_cast<int> (minions[ID].size()); j++) {
-        Minion &target = *minions[ID][j];
-        Card &targetNotify = static_cast<Card&>(*minions[ID][j]);
-        if (target.getReturnToHand() && players[ID]->getHandSize() < MAX_HAND) {
-            notifyMinionLeave(playerID, targetNotify);
-            target.detachAllEnchant();
-            target.setReturnToHand(false);
-                
-            unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(minions[ID][j].release()));
-            minions[ID].erase(minions[ID].begin() + j);
-            players[ID]->returnToHand(std::move(card)); // not sure if I need to cast to Card
-                
-        } else if (target.getBannished()) {
-            notifyMinionLeave(playerID, targetNotify);
-            target.detachAllEnchant();
-            target.setBannished(false);
-            players[ID]->sendToGraveyard(std::move(minions[ID][j]));
-            minions[ID].erase(minions[ID].begin() + j);
-
-        } else if (target.getDefence() <= 0 || (target.getReturnToHand() && players[ID]->getHandSize() >= MAX_HAND)) {
-            if (target.getReturnToHand()) cout << "hand is full, card discarded" << endl;
-            notifyMinionLeave(playerID, targetNotify);
-            target.detachAllEnchant();
-            players[ID]->sendToGraveyard(std::move(minions[ID][j]));
-            minions[ID].erase(minions[ID].begin() + j);
-        }
-    }
-    
-
-    if (static_cast<int> (rituals[ID].size()) > 0) {
-        if (rituals[ID][0]->getReturnToHand()) {
-                unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(rituals[ID][0].release()));
-                rituals[ID].pop_back();
-            if (players[ID]->getHandSize() < MAX_HAND) {
-                players[ID]->returnToHand(std::move(card));
-            } else {
-                cout << "hand is full, card discarded" << endl;
-            }
-        }
-    }
-}
-
-bool Board::summon(string card, int n, int playerID, int magicCost) {
-    // if the board is full, reset magic cost and return false
-    if (static_cast<int>(minions[playerID - 1].size()) >= MAX_MINIONS || magicCost == -1) {
-        players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() + magicCost);
-        return false;
-    }
-
-    for (int i = 0; i < n; i++) {
-        if (static_cast<int> (minions[playerID - 1].size()) < MAX_MINIONS) {
-            // add minion to vector, either by creating new from string or std::move(card)
-            minions[playerID - 1].emplace_back(static_cast<Minion*>((players[playerID - 1]->allocCard(card, playerID)).release()));
-            notifyMinionEnter(playerID);
-        }
-    }
-    return true;
-}
-
-void Board::attach(unique_ptr<Card> card, int playerID, int targetCard) {
-    unique_ptr<Enchantment> enchant = unique_ptr<Enchantment> (dynamic_cast<Enchantment*>(card.release()));
-    // unique_ptr<Enchantment> enchant = make_unique<Enchantment> (dynamic_cast<Enchantment*> (card.get()));
-    minions[playerID - 1][targetCard]->attachEnchant(std::move(enchant));
-}
-
-void Board::detach(int playerID, int targetCard) {
-    minions[playerID - 1][targetCard]->detachEnchant();
-}
+// =========================================================================
+//                         Notify functions (Observers)
+// =========================================================================
 
 void Board::notifyTurnStart(int playerID) {
     int ID = playerID - 1;
@@ -270,6 +228,10 @@ void Board::notifyMinionLeave(int playerID, Card &target) {
     }
 }
 
+// =========================================================================
+//                     Functions to return to printer
+// =========================================================================
+
 Player& Board::getPlayer(int playerID) const {
     return *players[playerID - 1].get();
 }
@@ -299,9 +261,9 @@ vector<vector<reference_wrapper<Ritual>>> Board::getRituals() const {
     return ritualsCopy;
 }
 
-vector<reference_wrapper<Card>> Board::getGraveyard(int playerID) const {
-    return players[playerID - 1]->getGraveyard();
-}
+// =========================================================================
+//                     Main control flow functions
+// =========================================================================
 
 void Board::startCommand(int playerID) {
     addMagic(playerID, 1);
@@ -375,8 +337,80 @@ bool Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlaye
     return false;
 }
 
-void Board::increaseRitualCharges(int playerID, int amount) {
-    rituals[playerID - 1][0]->setCharges(rituals[playerID - 1][0]->getCharges() + amount);
+// Runs through the whole board and discard cards that need to be discarded
+void Board::checkCardStates(int playerID) {
+    int ID = playerID - 1;
+    for (int j = 0; j < static_cast<int> (minions[ID].size()); j++) {
+        Minion &target = *minions[ID][j];
+        Card &targetNotify = static_cast<Card&>(*minions[ID][j]);
+        if (target.getReturnToHand() && players[ID]->getHandSize() < MAX_HAND) {
+            notifyMinionLeave(playerID, targetNotify);
+            target.detachAllEnchant();
+            target.setReturnToHand(false);
+                
+            unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(minions[ID][j].release()));
+            minions[ID].erase(minions[ID].begin() + j);
+            players[ID]->returnToHand(std::move(card)); // not sure if I need to cast to Card
+                
+        } else if (target.getBannished()) {
+            notifyMinionLeave(playerID, targetNotify);
+            target.detachAllEnchant();
+            target.setBannished(false);
+            players[ID]->sendToGraveyard(std::move(minions[ID][j]));
+            minions[ID].erase(minions[ID].begin() + j);
+
+        } else if (target.getDefence() <= 0 || (target.getReturnToHand() && players[ID]->getHandSize() >= MAX_HAND)) {
+            if (target.getReturnToHand()) cout << "hand is full, card discarded" << endl;
+            notifyMinionLeave(playerID, targetNotify);
+            target.detachAllEnchant();
+            players[ID]->sendToGraveyard(std::move(minions[ID][j]));
+            minions[ID].erase(minions[ID].begin() + j);
+        }
+    }
+    
+
+    if (static_cast<int> (rituals[ID].size()) > 0) {
+        if (rituals[ID][0]->getReturnToHand()) {
+                unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(rituals[ID][0].release()));
+                rituals[ID].pop_back();
+            if (players[ID]->getHandSize() < MAX_HAND) {
+                players[ID]->returnToHand(std::move(card));
+            } else {
+                cout << "hand is full, card discarded" << endl;
+            }
+        }
+    }
+}
+
+// =========================================================================
+//                             Functions for Cards
+// =========================================================================
+
+bool Board::summon(string card, int n, int playerID, int magicCost) {
+    // if the board is full, reset magic cost and return false
+    if (static_cast<int>(minions[playerID - 1].size()) >= MAX_MINIONS || magicCost == -1) {
+        players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() + magicCost);
+        return false;
+    }
+
+    for (int i = 0; i < n; i++) {
+        if (static_cast<int> (minions[playerID - 1].size()) < MAX_MINIONS) {
+            // add minion to vector, either by creating new from string or std::move(card)
+            minions[playerID - 1].emplace_back(static_cast<Minion*>((players[playerID - 1]->allocCard(card, playerID)).release()));
+            notifyMinionEnter(playerID);
+        }
+    }
+    return true;
+}
+
+void Board::attach(unique_ptr<Card> card, int playerID, int targetCard) {
+    unique_ptr<Enchantment> enchant = unique_ptr<Enchantment> (dynamic_cast<Enchantment*>(card.release()));
+    // unique_ptr<Enchantment> enchant = make_unique<Enchantment> (dynamic_cast<Enchantment*> (card.get()));
+    minions[playerID - 1][targetCard]->attachEnchant(std::move(enchant));
+}
+
+void Board::detach(int playerID, int targetCard) {
+    minions[playerID - 1][targetCard]->detachEnchant();
 }
 
 void Board::raiseDead(int playerID) {
@@ -403,6 +437,10 @@ void Board::removeRitual(int playerTarget) {
         throw logic_error("There is no ritual to target.");
     }
     
+}
+
+void Board::increaseRitualCharges(int playerID, int amount) {
+    rituals[playerID - 1][0]->setCharges(rituals[playerID - 1][0]->getCharges() + amount);
 }
 
 void Board::addMagic(int playerID, int magic) {

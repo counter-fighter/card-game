@@ -40,7 +40,6 @@ class Board {
     Player &getPlayer(int playerID) const; // returns a player object
     vector<vector<reference_wrapper<Card>>> getMinions() const; // returns p1's minions in vector[0] and p2's minions in vector[1]
     vector<vector<reference_wrapper<Ritual>>> getRituals() const; // returns p1's ritual in vector[0][0] and p2's ritual in vector[1][0] (if they exist)
-    vector<reference_wrapper<Card>> getGraveyard(int playerID) const; // do we need this?
 
     // Commands called from main using input
     void startCommand(int playerID);
