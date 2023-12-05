@@ -6,9 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <functional>
-// #include "card.h"
 #include "player.h"
-// #include "minion.h"
 #include "ritual.h"
 
 using namespace std;
