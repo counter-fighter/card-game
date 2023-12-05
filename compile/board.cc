@@ -21,7 +21,7 @@ void Board::initPlayer(string pName, int playerID, string deckfile, bool shuffle
     players.emplace_back(std::move(player));
 }
 
-void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCard) {
+bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCard) {
     TargetType targetType = TargetType::NoTarget;
     
     if (targetCard != -1) {
@@ -39,14 +39,14 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         cout << "wrong args for card " + cardToPlay->getName() << endl;
         players[playerID - 1]->returnToHand(std::move(cardToPlay));
         
-        return;
+        return false;
     }
 
     if (cardToPlay->getCost() > players[playerID - 1]->getPlayerMagic() && !players[playerID - 1]->getTesting()) {
         // print error message not enough magic
         cout << "not enough magic" << endl;
         players[playerID - 1]->returnToHand(std::move(cardToPlay));
-        return;
+        return false;
     }
     
 
@@ -63,6 +63,7 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
 
             minions[playerID - 1].emplace_back(std::move(minionToPlay));
             notifyMinionEnter(playerID);
+            return true;
         } else {
             players[playerID - 1]->returnToHand(std::move(cardToPlay));
             // error message for full minion board
@@ -83,6 +84,7 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         }
 
         rituals[playerID - 1].emplace_back(std::move(ritualToPlay));
+        return true;
 
     } else if (cardToPlay->getCardType() == CardType::Spell) {
         Card &cardCast = *cardToPlay.get();
@@ -134,6 +136,7 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         }
         
     }
+    return false;
 }
 
 void Board::checkCardStates() {
@@ -284,12 +287,12 @@ void Board::endCommand() {
     notifyTurnEnd();
 }
 
-void Board::attackCommand(int minionInd, int playerID, int enemyMinion) {
+bool Board::attackCommand(int minionInd, int playerID, int enemyMinion) {
     int enemyPlayer = (playerID == 1) ? 2 : 1;
     if (minions[playerID - 1][minionInd]->getActionCount() <= 0) {
         // print error not enough actions on minion
         cout << "Not enough actions to attack" << endl;
-        return;
+        return false;
     }
     
     if (enemyMinion != -1) {
@@ -298,21 +301,22 @@ void Board::attackCommand(int minionInd, int playerID, int enemyMinion) {
         minions[playerID - 1][minionInd]->attack(*players[enemyPlayer - 1]);
     }
     minions[playerID - 1][minionInd]->setActionCount(minions[playerID - 1][minionInd]->getActionCount() - 1);
+    return true;
 }
 
-void Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlayer, int targetCard) {
+bool Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlayer, int targetCard) {
     if (players[playerID - 1]->getPlayerMagic() < minions[playerID - 1][minionInd]->getActivationCost() && !players[playerID - 1]->getTesting()) {
         // print error message, not enough magic
         cout << "Not enough Magic" << endl;
-        return;
-    } else if (minions[playerID - 1][minionInd]->getActionCount() < 1) {
+        return false;
+    } else if (minions[playerID - 1][minionInd]->getActionCount() < 1 && !players[playerID - 1]->getTesting()) {
         // print error message, no more actions
         cout << "Not enough actions to use ability" << endl;
-        return;
+        return false;
     } else if (minions[playerID - 1][minionInd]->getSilenced()) {
         // print error message, minion is silenced
         cout << minions[playerID - 1][minionInd]->getName() << " is silenced, the ability will not activate." << endl;
-        return;
+        return false;
     }
 
     if (targetCard == 'r') {
@@ -324,19 +328,24 @@ void Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlaye
             minions[playerID - 1][minionInd]->activateAbility(*this);
             players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() -  minions[playerID - 1][minionInd]->getActivationCost());
             
+            // if testing mode and not enough magic
             if (players[playerID - 1]->getPlayerMagic() < 0 && players[playerID - 1]->getTesting()) {
                 players[playerID - 1]->setPlayerMagic(0);
             }
+            return true;
 
         } else if (targetCard >= 0 && targetCard <static_cast<int> (minions[playerID - 1].size())) {
             minions[playerID - 1][minionInd]->activateAbility(*this, *minions[targetPlayer - 1][targetCard]);
             players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() -  minions[playerID - 1][minionInd]->getActivationCost());
             
+            // if testing mode and not enough magic
             if (players[playerID - 1]->getPlayerMagic() < 0 && players[playerID - 1]->getTesting()) {
                 players[playerID - 1]->setPlayerMagic(0);
             }
+            return true;
         }
     }
+    return false;
 }
 
 void Board::increaseRitualCharges(int playerID, int amount) {

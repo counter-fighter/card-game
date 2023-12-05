@@ -16,7 +16,7 @@ int main (int argc, char *argv []) {
     const string deck1Arg = "-deck1", deck2Arg = "-deck2";
     string initFile, cmd, cardName, deckfile1, deckfile2;
     bool testing = false, graphics = false;
-    int currentPlayerID = 1;
+    int currentPlayerID = 1, turn = 1;
     bool fileInput = false, gameOn = true;
 
 
@@ -52,7 +52,8 @@ int main (int argc, char *argv []) {
                 getline(cin, line);
             }
         } else {
-            if (i < 2) 
+            if (i < 2) cout << "Enter Player " << i + 1 << "'s name: ";
+            else cout << "Player " << currentPlayerID << "'s move: ";
             if(!getline(cin, line)) break;
         }
         istringstream lineCmd (line);
@@ -68,9 +69,6 @@ int main (int argc, char *argv []) {
             i++;            
             board.initPlayer(p2Name, i, deckfile2, testing);
             continue; 
-        } else if (i == 2) {
-            board.startCommand(currentPlayerID);
-            i++;
         }
 
         int enemyPlayerID = (currentPlayerID == 1) ? 2 : 1;
@@ -81,9 +79,12 @@ int main (int argc, char *argv []) {
 
         } else if (cmd == "end") {
             board.endCommand();
+            
             currentPlayerID = (currentPlayerID == 1) ? 2 : 1;
+            if (turn > 1) board.startCommand(currentPlayerID);
             // printer.printStartTurn("");
             cout << "Player " << currentPlayerID << "'s Turn" << endl;
+            turn++;
 
         } else if (cmd == "quit") {
             break;
@@ -103,7 +104,11 @@ int main (int argc, char *argv []) {
                         cout << "Invalid attack target" << endl;
                         continue;
                     }
-                    board.attackCommand(ownMinion, currentPlayerID, enemyMinion--);
+
+                    if (board.attackCommand(ownMinion, currentPlayerID, enemyMinion--)) {
+                        board.checkCardStates();
+                    }
+                    
                 } else {
                     // attack player
                     board.attackCommand(ownMinion, currentPlayerID);
@@ -139,14 +144,19 @@ int main (int argc, char *argv []) {
                     }
 
                     if (targetCard != 'r') targetCard--;
-                    board.playACard(cardToPlay, currentPlayerID, targetPlayer, targetCard);
+                    if (board.playACard(cardToPlay, currentPlayerID, targetPlayer, targetCard)) {
+                        board.checkCardStates();
+                    }
+
                 } else {
                     if (targetPlayer != INT32_MIN) {
                         // printer.printError("");
                         cout << "Invalid number of arguments for play" << endl;
                         continue;
                     }
-                    board.playACard(cardToPlay, currentPlayerID);
+                    if (board.playACard(cardToPlay, currentPlayerID)) {
+                        board.checkCardStates();
+                    }
                 }
             } else {
                 // printer.printError("");
@@ -180,14 +190,18 @@ int main (int argc, char *argv []) {
 
 
                     if (targetCard != 'r') targetCard--;
-                    board.useMinionAbilityCommand(minion, currentPlayerID, targetPlayer, targetCard);
+                    if (board.useMinionAbilityCommand(minion, currentPlayerID, targetPlayer, targetCard)) {
+                        board.checkCardStates();
+                    }
                 } else {
                     if (targetPlayer != INT32_MIN) {
                         // printer.printError("");
                         cout << "Invalid number of arguments for use" << endl;
                         continue;
                     }
-                    board.useMinionAbilityCommand(minion, currentPlayerID);
+                    if (board.useMinionAbilityCommand(minion, currentPlayerID)) {
+                        board.checkCardStates();
+                    }
                 }
 
             } else {
