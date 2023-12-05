@@ -73,6 +73,7 @@ bool Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
     } else if (cardToPlay->getCardType() == CardType::Ritual) {
         if (static_cast<int>(rituals[playerID - 1].size()) > 0) {
             unique_ptr<Card> discard = unique_ptr<Card> (static_cast<Card*>(rituals[playerID - 1][0].release()));
+            rituals[playerID - 1].pop_back();
             discardedCards[playerID - 1].emplace_back(std::move(discard));
         }
         unique_ptr<Ritual> ritualToPlay = unique_ptr<Ritual> (dynamic_cast<Ritual*>(cardToPlay.release()));
@@ -149,6 +150,7 @@ void Board::checkCardStates() {
                 minions[i][j]->detachAllEnchant();
                 
                 unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(minions[i][j].release()));
+                minions[i].erase(minions[i].begin() + j);
                 players[i]->returnToHand(std::move(card)); // not sure if I need to cast to Card
                 
             } else if (minions[i][j]->getDefence() <= 0 || (minions[i][j]->getReturnToHand() && players[i]->getHandSize() >= MAX_HAND)) {
@@ -157,12 +159,14 @@ void Board::checkCardStates() {
                 notifyMinionLeave(i, targetNotify);
                 minions[i][j]->detachAllEnchant();
                 players[i]->sendToGraveyard(std::move(minions[i][j]));
+                minions[i].erase(minions[i].begin() + j);
             }
         }
 
         if (static_cast<int> (rituals[i].size()) > 0) {
             if (rituals[i][0]->getReturnToHand() && players[i]->getHandSize() < MAX_HAND) {
                 unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(rituals[i][0].release()));
+                rituals[i].erase(rituals[i].begin());
                 players[i]->returnToHand(std::move(card)); // not sure about cast again
             }
         }
@@ -171,7 +175,7 @@ void Board::checkCardStates() {
 
 bool Board::summon(string card, int n, int playerID, int magicCost) {
     // if the board is full, reset magic cost and return false
-    if (static_cast<int>(minions[playerID - 1].size()) == MAX_MINIONS) {
+    if (static_cast<int>(minions[playerID - 1].size()) >= MAX_MINIONS || magicCost == -1) {
         players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() + magicCost);
         return false;
     }
@@ -368,6 +372,7 @@ void Board::raiseDead(int playerID) {
 void Board::removeRitual(int playerTarget) {
     if (static_cast<int> (rituals[playerTarget].size()) > 0) {
         unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(rituals[playerTarget][0].release()));
+        rituals[playerTarget].pop_back();
         discardedCards[playerTarget - 1].emplace_back(std::move(card));
     } else {
         // print error message
