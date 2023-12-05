@@ -350,27 +350,26 @@ bool Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlaye
         // minions[playerID - 1][minionInd]->activateAbility(*this, *rituals[targetPlayer - 1][0]);
         // print error message for now because we don't have any cards that do this
         cout << "Ritual is not a valid target" << endl;
-    } else {
+    } else if (minions[playerID - 1][minionInd]->getActionCount() >= 1){
         if (targetCard == -1) {
             minions[playerID - 1][minionInd]->activateAbility(*this);
             players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() -  minions[playerID - 1][minionInd]->getActivationCost());
             
-            // if testing mode and not enough magic
-            if (players[playerID - 1]->getPlayerMagic() < 0 && players[playerID - 1]->getTesting()) {
-                players[playerID - 1]->setPlayerMagic(0);
-            }
-            return true;
-
         } else if (targetCard >= 0 && targetCard <static_cast<int> (minions[playerID - 1].size())) {
             minions[playerID - 1][minionInd]->activateAbility(*this, *minions[targetPlayer - 1][targetCard]);
             players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() -  minions[playerID - 1][minionInd]->getActivationCost());
-            
-            // if testing mode and not enough magic
-            if (players[playerID - 1]->getPlayerMagic() < 0 && players[playerID - 1]->getTesting()) {
-                players[playerID - 1]->setPlayerMagic(0);
-            }
-            return true;
+    
         }
+
+        // if testing mode and not enough magic
+        if (players[playerID - 1]->getPlayerMagic() < 0 && players[playerID - 1]->getTesting()) {
+            players[playerID - 1]->setPlayerMagic(0);
+        }
+
+        return true;
+    
+    } else {
+        cout << minions[playerID - 1][minionInd]->getName() << " does not have enough actions" << endl;    
     }
 
     return false;
@@ -386,6 +385,8 @@ void Board::raiseDead(int playerID) {
             unique_ptr<Minion> raisedMinion = players[playerID - 1]->returnTopFromGraveyard();
             raisedMinion->setDefence(1);
             minions[playerID - 1].emplace_back(std::move(raisedMinion));
+        } else {
+            throw std::logic_error("Raise Dead cannot be played when board is full");
         }
     } else {
         throw std::logic_error("Raise Dead cannot be played with no cards in graveyard");
