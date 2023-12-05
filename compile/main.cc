@@ -46,6 +46,11 @@ int main (int argc, char *argv []) {
     // game loop from initFile
     while (gameOn) {
         // try {}
+        if (graphics && i > 1) {
+            printer.updateHand(board.getPlayer(currentPlayerID).getHand()); // update after every move.
+            if (cmd != "inspect") printer.updateBoard(board); // updateBoard unless inspecting minion.
+        }
+
         if (fileInput) {
             if (!getline(init, line)) {
                 fileInput = false;
