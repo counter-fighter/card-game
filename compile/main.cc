@@ -205,8 +205,8 @@ int main (int argc, char *argv []) {
                     cout << "Minion index " << minion << " does not exist on the board." << endl;
                     continue;
                 }
-                // Card& inspectMinion = board.getMinions()[currentPlayerID - 1][minion - 1];
-                // printer.printInspect(inspectMinion);
+                Card& inspectMinion = board.getMinions()[currentPlayerID - 1][minion - 1];
+                printer.printInspect(inspectMinion);
             } else {
                 // printer.printError("");
                 cout << "Invalid number of arguments for inspect" << endl;
