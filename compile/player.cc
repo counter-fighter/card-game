@@ -137,5 +137,5 @@ vector<reference_wrapper<Card>> Player::getHand() {
 };
 
 void Player::discard(int i) {
-  hand.pop_back();
+  hand.erase(hand.begin() + i);
 }

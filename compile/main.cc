@@ -45,6 +45,7 @@ int main (int argc, char *argv []) {
 
     // game loop from initFile
     while (gameOn) {
+        // try {}
         if (fileInput) {
             if (!getline(init, line)) {
                 fileInput = false;
@@ -219,7 +220,9 @@ int main (int argc, char *argv []) {
 
         } else if (cmd == "draw") {
             if (testing) {
-                board.getPlayer(currentPlayerID).drawCard();
+                if (!board.getPlayer(currentPlayerID).drawCard()){
+                    printer.printError("Tried to draw, but your hand is full.");
+                }
             } else {
                 printer.printError("A valid command was not entered, please enter a valid command");
             }
