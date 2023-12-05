@@ -247,7 +247,7 @@ void Board::notifyMinionEnter(int playerID) {
                 minions[ID][j]->notifyCardMinionEnter(*this, *minions[playerID - 1][static_cast<int>(minions[playerID - 1].size()) - 1]);
             }
         }
-        if (static_cast<int> (rituals[ID].size()) > 0 && rituals[playerID - 1][0]->getCharges() >= rituals[playerID - 1][0]->getActionCost()) {
+        if (static_cast<int> (rituals[ID].size()) > 0 && rituals[ID][0]->getCharges() >= rituals[ID][0]->getActionCost()) {
             rituals[ID][0]->notifyCardMinionEnter(*this, *minions[playerID - 1][static_cast<int> (minions[playerID - 1].size()) - 1]);
         }
         ID = (playerID == 1) ? 1 : 0;
