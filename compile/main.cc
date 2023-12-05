@@ -52,12 +52,13 @@ int main (int argc, char *argv []) {
                 getline(cin, line);
             }
         } else {
+            if (i < 2) 
             if(!getline(cin, line)) break;
         }
         istringstream lineCmd (line);
         lineCmd >> cmd;
 
-        if (i == 0) { 
+        if (i == 0) {
             p1Name = cmd;
             i++;
             board.initPlayer(p1Name, i, deckfile1, testing);
@@ -83,7 +84,6 @@ int main (int argc, char *argv []) {
             currentPlayerID = (currentPlayerID == 1) ? 2 : 1;
             // printer.printStartTurn("");
             cout << "Player " << currentPlayerID << "'s Turn" << endl;
-            board.startCommand(currentPlayerID);
 
         } else if (cmd == "quit") {
             break;

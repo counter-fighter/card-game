@@ -42,13 +42,11 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         return;
     }
 
-    if (cardToPlay->getCost() > players[playerID - 1]->getPlayerMagic()) {
-        if (!players[playerID - 1]->getTesting() || cardToPlay->getCardType() != CardType::Spell) {
-            // print error message not enough magic
-            cout << "not enough magic" << endl;
-            players[playerID - 1]->returnToHand(std::move(cardToPlay));
-            return;
-        }
+    if (cardToPlay->getCost() > players[playerID - 1]->getPlayerMagic() && !players[playerID - 1]->getTesting()) {
+        // print error message not enough magic
+        cout << "not enough magic" << endl;
+        players[playerID - 1]->returnToHand(std::move(cardToPlay));
+        return;
     }
     
 
@@ -57,6 +55,12 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         if (static_cast<int>(minions[playerID - 1].size()) < MAX_MINIONS) {
             unique_ptr<Minion> minionToPlay = unique_ptr<Minion> (dynamic_cast<Minion*>(cardToPlay.release()));
             players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() - minionToPlay->getCost());
+
+            // if testing mode and not enough magic
+            if (players[playerID - 1]->getTesting() && players[playerID - 1]->getPlayerMagic() < 0) {
+                players[playerID - 1]->setPlayerMagic(0);
+            }
+
             minions[playerID - 1].emplace_back(std::move(minionToPlay));
             notifyMinionEnter(playerID);
         } else {
@@ -72,6 +76,12 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         }
         unique_ptr<Ritual> ritualToPlay = unique_ptr<Ritual> (dynamic_cast<Ritual*>(cardToPlay.release()));
         players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() - ritualToPlay->getCost());
+
+        // if testing mode and not enough magic
+        if (players[playerID - 1]->getTesting() && players[playerID - 1]->getPlayerMagic() < 0) {
+            players[playerID - 1]->setPlayerMagic(0);
+        }
+
         rituals[playerID - 1].emplace_back(std::move(ritualToPlay));
 
     } else if (cardToPlay->getCardType() == CardType::Spell) {
@@ -100,6 +110,7 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
                 players[playerID - 1]->setPlayerMagic(0);
             }
             discardedCards[playerID - 1].emplace_back(std::move(cardToPlay));
+
         } catch (std::logic_error &e) {
             players[playerID - 1]->returnToHand(std::move(cardToPlay));
             // print error message, use printer class to do it later
@@ -109,7 +120,14 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
     } else {
         if (targetCard != -1 && targetCard < static_cast<int> (minions[playerID - 1].size())) {
             unique_ptr<Enchantment> enchant = unique_ptr<Enchantment> (dynamic_cast<Enchantment*>(cardToPlay.release()));
+            players[playerID - 1]->setPlayerMagic(players[playerID - 1]->getPlayerMagic() - enchant->getCost());
             attach(std::move(enchant), playerID, targetCard);
+
+            // if testing mode and not enough magic
+            if (players[playerID - 1]->getTesting() && players[playerID - 1]->getPlayerMagic() < 0) {
+                players[playerID - 1]->setPlayerMagic(0);
+            }
+
         } else {
             //print error message no target
             players[playerID - 1]->returnToHand(std::move(cardToPlay));
