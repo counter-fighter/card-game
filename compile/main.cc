@@ -116,6 +116,8 @@ int main (int argc, char *argv []) {
                         if (board.attackCommand(ownMinion, currentPlayerID, enemyMinion)) {
                             board.checkCardStates(currentPlayerID);
                             board.checkCardStates(enemyPlayerID);
+                        } else {
+                            throw std::logic_error("Attack failed.");
                         }
                         
                     } else {
@@ -153,6 +155,8 @@ int main (int argc, char *argv []) {
                         if (board.playACard(cardToPlay, currentPlayerID, targetPlayer, targetCard)) {
                             board.checkCardStates(currentPlayerID);
                             board.checkCardStates(enemyPlayerID);
+                        } else {
+                            throw std::logic_error("Playing the card failed.");
                         }
 
                     } else {
@@ -165,6 +169,8 @@ int main (int argc, char *argv []) {
                         if (board.playACard(cardToPlay, currentPlayerID)) {
                             board.checkCardStates(currentPlayerID);
                             board.checkCardStates(enemyPlayerID);
+                        } else {
+                            throw std::logic_error("Playing the card failed.");
                         }
                     }
                 } else {
@@ -199,6 +205,8 @@ int main (int argc, char *argv []) {
                         if (board.useMinionAbilityCommand(minion, currentPlayerID, targetPlayer, targetCard)) {
                             board.checkCardStates(currentPlayerID);
                             board.checkCardStates(enemyPlayerID);
+                        } else {
+                            throw std::logic_error("Using minion ability failed.");
                         }
                     } else {
                         if (targetPlayer != INT32_MIN) {
@@ -210,6 +218,8 @@ int main (int argc, char *argv []) {
                         if (board.useMinionAbilityCommand(minion, currentPlayerID)) {
                             board.checkCardStates(currentPlayerID);
                             board.checkCardStates(enemyPlayerID);
+                        } else {
+                            throw std::logic_error("Using minion ability failed.");
                         }
                     }
 
@@ -221,11 +231,19 @@ int main (int argc, char *argv []) {
 
             } else if (cmd == "inspect") {
                 int minion;
+                char enemy;
                 if (lineCmd >> minion) {
                     if (minion <= 0 || minion > static_cast<int>(board.getMinions()[currentPlayerID - 1].size())) {
                         printer.printError("Minion index " + to_string(minion) + " does not exist on the board.");
                         continue;
                     }
+
+                    if (lineCmd >> enemy) {
+                        if (enemy == 'e') {
+                            continue;
+                        }
+                    }
+
                     Card& inspectMinion = board.getMinions()[currentPlayerID - 1][minion - 1];
                     printer.printInspect(inspectMinion);
                 } else {
