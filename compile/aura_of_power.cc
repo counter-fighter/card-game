@@ -4,6 +4,8 @@ AuraOfPower::AuraOfPower(int player) : Ritual{"Aura of Power", "Whenever a minio
 
 AuraOfPower::~AuraOfPower() {};
 
+// Checks that this ritual has enough charges, and that target is of right 
+//   type from opposing player, otherwise does not run
 void AuraOfPower::notifyCardMinionEnter(Board &brd, Card &target) {
   if (target.getCardType() == CardType::Minion && charges >= actCost) {
     Minion &m = dynamic_cast<Minion&>(target);

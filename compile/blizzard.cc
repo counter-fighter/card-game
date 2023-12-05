@@ -5,6 +5,7 @@ Blizzard::Blizzard(int player) : Spell{"Blizzard", "Deal 2 damage to all minions
 
 Blizzard::~Blizzard() {};
 
+// Damages all minions by 2
 void Blizzard::useSpell(Board &brd) {
   brd.damageAll(2);
 };

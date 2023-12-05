@@ -5,6 +5,7 @@ DarkRitual::DarkRitual(int player) : Ritual{"Dark Ritual", "At the start of your
 
 DarkRitual::~DarkRitual() {};
 
+// Only triggers if charges are sufficient
 void DarkRitual::notifyCardTurnStart(Board &brd) {
   if (charges >= actCost) {
     brd.addMagic(player, 1);

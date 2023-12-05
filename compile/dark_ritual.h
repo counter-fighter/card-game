@@ -6,7 +6,7 @@ class DarkRitual : public Ritual {
     public:
         DarkRitual(int player);
         ~DarkRitual();
-        void notifyCardTurnStart(Board &brd) override;
+        void notifyCardTurnStart(Board &brd) override; // At the start of your turn, gain 1 magic
 };
 
 

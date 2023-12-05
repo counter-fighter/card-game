@@ -6,7 +6,7 @@ class Disenchant : public Spell {
     public:
         Disenchant(int player);
         virtual ~Disenchant();
-        void useSpell(Board &brd, Card &target) override;
+        void useSpell(Board &brd, Card &target) override; //Destroy top enchantment on target minion
 };
 
 

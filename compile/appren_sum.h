@@ -6,7 +6,7 @@ class ApprenticeSummoner : public Minion {
   public :
     ApprenticeSummoner(int player);
     ~ApprenticeSummoner();
-    void activateAbility(Board &brd) override;
+    void activateAbility(Board &brd) override; // Summon a 1/1 air elemental
 };
 
 #endif

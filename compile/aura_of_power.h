@@ -6,7 +6,7 @@ class AuraOfPower : public Ritual {
     public:
         AuraOfPower(int player);
         ~AuraOfPower();
-        void notifyCardMinionEnter(Board &brd, Card &target) override;
+        void notifyCardMinionEnter(Board &brd, Card &target) override; // Whenever a minion enters play under your control, it gains +1/+1
 };
 
 

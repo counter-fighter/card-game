@@ -3,11 +3,10 @@
 #include "minion.h"
 
 class BoneGolem : public Minion {
-  void notifyCardMinionLeave(Board &brd, Card &target) override;
-  
   public :
     BoneGolem(int player);
     ~BoneGolem();
+    void notifyCardMinionLeave(Board &brd, Card &target) override; // Gain +1/+1 whenever a minion leaves play
 };
 
 #endif
