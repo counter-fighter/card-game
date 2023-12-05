@@ -95,7 +95,7 @@ void Player::setPlayerHealth(int n) { health = n; };
 bool Player::getTesting() const { return testing; }
 
 bool Player::drawCard() {
-  if ((int)hand.size() < MAX_HAND) {
+  if (static_cast<int>(hand.size()) < MAX_HAND && static_cast<int>(deck.size()) > 0) {
     hand.emplace_back(move(deck.back()));
     deck.pop_back();
     return true;

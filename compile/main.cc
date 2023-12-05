@@ -79,7 +79,7 @@ int main (int argc, char *argv []) {
             printer.printHelp();
 
         } else if (cmd == "end") {
-            board.endCommand();
+            board.endCommand(currentPlayerID);
             currentPlayerID = (currentPlayerID == 1) ? 2 : 1;
             // printer.printStartTurn("");
             cout << "Player " << currentPlayerID << "'s Turn" << endl;

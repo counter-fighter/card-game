@@ -22,6 +22,7 @@ class Board {
   vector<vector<unique_ptr<Ritual>>> rituals;
   vector<unique_ptr<Player>> players;
   vector<vector<unique_ptr<Card>>> discardedCards;
+  void checkCardStates(); // checks all card states and moves a card to different area if conditions are met
 
   public:
     Board();
@@ -31,11 +32,10 @@ class Board {
     // plays a card from hand, discards spell after use or places minion/ritual/enchanment on board
     void playACard(int cardInd, int playerID, int targetPlayer = -1, int targetCard = -1); 
 
-    void checkCardStates(); // checks all card states and moves a card to different area if conditions are met
 
     // Notify all cards on board
-    void notifyTurnStart(); // notifies turn start for all minions/rituals on board
-    void notifyTurnEnd(); // notifies turn end for all minions/rituals on board
+    void notifyTurnStart(int playerId); // notifies turn start for all minions/rituals on board
+    void notifyTurnEnd(int playerId); // notifies turn end for all minions/rituals on board
     void notifyMinionEnter(int playerID); // notifies all minions/rituals that a minion entered the board
     void notifyMinionLeave(int playerID, Card &target); // notifies all minions/rituals that a minion left the board
 
@@ -47,7 +47,7 @@ class Board {
 
     // Commands called from main using input
     void startCommand(int playerID);
-    void endCommand(); // ends the turn, notifies all cards of Turn End
+    void endCommand(int playerID); // ends the turn, notifies all cards of Turn End
     void attackCommand(int minionInd, int playerID, int enemyMinion = -1); // performs an attack on an enemy minion or player
     void useMinionAbilityCommand(int minion, int playerID, int targetPlayer = -1, int targetCard = -1); // uses a minion ability
 
@@ -61,7 +61,7 @@ class Board {
     void addMagic(int playerID, int magic); // increases the player's magic
     void rechargeRitual(int playerID, int charges); // increases the ritual's charges of the player
     void damageAll(int n); // damages all minions on board
-    void healAll(int n); // adds Defence to all minions on board
+    void healAllPlayer(int n, int playId); // adds Defence to all PlayerId's minions on board
 };
 
 #endif

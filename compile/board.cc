@@ -116,21 +116,23 @@ void Board::playACard(int cardInd, int playerID, int targetPlayer, int targetCar
         }
         
     }
+    checkCardStates();
 }
 
 void Board::checkCardStates() {
     const int numPlayers = 2;
     for (int i = 0; i < numPlayers; i++) {
         for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
-            if (minions[i][j]->getReturnToHand()) {
+            if (minions[i][j]->getReturnToHand() && players[i]->getHandSize() < MAX_HAND) {
                 Card &targetNotify = static_cast<Card&>(*minions[i][j]);
                 notifyMinionLeave(i, targetNotify);
                 minions[i][j]->detachAllEnchant();
                 
                 unique_ptr<Card> card = unique_ptr<Card> (static_cast<Card*>(minions[i][j].release()));
                 players[i]->returnToHand(std::move(card)); // not sure if I need to cast to Card
-            
-            } else if (minions[i][j]->getDefence() <= 0) {
+                
+            } else if (minions[i][j]->getDefence() <= 0 || (minions[i][j]->getReturnToHand() && players[i]->getHandSize() >= MAX_HAND)) {
+                if (minions[i][j]->getReturnToHand()) cout << "hand is full, card discarded" << endl;
                 Card &targetNotify = static_cast<Card&> (*minions[i][j]);
                 notifyMinionLeave(i, targetNotify);
                 minions[i][j]->detachAllEnchant();
@@ -174,28 +176,26 @@ void Board::detach(int playerID, int targetCard) {
     minions[playerID - 1][targetCard]->detachEnchant();
 }
 
-void Board::notifyTurnStart() {
-    for (int i = 0; i < NUM_PLAYERS; i++) {
-        for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
-            if (!minions[i][j]->getSilenced()) minions[i][j]->notifyCardTurnStart(*this);
-            else minions[i][j]->setActionCount(minions[i][j]->getActionReset());
-        }
+void Board::notifyTurnStart(int playerID) {
+    int ID = playerID - 1;
+    for (int j = 0; j < static_cast<int> (minions[ID].size()); j++) {
+        if (!minions[ID][j]->getSilenced()) minions[ID][j]->notifyCardTurnStart(*this);
+        else minions[ID][j]->setActionCount(minions[ID][j]->getActionReset());
+    }
 
-        if (static_cast<int> (rituals[i].size()) > 0 && rituals[i][0]->getCharges() < rituals[i][0]->getActionCost()) {
-            rituals[i][0]->notifyCardTurnStart(*this);
-        }
+    if (static_cast<int> (rituals[ID].size()) > 0 && rituals[ID][0]->getCharges() < rituals[ID][0]->getActionCost()) {
+        rituals[ID][0]->notifyCardTurnStart(*this);
     }
 }
 
-void Board::notifyTurnEnd() {
-    for (int i = 0; i < NUM_PLAYERS; i++) {
-        for (int j = 0; j < static_cast<int> (minions[i].size()); j++) {
-            if (!minions[i][j]->getSilenced()) minions[i][j]->notifyCardTurnEnd(*this);
-        }
+void Board::notifyTurnEnd(int playerID) {
+    int ID = playerID - 1;
+    for (int j = 0; j < static_cast<int> (minions[ID].size()); j++) {
+        if (!minions[ID][j]->getSilenced()) minions[ID][j]->notifyCardTurnEnd(*this);
+    }
 
-        if (static_cast<int> (rituals[i].size()) > 0 && rituals[i][0]->getCharges() < rituals[i][0]->getActionCost()) {
-            rituals[i][0]->notifyCardTurnEnd(*this);
-        }
+    if (static_cast<int> (rituals[ID].size()) > 0 && rituals[ID][0]->getCharges() < rituals[ID][0]->getActionCost()) {
+        rituals[ID][0]->notifyCardTurnEnd(*this);
     }
 }
 
@@ -259,11 +259,11 @@ vector<reference_wrapper<Minion>> Board::getGraveyard(int playerID) const {
 void Board::startCommand(int playerID) {
     addMagic(playerID, 1);
     players[playerID - 1]->drawCard(); // checking for hand size and deck size is done in player
-    notifyTurnStart();
+    notifyTurnStart(playerID);
 }
 
-void Board::endCommand() {
-    notifyTurnEnd();
+void Board::endCommand(int playerID) {
+    notifyTurnEnd(playerID);
 }
 
 void Board::attackCommand(int minionInd, int playerID, int enemyMinion) {
@@ -279,7 +279,9 @@ void Board::attackCommand(int minionInd, int playerID, int enemyMinion) {
     } else {
         minions[playerID - 1][minionInd]->attack(*players[enemyPlayer - 1]);
     }
-    minions[playerID - 1][minionInd]->setActionCount(minions[playerID - 1][minionInd]->getActionCount() - 1);
+    //minions[playerID - 1][minionInd]->setActionCount(minions[playerID - 1][minionInd]->getActionCount() - 1);
+
+    checkCardStates();
 }
 
 void Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlayer, int targetCard) {
@@ -319,6 +321,8 @@ void Board::useMinionAbilityCommand(int minionInd, int playerID, int targetPlaye
             }
         }
     }
+
+    checkCardStates();
 }
 
 void Board::increaseRitualCharges(int playerID, int amount) {
@@ -335,6 +339,7 @@ void Board::raiseDead(int playerID) {
     } else {
         throw std::logic_error("Raise Dead cannot be played with no cards in graveyard");
     }
+    checkCardStates();
 }
 
 void Board::removeRitual(int playerTarget) {
@@ -373,14 +378,11 @@ void Board::damageAll(int n) {
     }
 }
 
-void Board::healAll(int n) {
-    const int p1 = 0, p2 = 1;
-    int minionSizeP1 = minions[p1].size(), minionSizeP2 = minions[p2].size();
-    for (int i = 0; i < minionSizeP1; i++) {
-        minions[p1][i]->setDefence(minions[p1][i]->getDefence() + n);
+void Board::healAllPlayer(int n, int playerID) {
+    const int p = playerID - 1;
+    int minionSizeP = minions[p].size();
+    for (int i = 0; i < minionSizeP; i++) {
+        minions[p][i]->setDefence(minions[p][i]->getDefence() + n);
     }
 
-    for (int i = 0; i < minionSizeP2; i++) {
-        minions[p2][i]->setDefence(minions[p2][i]->getDefence() + n);
-    }
 }
