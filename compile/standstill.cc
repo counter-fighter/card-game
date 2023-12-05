@@ -8,7 +8,7 @@ void Standstill::notifyCardMinionEnter(Board &brd, Card &target) {
   if (target.getCardType() == CardType::Minion && charges >= actCost) {
     Minion &m = dynamic_cast<Minion&>(target);
 
-    m.setDefence(-1);
+    m.setBannished(true);
     charges -= actCost;
   }
 };

@@ -11,12 +11,12 @@ using namespace std;
 
 int main (int argc, char *argv []) {
     const string initArg = "-init", testingArg = "-testing", graphicsArg = "-graphics";
-    const string deck1Arg = "-deck1", deck2Arg = "-deck2";
+    const string deck1Arg = "-deck1", deck2Arg = "-deck2", bonusArg = "-enableBonus";
     string initFile, cmd, cardName, deckfile1, deckfile2;
     bool testing = false, graphics = false;
     int currentPlayerID = 1, turn = 1;
     bool fileInput = false, gameOn = true;
-
+    bool enableBonus = false;
 
     for (int i = 0; i < argc; i++) {
         string arg = argv[i];
@@ -31,6 +31,8 @@ int main (int argc, char *argv []) {
             testing = true;
         } else if (arg == graphicsArg) { // -graphics arg
             graphics = true;
+        } else if (arg == bonusArg) { // bonus arg
+            enableBonus = true;
         }
     }
 
