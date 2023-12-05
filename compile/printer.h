@@ -18,13 +18,15 @@ class Printer {
 
     // Printing Board
     void printOuterRow(vector<reference_wrapper<Ritual>> ritual, const Player& player, // Prints cards on the ritual, player, and graveyard slots.
-                       vector<reference_wrapper<Card>> graveyard);
-    void printInnerRow(vector<reference_wrapper<Card>> minions); // Prints cards on the player's minion slots.
-    void printUpperBoarder();
-    void printCentreGraphic();
-    void printLowerBoarder();
-    void printCardsWithBoarder();
-    void printCards(bool noText = false); // Prints MAX 5 cards per row; No textual output for updateHand method (noText == true).
+                       vector<reference_wrapper<Card>> graveyard, bool showText = true, 
+                       bool showWindow = true);
+    void printInnerRow(vector<reference_wrapper<Card>> minions, bool showText = true, // Prints cards on the player's minion slots.
+                       bool showWindow = true); 
+    void printUpperBoarder(bool showText = true, bool showWindow = true); // Prints upper board boarder.
+    void printCentreGraphic(bool showText = true, bool showWindow = true); // Prints board centre graphic.
+    void printLowerBoarder(bool showText = true, bool showWindow = true); // Prints lower board boarder.
+    void printCardsWithBoarder(bool showText = true, bool showWindow = true);
+    void printCards(bool showText = true, bool showWindow = true); // Prints MAX 5 cards per row; No textual output for updateHand method (showText == true).
     void emplaceBackCard(Card& card);
     void emplaceBackCard(Minion& minion);
     void emplaceBackPlayerCard(const Player& player);
@@ -46,6 +48,7 @@ class Printer {
         void printHand(vector<reference_wrapper<Card>> hand);
         void printInspect(Card& minion);
         void updateHand(vector<reference_wrapper<Card>> hand); // Requires enableGraphics == true
+        void updateBoard(const Board& board); // Requires enableGraphics == true
 };
 
 #endif
