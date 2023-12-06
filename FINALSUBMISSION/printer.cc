@@ -155,7 +155,8 @@ void Printer::printHelp() {
          << " owned by target-player." << endl;
     cout << "          use minion [target-player target-card] -- Use minion\'s special ability, optionally"
          << " targeting target-card owned by target-player." << endl;
-    cout << "          inspect minion [e]-- View a minion\'s card and all enchantments on that minion." << endl;
+    cout << "          inspect minion [e] -- View a minion\'s card and all enchantments on that minion. Optionally"
+         << " inspect an opponent's minion by specifying e for enemy." << endl;
     cout << "          hand -- Describe all cards in your hand." << endl;
     cout << "          board -- Describe all cards on the board." << endl;
 }

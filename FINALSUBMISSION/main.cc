@@ -233,15 +233,21 @@ int main (int argc, char *argv []) {
                 int minion;
                 char enemy;
                 if (lineCmd >> minion) {
+                    if (enableBonus && lineCmd >> enemy) {
+                        if (enemy == 'e') {
+                            if (minion <= 0 || minion > static_cast<int>(board.getMinions()[enemyPlayerID - 1].size())) {
+                                printer.printError("Minion index " + to_string(minion) + " does not exist on the board.");
+                                continue;
+                            }
+                            Card& inspectMinion = board.getMinions()[enemyPlayerID - 1][minion - 1];
+                            printer.printInspect(inspectMinion);
+                            continue;
+                        }
+                    }
+
                     if (minion <= 0 || minion > static_cast<int>(board.getMinions()[currentPlayerID - 1].size())) {
                         printer.printError("Minion index " + to_string(minion) + " does not exist on the board.");
                         continue;
-                    }
-
-                    if (lineCmd >> enemy) {
-                        if (enemy == 'e') {
-                            continue;
-                        }
                     }
 
                     Card& inspectMinion = board.getMinions()[currentPlayerID - 1][minion - 1];
@@ -295,6 +301,8 @@ int main (int argc, char *argv []) {
             }
         } catch (std::logic_error& e) {
             printer.printError(e.what());
+            continue;
+        } catch (...) {
             continue;
         } // try
     } // while
