@@ -1,1 +1,1 @@
-# cs246-sorcery-fall-2023
+# Card Game
